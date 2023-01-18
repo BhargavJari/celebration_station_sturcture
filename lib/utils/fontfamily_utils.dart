@@ -71,6 +71,9 @@ class FontTextStyle {
   static TextStyle poppinsS24W7BlackColor =
   poppinsS24W7PrimaryColor.copyWith(color: ColorUtils.blackColor);
 
+  static TextStyle poppinsS24W7RedColor =
+  poppinsS24W7PrimaryColor.copyWith(color: ColorUtils.darkBlueColor);
+
 
 
 }

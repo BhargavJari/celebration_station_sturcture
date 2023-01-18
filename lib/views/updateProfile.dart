@@ -60,6 +60,7 @@ class _UpdateProfile extends State<UpdateProfile> {
     }
   }
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -76,10 +77,6 @@ class _UpdateProfile extends State<UpdateProfile> {
       token = await Preferances.getString("token");
       type = await Preferances.getString("type");
       profileStatus = await Preferances.getString("PROFILE_STATUS");
-      // id = (prefs.getString('id') ?? '');
-      // token = (prefs.getString('token') ?? '');
-      // type = (prefs.getString('type') ?? '');
-      // profileStatus = (prefs.getString('PROFILE_STATUS') ?? '');
     });
   }
 
@@ -191,6 +188,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                   fieldController: pinCode,
                   maxLines: 1,
                   textInputAction: TextInputAction.next,
+                  keyboard: TextInputType.number,
                   validator: (str) {
                     if (str!.isEmpty) {
                       return '* Is Required';
@@ -220,7 +218,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                     if (str!.isEmpty) {
                       return '* Is Required';
                     }else if (str.length != 10) {
-                      return '* Phone number must be of 6 digit';
+                      return '* Phone number must be of 10 digit';
                     }
                   }),
               const SizedBox(height: 15.0),
@@ -237,7 +235,32 @@ class _UpdateProfile extends State<UpdateProfile> {
                             borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () {
-                        ApiService().updateProfile(context, data: data());
+                        FormData data() {
+                          return FormData.fromMap({
+                            "business_name": businessName.text.toString(),
+                            "owner_name": ownerName.text.toString(),
+                            "state": state.text.toString(),
+                            "district": district.text.toString(),
+                            "business_type": selectedBusinessType,
+                            "pincode": pinCode.text.toString(),
+                            "address": address.text.toString(),
+                            "whats_app": whatsappNo.text.toString(),
+                            "loginid": id!.replaceAll('"', '').replaceAll('"', '').toString(),
+                          });
+                        }
+                        // Map<String,dynamic> data = {
+                        //   'business_name': businessName.text.trim(),
+                        //   'owner_name': ownerName.text.trim(),
+                        //   'state': state.text.trim(),
+                        //   'district': district.text.trim(),
+                        //   'business_type': selectedBusinessType,
+                        //   'pincode': pinCode.text.trim(),
+                        //   'address': address.text.trim(),
+                        //   'whats_app': whatsappNo.text.trim(),
+                        //   'loginid': id!.replaceAll('"', '').replaceAll('"', '').toString(),
+                        // };
+                        print(data);
+                      ApiService().updateProfile(context, data: data());
                       },
                       child: const Text(
                         "Submit",
@@ -294,21 +317,6 @@ class _UpdateProfile extends State<UpdateProfile> {
         });
       },
     );
-  }
-
-  FormData data() {
-    return FormData.fromMap({
-      "business_name": businessName.text.toString(),
-      "owner_name": ownerName.text.toString(),
-      "state": state.text.toString(),
-      "district": district.text.toString(),
-      "business_type": selectedBusinessType,
-      "pincode": pinCode.text.toString(),
-      "address": address.text.toString(),
-      "whats_app": whatsappNo.text.toString(),
-      "loginid": id,
-      "status": '1',
-    });
   }
 }
 

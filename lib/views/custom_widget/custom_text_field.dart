@@ -40,8 +40,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
-        TextFormField(controller: widget.fieldController,
-
+        TextFormField(
+          controller: widget.fieldController,
           obscureText: widget.obscureText ?? false,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           textInputAction: widget.textInputAction ?? TextInputAction.next,

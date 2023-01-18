@@ -1,18 +1,15 @@
-class GetProfileRecord {
+class GetAllProfileModel {
   int? status;
   String? message;
-  Detail? detail;
-  List<Detail>? details;
+  ProfileDetails? detail;
 
+  GetAllProfileModel({this.status, this.message, this.detail});
 
-  GetProfileRecord({this.status, this.message, this.detail , this.details});
-
-  GetProfileRecord.fromJson(Map<String, dynamic> json) {
+  GetAllProfileModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     detail =
-    json['detail'] != null ? new Detail.fromJson(json['detail']) : null;
-    //details!.add(new GetProfileRecord.fromJson(v));
+    json['detail'] != null ? new ProfileDetails.fromJson(json['detail']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,7 +23,7 @@ class GetProfileRecord {
   }
 }
 
-class Detail {
+class ProfileDetails {
   String? bRANCHID;
   String? bRANCHFIRMNAME;
   String? bRANCHNAME;
@@ -62,8 +59,12 @@ class Detail {
   String? bRANCHPINCODE;
   String? fIRMID;
   String? pROFILESTATUS;
+  String? pAYMENTSTATUS;
+  String? pAYMENTTRANSACTIONID;
+  String? rEGISTRATIONFEE;
+  String? pAYMNENTDATE;
 
-  Detail(
+  ProfileDetails(
       {this.bRANCHID,
         this.bRANCHFIRMNAME,
         this.bRANCHNAME,
@@ -98,9 +99,13 @@ class Detail {
         this.bRANCHBUSINESSTYPE,
         this.bRANCHPINCODE,
         this.fIRMID,
-        this.pROFILESTATUS});
+        this.pROFILESTATUS,
+        this.pAYMENTSTATUS,
+        this.pAYMENTTRANSACTIONID,
+        this.rEGISTRATIONFEE,
+        this.pAYMNENTDATE});
 
-  Detail.fromJson(Map<String, dynamic> json) {
+  ProfileDetails.fromJson(Map<String, dynamic> json) {
     bRANCHID = json['BRANCH_ID'];
     bRANCHFIRMNAME = json['BRANCH_FIRM_NAME'];
     bRANCHNAME = json['BRANCH_NAME'];
@@ -136,6 +141,10 @@ class Detail {
     bRANCHPINCODE = json['BRANCH_PINCODE'];
     fIRMID = json['FIRM_ID'];
     pROFILESTATUS = json['PROFILE_STATUS'];
+    pAYMENTSTATUS = json['PAYMENT_STATUS'];
+    pAYMENTTRANSACTIONID = json['PAYMENT_TRANSACTION_ID'];
+    rEGISTRATIONFEE = json['REGISTRATION_FEE'];
+    pAYMNENTDATE = json['PAYMNENT_DATE'];
   }
 
   Map<String, dynamic> toJson() {
@@ -175,6 +184,10 @@ class Detail {
     data['BRANCH_PINCODE'] = this.bRANCHPINCODE;
     data['FIRM_ID'] = this.fIRMID;
     data['PROFILE_STATUS'] = this.pROFILESTATUS;
+    data['PAYMENT_STATUS'] = this.pAYMENTSTATUS;
+    data['PAYMENT_TRANSACTION_ID'] = this.pAYMENTTRANSACTIONID;
+    data['REGISTRATION_FEE'] = this.rEGISTRATIONFEE;
+    data['PAYMNENT_DATE'] = this.pAYMNENTDATE;
     return data;
   }
 }

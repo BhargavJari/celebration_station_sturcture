@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
+import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
-import '../model/get_profile_record_model.dart';
 import '../views/updateProfile.dart';
 import 'api_endpoint.dart';
 import 'dio_client.dart';
@@ -63,6 +63,7 @@ class ApiService {
     } on DioError catch (e) {
       print("dio");
       debugPrint('Dio E  $e');
+      debugPrint('Dio E  $e');
     }
   }
 
@@ -75,7 +76,7 @@ class ApiService {
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
-      response = await dio.post(ApiEndPoints.updateProfileApi,
+      response = await dio.post("https://celebrationstation.in/post_ajax/update_profile/",
           options: Options(headers: {
             'Client-Service': 'frontend-client',
             'Auth-Key': 'simplerestapi',
@@ -106,7 +107,7 @@ class ApiService {
     }
   }
 
-  Future<GetProfileRecord?> getProfileRecord(BuildContext context, {
+  Future<GetAllProfileModel?> getProfileRecord(BuildContext context, {
     FormData? data,
   }) async {
     try {
@@ -117,9 +118,13 @@ class ApiService {
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
       var formData = FormData.fromMap({
-        'id': id?.replaceAll('"', '').replaceAll('"', '').toString(),
+        'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
       });
-      response = await dio.post(ApiEndPoints.getProfileRecordApi,
+      // Map<String,dynamic> data = {
+      //   'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString()};
+      print(formData);
+      print(id);
+      response = await dio.post("https://celebrationstation.in/get_ajax/get_profile_record/",
           options: Options(headers: {
             'Client-Service': 'frontend-client',
             'Auth-Key': 'simplerestapi',
@@ -128,18 +133,20 @@ class ApiService {
             'type': type
           }),
           data: formData);
-      GetProfileRecord responseData =
-      GetProfileRecord.fromJson(response.data);
+      GetAllProfileModel responseData =
+      GetAllProfileModel.fromJson(response.data);
       if (responseData.message == "ok") {
-        print("if");
 
-        debugPrint('login data  ----- > ${response.data}');
+        debugPrint('Get Profile data  ----- > ${response.data}');
+
+
 
 
         Fluttertoast.showToast(
-          msg: 'Login Sucessfully...',
+          msg: 'Get Profile Data Sucessfully...',
           backgroundColor: Colors.grey,
         );
+        return responseData;
       } else {
 
         Fluttertoast.showToast(
@@ -176,7 +183,7 @@ class ApiService {
       if (response.statusCode == 200) {
 
         debugPrint('Add Enquiry ----- > ${response.data}');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OurServices(),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(),));
         Fluttertoast.showToast(
           msg: 'Enquiry Add Sucessfully...',
           backgroundColor: Colors.grey,
