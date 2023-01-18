@@ -142,17 +142,6 @@ class _ContactUs extends State<ContactUs> {
                               return '* Is Required';
                             }
                           }),
-                      // TextFormField(
-                      //   controller: _name,
-                      //   textInputAction: TextInputAction.next,
-                      //   decoration: buildInputDecoration("Name"),
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty || value=='') {
-                      //       return 'Please enter some text';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                       SizedBox(height: 2.h),
                       CustomTextField(
                           hintName: "Phone Number",
@@ -167,22 +156,6 @@ class _ContactUs extends State<ContactUs> {
                               return '* Phone number must be of 10 digit';
                             }
                           }),
-                      // TextFormField(
-                      //   controller: _phone,
-                      //   textInputAction: TextInputAction.next,
-                      //   keyboardType: TextInputType.number,
-                      //   maxLength: 10,
-                      //   decoration: buildInputDecoration("Phone Number"),
-                      //   validator: (value) {
-                      //     if (value!.isEmpty || value == null) {
-                      //       return "Please Enter a Phone Number";
-                      //     } else if (!RegExp(
-                      //         r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$')
-                      //         .hasMatch(value)) {
-                      //       return "Please Enter a Valid Phone Number";
-                      //     }
-                      //   },
-                      // ),
                       SizedBox(height: 2.h),
                       CustomTextField(
                           hintName: "Subject",
@@ -195,17 +168,6 @@ class _ContactUs extends State<ContactUs> {
                               return '* Is Required';
                             }
                           }),
-                      // TextFormField(
-                      //   controller: _subject,
-                      //   textInputAction: TextInputAction.next,
-                      //   decoration: buildInputDecoration("Subject"),
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Please enter some text';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                       SizedBox(height: 2.h),
                       CustomTextField(
                           hintName: "Message",
@@ -218,18 +180,6 @@ class _ContactUs extends State<ContactUs> {
                               return '* Is Required';
                             }
                           }),
-                      // TextFormField(
-                      //   controller: _message,
-                      //   textInputAction: TextInputAction.done,
-                      //   maxLines: 7,
-                      //   decoration: buildInputDecoration("Message"),
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Please enter some text';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                       SizedBox(height: 3.h),
                       SizedBox(
                           height:50, //height of button

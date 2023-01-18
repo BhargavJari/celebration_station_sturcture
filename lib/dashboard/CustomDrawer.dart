@@ -1,13 +1,17 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../model/get_profile_record_model.dart';
+import '../model/GetAllProfileModel.dart';
 import '../services/api_services.dart';
+import '../services/shared_preference.dart';
+import '../views/auth/login_screen.dart';
 import '../views/contactUs.dart';
 import '../views/editProfile.dart';
+import '../views/ourService.dart';
+import '../views/subscription_screen.dart';
 import 'bottomNavBar/tabs/ourServices-1.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -17,21 +21,24 @@ class CustomDrawer extends StatefulWidget {
 
 class CustomDrawerState extends State<CustomDrawer> {
 
-  List<Detail?> getAllRecord = [];
+  ProfileDetails? profileDetails;
+  var formData;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     ApiService().getProfileRecord(context).then((value) {
       if(value!.message == "ok"){
+        print("hhiii");
         setState(() {
-          getAllRecord = value.details!;
+          profileDetails = value.detail!;
         });
+        print('model:$profileDetails');
       }
-
     });
-
   }
+
+
 
   // @override
   // void initState() {
@@ -56,8 +63,8 @@ class CustomDrawerState extends State<CustomDrawer> {
         child: Column(
           children: <Widget>[
             UserAccountsDrawerHeader(
-                accountName: Text("a"),
-                accountEmail: Text('*********@gmail.com'),
+                accountName: Text("${profileDetails?.bRANCHNAME}"),
+                accountEmail: Text("${profileDetails?.bRANCHCONTACT}"),
                 currentAccountPicture: GestureDetector(
                     child: CircleAvatar(
                         backgroundColor: Colors.grey,
@@ -67,10 +74,10 @@ class CustomDrawerState extends State<CustomDrawer> {
                 leading: Icon(Icons.person, color: Colors.lime),
                 title: Text('Dashboard'),
                 onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (BuildContext context) {
-                  //   return OurService();
-                  // }));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return OurService();
+                  }));
                 }),
             ListTile(
               leading: Icon(Icons.person, color: Colors.lime),
@@ -115,7 +122,12 @@ class CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               leading: Icon(Icons.payment, color: Colors.lime),
               title: Text('Payment Refund'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return SubscriptionScreen();
+                    }));
+              },
             ),
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),
@@ -159,13 +171,48 @@ class CustomDrawerState extends State<CustomDrawer> {
               leading: Icon(Icons.logout, color: Colors.lime),
               title: Text('Logout'),
               onTap: () async {
-                // SharedPreferences sharedPreferences =
-                // await SharedPreferences.getInstance();
-                // sharedPreferences.clear();
-                // Navigator.of(context).pushAndRemoveUntil(
-                //     MaterialPageRoute(builder: (context) =>
-                //     const Home()), (
-                //     Route<dynamic> route) => false);
+                showDialog(
+                  context: context,
+                  builder: (ctx) =>
+                      AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Are You Sure ?"),
+                        actions: <Widget>[
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.all(14),
+                                  child: const Text("Cancel"),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: ()async {
+                                  SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                                  sharedPreferences.clear();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(builder: (context) =>
+                                      const LoginScreen()), (
+                                      Route<dynamic> route) => false);
+                                },
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.all(14),
+                                  child: const Text("okay"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                );
               },
             ),
           ],
