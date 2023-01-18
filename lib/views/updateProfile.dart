@@ -96,182 +96,185 @@ class _UpdateProfile extends State<UpdateProfile> {
           height: 60,
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              const Center(
-                child: Text(
-                  "Update Profile",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                const Center(
+                  child: Text(
+                    "Update Profile",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Enter Bussiness Name" + '$id',
-                  fieldController: businessName,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Enter Owner Name",
-                  fieldController: ownerName,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Select State",
-                  fieldController: state,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Select District",
-                  fieldController: district,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              //   DropdownButton<String>(
-              //   value: selectedValue,
-              //     hint: Text("Select Business Type"),
-              //     items: categoryItemList.map<DropdownMenuItem<String>>((list){
-              //       return DropdownMenuItem(
-              //         child: Text(list),
-              //       );
-              //     },).toList(),
-              //     onChanged: (value){
-              //     setState(() {
-              //       selectedValue = value as String;
-              //     });
-              //     }
-              // ),
-              Container(
-                width: double.infinity,
-                height: 58,
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 3),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 2),
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(19),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Enter Bussiness Name" + '$id',
+                    fieldController: businessName,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Enter Owner Name",
+                    fieldController: ownerName,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Select State",
+                    fieldController: state,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Select District",
+                    fieldController: district,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                //   DropdownButton<String>(
+                //   value: selectedValue,
+                //     hint: Text("Select Business Type"),
+                //     items: categoryItemList.map<DropdownMenuItem<String>>((list){
+                //       return DropdownMenuItem(
+                //         child: Text(list),
+                //       );
+                //     },).toList(),
+                //     onChanged: (value){
+                //     setState(() {
+                //       selectedValue = value as String;
+                //     });
+                //     }
+                // ),
+                Container(
+                  width: double.infinity,
+                  height: 58,
+                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 3),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 2),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(19),
+                  ),
+                  child: dropdowncategorybutton(),
                 ),
-                child: dropdowncategorybutton(),
-              ),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Enter Pincode",
-                  fieldController: pinCode,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  keyboard: TextInputType.number,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }else if (str.length != 6) {
-                      return '* Pin code must be of 6 digit';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "Enter Address",
-                  fieldController: address,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              CustomTextField(
-                  hintName: "WhatsApp No",
-                  fieldController: whatsappNo,
-                  keyboard: TextInputType.phone,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.done,
-                  validator: (str) {
-                    if (str!.isEmpty) {
-                      return '* Is Required';
-                    }else if (str.length != 10) {
-                      return '* Phone number must be of 10 digit';
-                    }
-                  }),
-              const SizedBox(height: 15.0),
-              Center(
-                child: SizedBox(
-                    height: 50, //height of button
-                    width: double.infinity, //width of button
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.lime[200], //background color of button
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                            //to set border radius to button
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () {
-                        FormData data() {
-                          return FormData.fromMap({
-                            "business_name": businessName.text.toString(),
-                            "owner_name": ownerName.text.toString(),
-                            "state": state.text.toString(),
-                            "district": district.text.toString(),
-                            "business_type": selectedBusinessType,
-                            "pincode": pinCode.text.toString(),
-                            "address": address.text.toString(),
-                            "whats_app": whatsappNo.text.toString(),
-                            "loginid": id!.replaceAll('"', '').replaceAll('"', '').toString(),
-                          });
-                        }
-                        // Map<String,dynamic> data = {
-                        //   'business_name': businessName.text.trim(),
-                        //   'owner_name': ownerName.text.trim(),
-                        //   'state': state.text.trim(),
-                        //   'district': district.text.trim(),
-                        //   'business_type': selectedBusinessType,
-                        //   'pincode': pinCode.text.trim(),
-                        //   'address': address.text.trim(),
-                        //   'whats_app': whatsappNo.text.trim(),
-                        //   'loginid': id!.replaceAll('"', '').replaceAll('"', '').toString(),
-                        // };
-                        print(data);
-                      ApiService().updateProfile(context, data: data());
-                      },
-                      child: const Text(
-                        "Submit",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            color: Colors.black),
-                      ),
-                    )),
-              ),
-            ],
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Enter Pincode",
+                    fieldController: pinCode,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    keyboard: TextInputType.number,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }else if (str.length != 6) {
+                        return '* Pin code must be of 6 digit';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "Enter Address",
+                    fieldController: address,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.next,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                CustomTextField(
+                    hintName: "WhatsApp No",
+                    fieldController: whatsappNo,
+                    keyboard: TextInputType.phone,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.done,
+                    validator: (str) {
+                      if (str!.isEmpty) {
+                        return '* Is Required';
+                      }else if (str.length != 10) {
+                        return '* Phone number must be of 10 digit';
+                      }
+                    }),
+                const SizedBox(height: 15.0),
+                Center(
+                  child: SizedBox(
+                      height: 50, //height of button
+                      width: double.infinity, //width of button
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.lime[200], //background color of button
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
+                        onPressed: () {
+                          FormData data() {
+                            return FormData.fromMap({
+                              "business_name": businessName.text.toString(),
+                              "owner_name": ownerName.text.toString(),
+                              "state": state.text.toString(),
+                              "district": district.text.toString(),
+                              "business_type": selectedBusinessType,
+                              "pincode": pinCode.text.toString(),
+                              "address": address.text.toString(),
+                              "whats_app": whatsappNo.text.toString(),
+                              "loginid": id!.replaceAll('"', '').replaceAll('"', '').toString(),
+                            });
+                          }
+                          // Map<String,dynamic> data = {
+                          //   'business_name': businessName.text.trim(),
+                          //   'owner_name': ownerName.text.trim(),
+                          //   'state': state.text.trim(),
+                          //   'district': district.text.trim(),
+                          //   'business_type': selectedBusinessType,
+                          //   'pincode': pinCode.text.trim(),
+                          //   'address': address.text.trim(),
+                          //   'whats_app': whatsappNo.text.trim(),
+                          //   'loginid': id!.replaceAll('"', '').replaceAll('"', '').toString(),
+                          // };
+                          print(data);
+                        ApiService().updateProfile(context, data: data());
+                        },
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              color: Colors.black),
+                        ),
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

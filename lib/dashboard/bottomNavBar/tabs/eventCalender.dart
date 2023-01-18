@@ -8,6 +8,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../services/shared_preference.dart';
+import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
 
 
@@ -26,6 +28,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   Map<String, List<dynamic>> mySelectedEvents = {};
   var getData;
   var getEvent = [];
+  var paymentStatus=0;
 
   final titleController = TextEditingController();
   final bookingAmountController = TextEditingController();
@@ -55,19 +58,23 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
     void addBooking (String date, String title, String desc, String bookingAmount, String advance, String maleName, String femaleName, String customerPhone) async{
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/post_ajax/add_new_booking'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {
           'booking_date': date,
-          'loginid':'1',
+          'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'booking_amount': bookingAmount,
           'booking_advance': advance,
           'male_name':maleName,
@@ -91,99 +98,25 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       print(e.toString());
     }
   }
-  //final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  /*void addBooking() async {
-    var url="https://celebrationstation.in/post_ajax/add_new_booking";
-    var data={
-      "booking_date" : DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
-      "loginid" : 1.toString(),
-      "booking_amount" : bookingAmountController.text,
-      "booking_advance" : advanceController.text,
-      "male_name" : maleNameController.text,
-      "female_name" : femaleNameController.text,
-      "description" : descpController.text,
-      "customer_phone" : 9714825938.toString()
-    };
-    var body=jsonEncode(data);
-    var urlParse = Uri.parse(url);
-    http.Response response = (await http.post(
-      urlParse,
-      headers: {
-        "Client-Service": "frontend-client",
-        "Auth-Key" : "simplerestapi",
-        "User-ID" : "1",
-        "token" : "32ZzvzhrbcJmc",
-        "type" : "1"
-      },
-      body: body
-    ));
-    var statuscode = response.statusCode;
-    if(response.statusCode == 200){
-      print("Passed");
-      var dataa=jsonDecode(response.body.toString());
-      //print(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString());
-      print(dataa);
-    }else{
-      print(statuscode);
-
-    }
-
-  }*/
-  /*Future<void> addBooking() async {
-    try{
-        var headers = {'Client-Service': 'frontend-client',
-                      'Auth-Key' : 'simplerestapi',
-                      'User-ID' : '1',
-                      'token' : '14LBqS7Dlcnfo',
-                      'type' : '1'};
-        //var url = Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.authEndcpoints.addNewBooking);
-        var url = Uri.parse('https://celebrationstation.in/post_ajax/add_new_booking');
-        Map body = {
-          "booking_date" : _selectedDate.toString(),
-          "loginid" : "1",
-          "booking_amount" : bookingAmountController.text,
-          "booking_advance" : advanceController.text,
-          "male_name" : maleNameController.text,
-          "female_name" : femaleNameController.text,
-          "description" : descpController.text,
-          "customer_name" : "9856858585"
-        };
-
-        http.Response response = await http.post(url, headers: headers, body: jsonEncode(body));
-
-        if(response.statusCode == 200){
-          final json = jsonDecode(response.body);
-          print(json);
-          if(json['code'] == 0){
-            var token = json['token'];
-            print(token);
-            final SharedPreferences? prefs = await _prefs;
-            await prefs?.setString('token',token);
-          }
-        }else{
-          print(_selectedDate.toString());
-          throw jsonDecode(response.body)["Message"] ?? "Unknown Error Occurred";
-        }
-    }catch(e){
-      print(e.toString());
-    }
-  }*/
-
   getBookingDetails(String year, String month) async{
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {
           'year' : year,
-          'loginid':'1',
+          'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'month' : month
         },
       );
@@ -213,43 +146,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // return getEvent;
   }
 
-  /*Future getBookingDetails(BuildContext context, {
-    Map? data,
-  }) async {
-    try {
-      var url = "https://celebrationstation.in/get_ajax/get_booking_month_details/";
-      Response response = await post(
-        Uri.parse(url),
-        body: {
-      'year' : DateFormat('yyyy').format(_selectedDate!),
-      'loginid':'1',
-      'month' : DateFormat('MM').format(_selectedDate!)
-        },
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          getEvent = response.body;
-          print("1st done");
-        });
-        debugPrint('add account  ----- > ${response.body}');
-      } else {
-        throw Exception(response.body);
-      }
-    } catch (e) {
-      debugPrint('Dio E  $e');
-    }*/
-
-
     loadPreviousEvents() {
     getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-    /*for(var i=0;i<mySelectedEvents.length;i++){
-      mySelectedEvents = {
-        getEvent[i]['CBD_BOOKING_DATE'].toString():[
-          {"eventDescp": getEvent[i]['CBD_DESC'], "bookingAmount" : getEvent[i]['CBD_BOOKING_AMOUNT'], "advance":getEvent[i]['CBD_BOOKING_ADVANCE'], "maleName" : getEvent[i]['CBD_MALE_NAME'], "femaleName" : getEvent[i]['CBD_FEMALE_NAME']},
-        ],
-      };
-    }*/
    /* mySelectedEvents = {
       "2022-12-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
@@ -576,7 +474,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: () => _showAddEventDialog(),
+          onPressed: () => paymentStatus == 0 ? Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) : _showAddEventDialog(),
           label: const Text('Add Event'),
         ),
         replacement: Align(

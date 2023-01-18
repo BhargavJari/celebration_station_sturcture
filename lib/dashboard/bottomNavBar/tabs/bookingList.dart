@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/shared_preference.dart';
 import '../../CustomDrawer.dart';
 
 class BookingList extends StatefulWidget {
@@ -32,19 +33,23 @@ class _BookingListState extends State<BookingList> {
       isLoading = true;
     });
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {
           'year' : year,
-          'loginid':'1',
+          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'month' : month
         },
       );
@@ -69,18 +74,22 @@ class _BookingListState extends State<BookingList> {
 
   void cancelBooking (String bookingDate, String message, String bookingId) async{
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         Uri.parse('https://celebrationstation.in/post_ajax/cancelled_booking'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {
           'booking_date': bookingDate,
-          'loginid':'1',
+          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'message': message,
           'booking_id': bookingId,
         },

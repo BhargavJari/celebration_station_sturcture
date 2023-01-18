@@ -38,24 +38,6 @@ class CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
-
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   ApiService().getProfileRecord(context).then((value) {
-  //     if(value!.message == "ok"){
-  //       setState(() {
-  //         getAllRecord = value.details!;
-  //       });
-  //     }
-  //
-  //   });
-  //
-  // }
-
-
   @override
   Widget build(BuildContext context) {
     return Drawer(

@@ -27,6 +27,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           "asset/images/logo.png",
           height: 60,
         ),
+        leading: BackButton(color: ColorUtils.blackColor),
         actions: [
           IconButton(
             iconSize: 30.0,

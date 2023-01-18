@@ -88,7 +88,7 @@ class ApiService {
       if (response.statusCode == 200) {
 
         debugPrint('Update profile data  ----- > ${response.data}');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OurServices(),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(),));
         Fluttertoast.showToast(
           msg: 'Updated Sucessfully...',
           backgroundColor: Colors.grey,

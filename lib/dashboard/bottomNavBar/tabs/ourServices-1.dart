@@ -7,6 +7,8 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:carousel_nullsafety/carousel_nullsafety.dart';
 
+import '../../../services/shared_preference.dart';
+
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
 
@@ -32,14 +34,18 @@ class _OurServicesState extends State<OurServices> {
       isLoading = true;
     });
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         Uri.parse('https://celebrationstation.in/get_ajax/get_slidder'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {},
       );
@@ -67,19 +73,23 @@ class _OurServicesState extends State<OurServices> {
       isLoading = true;
     });
     try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
-          'User-ID': '1',
-          'token': '94P9d.7uf7o6c',
-          'type': '1'
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
         },
         body: {
           'year' : year,
-          'loginid':'1',
+          'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'month' : month
         },
       );
@@ -114,15 +124,19 @@ class _OurServicesState extends State<OurServices> {
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: IconButton(
-          iconSize: 30,
-          icon: Icon(
-            Icons.menu,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            // CustomDrawer();
-          },
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              iconSize: 30,
+              icon: Icon(
+                Icons.menu,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         actions: [
           IconButton(
