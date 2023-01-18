@@ -90,6 +90,7 @@ class _BookingListState extends State<BookingList> {
         var data = json.decode(response.body);
         print(data);
         print('Booking Canceled');
+        getBookingDetails();
       }else{
         var data = json.decode(response.body.toString());
         print(data);
@@ -295,7 +296,7 @@ class _BookingListState extends State<BookingList> {
                       textAlign: TextAlign.right,
                       style: TextStyle(color: Colors.green, fontSize: 20),
                     ),
-                    onPressed: () {
+                    onPressed: ()async {
                       if(cancelMessageController.text.isEmpty){
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Enter Cancellation reason!!'),
@@ -305,6 +306,7 @@ class _BookingListState extends State<BookingList> {
                         return;
                       }else{
                         cancelBooking(bookingDate, cancelMessageController.text.toString(),bookingId);
+                        getBookingDetails();
                       }
                       Navigator.pop(context);
                       cancelMessageController.clear();

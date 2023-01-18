@@ -6,5 +6,6 @@ class ApiEndPoints{
   static const String updateProfileApi ="${baseUrl}${postUrl}update_profile/";
   static const String getProfileRecordApi ="${baseUrl}${getUrl}get_profile_record/";
   static const String addEnquiryApi ="${baseUrl}${postUrl}add_enquiry/";
-  static const String getAllApi ="${baseUrl}${getUrl}get_all_enquiry/";
+  static const String imageSlidder ="${baseUrl}${getUrl}get_slidder/";
+
 }

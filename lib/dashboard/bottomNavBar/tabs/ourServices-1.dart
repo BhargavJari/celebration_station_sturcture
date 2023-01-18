@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:carousel_nullsafety/carousel_nullsafety.dart';
-
-import '../../CustomDrawer.dart';
 
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
@@ -17,10 +17,14 @@ class OurServices extends StatefulWidget {
 class _OurServicesState extends State<OurServices> {
   List images = [];
   bool isLoading = false;
+  List getEvent = [];
+  var year = DateFormat('yyyy').format(DateTime.now());
+  var month = DateFormat('MM').format(DateTime.now());
 
   initState(){
     super.initState();
     getImages();
+    getBookingDetails();
   }
 
   getImages() async{
@@ -50,6 +54,44 @@ class _OurServicesState extends State<OurServices> {
         setState(() {
           images = [];
           isLoading = false;
+        });
+        print("Error");
+      }
+    }catch(e){
+      print(e.toString());
+    }
+  }
+
+  getBookingDetails() async{
+    setState(() {
+      isLoading = true;
+    });
+    try{
+      Response response= await post(
+        //Uri.parse('https://reqres.in/api/login'),
+        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        headers: {
+          'Client-Service':'frontend-client',
+          'Auth-Key':'simplerestapi',
+          'User-ID': '1',
+          'token': '94P9d.7uf7o6c',
+          'type': '1'
+        },
+        body: {
+          'year' : year,
+          'loginid':'1',
+          'month' : month
+        },
+      );
+      if(response.statusCode==200){
+        var items = jsonDecode(response.body)['\$booking'];
+        setState(() {
+          getEvent = items;
+        });
+        print(getEvent);
+      }else{
+        setState(() {
+          getEvent = [];
         });
         print("Error");
       }
@@ -103,17 +145,6 @@ class _OurServicesState extends State<OurServices> {
               height: 200,
               width: double.infinity,
               child: Carousel(
-                //images:
-                  /*images.map((e) => Container(
-                    child: Image.network('https://celebrationstation.in/uploads/'+images[e]['IMAGE_URL']),
-                  )).toList(),*/
-                  /*ListView.builder(
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      return Image.network('https://celebrationstation.in/uploads/'+images[index]['IMAGE_URL']);
-                    },
-                  ),*/
-
                 images:[
                   for(var i=0; i<images.length ; i++)...[
                     Image.network('https://celebrationstation.in/uploads/'+images[i]['IMAGE_URL'])
@@ -121,9 +152,10 @@ class _OurServicesState extends State<OurServices> {
                 ],
                 //images.map((e) => Image.network('https://celebrationstation.in/uploads/'+images[e]['IMAGE_URL'])).toList(),
                 showIndicator: true,
+                autoplay: true,
+                autoplayDuration: Duration(seconds: 2),
                 borderRadius: false,
                 moveIndicatorFromBottom: 180.0,
-                noRadiusForIndicator: true,
                 overlayShadow: true,
                 overlayShadowColors: Colors.black,
                 overlayShadowSize: 0.4,
@@ -183,7 +215,7 @@ class _OurServicesState extends State<OurServices> {
                     onPressed: (){
 
                     },
-                    child: const Text("Confirm Booking : 01",
+                    child: Text("Confirm Booking : "+getEvent.length.toString(),
                       style:TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,

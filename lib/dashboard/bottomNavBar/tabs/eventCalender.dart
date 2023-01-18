@@ -79,6 +79,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       );
       if(response.statusCode==200){
         var data = jsonDecode(response.body.toString());
+        getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('yyyy').format(_selectedDate!));
         print(data);
         print('Event Added');
       }else{
@@ -181,9 +182,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           'type': '1'
         },
         body: {
-          'year' : DateFormat('yyyy').format(_selectedDate!),
+          'year' : year,
           'loginid':'1',
-          'month' : DateFormat('MM').format(_selectedDate!)
+          'month' : month
         },
       );
 
@@ -200,7 +201,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             ]);
           }
         });
-        print(getEvent);
       }else{
         setState(() {
           getEvent = [];
