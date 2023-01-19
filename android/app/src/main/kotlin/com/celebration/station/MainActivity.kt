@@ -1,4 +1,4 @@
-package com.example.celebration_station_sturcture
+package com.celebration.station
 
 import io.flutter.embedding.android.FlutterActivity
 

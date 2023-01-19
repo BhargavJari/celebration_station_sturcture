@@ -7,15 +7,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
 import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
+import '../model/mobile_verify_model.dart';
+import '../views/auth/otp_verification_screen.dart';
 import '../views/updateProfile.dart';
 import 'api_endpoint.dart';
 import 'dio_client.dart';
+import 'package:http/http.dart' as http;
 
 Dio dio = Dio();
+
 class ApiService {
   ApiClient apiClient = ApiClient();
 
-  Future<LoginModel?> login(BuildContext context, {
+  Future<LoginModel?> login(
+    BuildContext context, {
     FormData? data,
   }) async {
     try {
@@ -27,8 +32,7 @@ class ApiService {
             'Auth-Key': 'simplerestapi'
           }),
           data: data);
-      LoginModel responseData =
-      LoginModel.fromJson(response.data);
+      LoginModel responseData = LoginModel.fromJson(response.data);
       if (responseData.message == "ok") {
         var cookies = response.headers['set-cookie'];
         print("cookies:=${cookies![0].split(';')[0]}");
@@ -68,7 +72,8 @@ class ApiService {
     }
   }
 
-  Future updateProfile(BuildContext context, {
+  Future updateProfile(
+    BuildContext context, {
     FormData? data,
   }) async {
     try {
@@ -77,7 +82,8 @@ class ApiService {
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
-      response = await dio.post("https://celebrationstation.in/post_ajax/update_profile/",
+      response = await dio.post(
+          "https://celebrationstation.in/post_ajax/update_profile/",
           options: Options(headers: {
             'Client-Service': 'frontend-client',
             'Auth-Key': 'simplerestapi',
@@ -108,7 +114,8 @@ class ApiService {
     }
   }
 
-  Future<GetAllProfileModel?> getProfileRecord(BuildContext context, {
+  Future<GetAllProfileModel?> getProfileRecord(
+    BuildContext context, {
     FormData? data,
   }) async {
     try {
@@ -125,7 +132,8 @@ class ApiService {
       //   'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString()};
       print(formData);
       print(id);
-      response = await dio.post("https://celebrationstation.in/get_ajax/get_profile_record/",
+      response = await dio.post(
+          "https://celebrationstation.in/get_ajax/get_profile_record/",
           options: Options(headers: {
             'Client-Service': 'frontend-client',
             'Auth-Key': 'simplerestapi',
@@ -135,7 +143,7 @@ class ApiService {
           }),
           data: formData);
       GetAllProfileModel responseData =
-      GetAllProfileModel.fromJson(response.data);
+          GetAllProfileModel.fromJson(response.data);
       if (responseData.message == "ok") {
 
         debugPrint('Get Profile data  ----- > ${response.data}');
@@ -163,7 +171,8 @@ class ApiService {
     }
   }
 
-  Future addEnquiry(BuildContext context, {
+  Future addEnquiry(
+    BuildContext context, {
     FormData? data,
   }) async {
     try {
@@ -184,7 +193,11 @@ class ApiService {
       if (response.statusCode == 200) {
 
         debugPrint('Add Enquiry ----- > ${response.data}');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavBar(),
+            ));
         Fluttertoast.showToast(
           msg: 'Enquiry Add Sucessfully...',
           backgroundColor: Colors.grey,
@@ -203,5 +216,54 @@ class ApiService {
     }
   }
 
+  Future<MobileVerifyModel?> mobileVerify(
+    BuildContext context, {
+    FormData? data,
+    String? mobile,
+  }) async {
+    try {
+      print("Register check try:=${mobile}");
+      Response response;
+      response = await dio.post(ApiEndPoints.mobileVerify,
+          options: Options(headers: {
+            "Client-Service": 'frontend-client',
+            'Auth-Key': 'simplerestapi'
+          }),
+          data: data);
 
+      MobileVerifyModel responseData =
+          MobileVerifyModel.fromJson(response.data);
+      print("responseData:=${responseData}");
+      print("responseData.status:=${responseData.status}");
+      if (responseData.message == "ok") {
+        print("responseData.bjjhstatus:=${responseData.status}");
+        if (responseData.count == 0) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpVerificationScreen(
+                        phoneNumber: "${mobile}",
+                      )));
+        } else if (responseData.count == 1) {
+          Fluttertoast.showToast(
+            msg: 'Your number is already register please login',
+            backgroundColor: Colors.grey,
+          );
+        }
+
+        return responseData;
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );
+
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      debugPrint('Dio E  $e');
+    }
+  }
 }

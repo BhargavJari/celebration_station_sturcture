@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "834741340968",
+    "project_id": "celebrationstation-17682",
+    "storage_bucket": "celebrationstation-17682.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834741340968:android:a602cfd6da69ca50bd9e1d",
+        "android_client_info": {
+          "package_name": "com.celebration.station"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834741340968-8g27acimudad4p0g9ua7k9jg0p6dtpf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJAhbw66Ugu6-95MdSCW69ZycLZjGCK9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834741340968-8g27acimudad4p0g9ua7k9jg0p6dtpf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834741340968:android:aab53e1222bde2fabd9e1d",
+        "android_client_info": {
+          "package_name": "com.example.celebration_station"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834741340968-tl1t6771c5ipkd9jq1o7839ob34v9vfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.celebration_station",
+            "certificate_hash": "32317591a4618e69ab720ef2e2b1fd62624b69d1"
+          }
+        },
+        {
+          "client_id": "834741340968-8g27acimudad4p0g9ua7k9jg0p6dtpf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJAhbw66Ugu6-95MdSCW69ZycLZjGCK9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834741340968-8g27acimudad4p0g9ua7k9jg0p6dtpf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
