@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 
 import '../../CustomDrawer.dart';
 
-
 class EventCalendarScreen extends StatefulWidget {
   const EventCalendarScreen({Key? key}) : super(key: key);
 
@@ -22,7 +21,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
-  bool _isVisible=true;
+  bool _isVisible = true;
   Map<String, List<dynamic>> mySelectedEvents = {};
   var getData;
   var getEvent = [];
@@ -53,40 +52,48 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     });*/
   }
 
-    void addBooking (String date, String title, String desc, String bookingAmount, String advance, String maleName, String femaleName, String customerPhone) async{
-    try{
-      Response response= await post(
+  void addBooking(
+      String date,
+      String title,
+      String desc,
+      String bookingAmount,
+      String advance,
+      String maleName,
+      String femaleName,
+      String customerPhone) async {
+    try {
+      Response response = await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/post_ajax/add_new_booking'),
         headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
           'User-ID': '1',
           'token': '94P9d.7uf7o6c',
           'type': '1'
         },
         body: {
           'booking_date': date,
-          'loginid':'1',
+          'loginid': '1',
           'booking_amount': bookingAmount,
           'booking_advance': advance,
-          'male_name':maleName,
-          'female_name':femaleName,
+          'male_name': maleName,
+          'female_name': femaleName,
           'description': desc,
           'customer_phone': customerPhone,
-          'title_name' : title
+          'title_name': title
         },
       );
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
         print(data);
         print('Event Added');
-      }else{
+      } else {
         var data = jsonDecode(response.body.toString());
         print(data);
         print('FAILED');
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -168,46 +175,57 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     }
   }*/
 
-  getBookingDetails(String year, String month) async{
-    try{
-      Response response= await post(
+  getBookingDetails(String year, String month) async {
+    try {
+      Response response = await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        Uri.parse(
+            'https://celebrationstation.in/get_ajax/get_booking_month_details'),
         headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
           'User-ID': '1',
           'token': '94P9d.7uf7o6c',
           'type': '1'
         },
         body: {
-          'year' : DateFormat('yyyy').format(_selectedDate!),
-          'loginid':'1',
-          'month' : DateFormat('MM').format(_selectedDate!)
+          'year': DateFormat('yyyy').format(_selectedDate!),
+          'loginid': '1',
+          'month': DateFormat('MM').format(_selectedDate!)
         },
       );
 
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         var items = jsonDecode(response.body)['\$booking'];
         getEvent = items;
         /*events = getEvent[index]['CBD_BOOKING_DATE'];*/
         setState(() {
-          for(var i=0; i<getEvent.length; i++){
+          for (var i = 0; i < getEvent.length; i++) {
             mySelectedEvents.addEntries([
-              MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
-                {"eventTitle": getEvent[i]['CBD_TITLE'],"eventDescp": getEvent[i]['CBD_DESC'], "bookingAmount" : getEvent[i]['CBD_BOOKING_AMOUNT'], "advance":getEvent[i]['CBD_BOOKING_ADVANCE'], "maleName" : getEvent[i]['CBD_MALE_NAME'], "femaleName" : getEvent[i]['CBD_FEMALE_NAME']},
-              ],)
+              MapEntry(
+                getEvent[i]['CBD_BOOKING_DATE'].toString(),
+                [
+                  {
+                    "eventTitle": getEvent[i]['CBD_TITLE'],
+                    "eventDescp": getEvent[i]['CBD_DESC'],
+                    "bookingAmount": getEvent[i]['CBD_BOOKING_AMOUNT'],
+                    "advance": getEvent[i]['CBD_BOOKING_ADVANCE'],
+                    "maleName": getEvent[i]['CBD_MALE_NAME'],
+                    "femaleName": getEvent[i]['CBD_FEMALE_NAME']
+                  },
+                ],
+              )
             ]);
           }
         });
         print(getEvent);
-      }else{
+      } else {
         setState(() {
           getEvent = [];
         });
         print("Error");
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
     // return getEvent;
@@ -240,9 +258,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       debugPrint('Dio E  $e');
     }*/
 
-
-    loadPreviousEvents() {
-    getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
+  loadPreviousEvents() {
+    getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
+        DateFormat('MM').format(_selectedDate!));
     /*for(var i=0;i<mySelectedEvents.length;i++){
       mySelectedEvents = {
         getEvent[i]['CBD_BOOKING_DATE'].toString():[
@@ -250,7 +268,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         ],
       };
     }*/
-   /* mySelectedEvents = {
+    /* mySelectedEvents = {
       "2022-12-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ],
@@ -347,7 +365,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   advanceController.text.isEmpty ||
                   maleNameController.text.isEmpty ||
                   femaleNameController.text.isEmpty ||
-                  phoneController.text.isEmpty || phoneController.text.length !=10 ) {
+                  phoneController.text.isEmpty ||
+                  phoneController.text.length != 10) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter all the data correctly'),
@@ -358,15 +377,17 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 return;
               } else {
                 setState(() {
-                  addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                  addBooking(
+                      DateFormat('yyyy-MM-dd')
+                          .format(_selectedDate!)
+                          .toString(),
                       titleController.text.toString(),
                       descpController.text.toString(),
-                    bookingAmountController.text.toString(),
-                    advanceController.text.toString(),
-                    maleNameController.text.toString(),
-                    femaleNameController.text.toString(),
-                    phoneController.text.toString()
-                  );
+                      bookingAmountController.text.toString(),
+                      advanceController.text.toString(),
+                      maleNameController.text.toString(),
+                      femaleNameController.text.toString(),
+                      phoneController.text.toString());
                   //addBooking();
                   /*if (mySelectedEvents[
                   DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
@@ -395,8 +416,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     ];
                   }*/
                 });
-                _isVisible=false;
-                print("New Event for backend developer ${json.encode(mySelectedEvents)}");
+                _isVisible = false;
+                print(
+                    "New Event for backend developer ${json.encode(mySelectedEvents)}");
                 titleController.clear();
                 bookingAmountController.clear();
                 advanceController.clear();
@@ -413,6 +435,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       ),
     );
   }
+
   _showCancelEventDialog() async {
     await showDialog(
       context: context,
@@ -440,17 +463,18 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: TextButton(
-                  child: const Text(
+                    child: const Text(
                       'Yes',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(color: Colors.green, fontSize: 20),
-                  ),
-                  onPressed: () {
-                    setState(() { _listOfDayEvents(_selectedDate!).removeAt(0);});
-                    _isVisible=true;
-                    Navigator.pop(context);
-                    }
-                ),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _listOfDayEvents(_selectedDate!).removeAt(0);
+                      });
+                      _isVisible = true;
+                      Navigator.pop(context);
+                    }),
               ),
             ],
           ),
@@ -470,7 +494,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
-        title:  Image.asset(
+        title: Image.asset(
           "asset/images/logo.png",
           height: 60,
         ),
@@ -511,9 +535,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   ),
                 ),
               ),
-
               TableCalendar(
-                firstDay: DateTime.utc(2022)/*DateTime.now()*/,
+                firstDay: DateTime.utc(2022) /*DateTime.now()*/,
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
@@ -523,10 +546,12 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     setState(() {
                       _selectedDate = selectedDay;
                       _focusedDay = focusedDay;
-                      if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDate!)] != null) {
-                        _isVisible=false;
-                      }else{
-                        _isVisible=true;
+                      if (mySelectedEvents[DateFormat('yyyy-MM-dd')
+                              .format(_selectedDate!)] !=
+                          null) {
+                        _isVisible = false;
+                      } else {
+                        _isVisible = true;
                       }
                     });
                   }
@@ -549,34 +574,40 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 eventLoader: _listOfDayEvents,
               ),
               ..._listOfDayEvents(_selectedDate!).map(
-                    (myEvents) => ListTile(
+                (myEvents) => ListTile(
                   leading: const Icon(
                     Icons.done,
                     color: Colors.teal,
                   ),
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child:/*List.generate(getEvent.length, (index){
+                    child: /*List.generate(getEvent.length, (index){
                       return ListView()
-                    })*/Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
+                    })*/
+                        Text(
+                            'Booking Details: \n \n ${myEvents['eventTitle']}'),
                   ),
                   subtitle: Text(' Description:  ${myEvents['eventDescp']}'
                       '\n Booking Amount : ${myEvents['bookingAmount']}'
                       '\n Advance : ${myEvents['advance']}'
                       '\n Male Name : ${myEvents['maleName']}'
-                      '\n Female Name : ${myEvents['femaleName']}'
-                  ),
+                      '\n Female Name : ${myEvents['femaleName']}'),
                 ),
               ),
             ],
           ),
         ),
       ),
-
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: () => _showAddEventDialog(),
+          onPressed: () {
+            ///if payment first time then call first payment
+
+            /// then call add event
+
+            //_showAddEventDialog();
+          },
           label: const Text('Add Event'),
         ),
         replacement: Align(

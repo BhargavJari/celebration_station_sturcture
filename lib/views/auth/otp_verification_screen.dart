@@ -131,7 +131,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       }
                     },
                     child: Text("Verify")),
-              )
+              ),
+              SizedBox(height: 40),
+              if (_timer?.isActive ?? false)
+                Text(
+                  _seconds.toString(),
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                )
+              else if (_seconds != -1)
+                GestureDetector(
+                  onTap: () async => sendCode(),
+                  child: Text(
+                    'Resend Code',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
             ],
           ),
         ),
@@ -192,7 +211,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         default:
       }
       if (result.message != null) {
-        CommonFunctions.toast("sign up done");
+        CommonFunctions.toast("Register successfully !!");
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
       }

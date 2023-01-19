@@ -1,3 +1,5 @@
+import 'package:celebration_station_sturcture/services/api_services.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../custom_widget/custom_text_field.dart';
@@ -57,38 +59,52 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: 30,
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black, width: 1.5),
-                        borderRadius: BorderRadius.circular(25.0)),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                    child: Center(
-                      child: Text("+91"),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: CustomTextField(
-                      hintName: "Enter phone no.",
-                      fieldController: phone,
-                      keyboard: TextInputType.phone,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter mobile number ';
-                        } else if (value.length != 10) {
-                          return 'Mobile Number must be of 10 digit';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                  ),
-                ],
+              // Row(
+              //   children: [
+              //     Container(
+              //       decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           border: Border.all(color: Colors.black, width: 1.5),
+              //           borderRadius: BorderRadius.circular(25.0)),
+              //       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              //       child: Center(
+              //         child: Text("+91"),
+              //       ),
+              //     ),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     Expanded(
+              //       child: CustomTextField(
+              //         hintName: "Enter phone no.",
+              //         fieldController: phone,
+              //         keyboard: TextInputType.phone,
+              //         validator: (value) {
+              //           if (value!.isEmpty) {
+              //             return 'Please enter mobile number ';
+              //           } else if (value.length != 10) {
+              //             return 'Mobile Number must be of 10 digit';
+              //           } else {
+              //             return null;
+              //           }
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              CustomTextField(
+                hintName: "Enter phone no.",
+                fieldController: phone,
+                keyboard: TextInputType.phone,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter mobile number ';
+                  } else if (value.length != 10) {
+                    return 'Mobile Number must be of 10 digit';
+                  } else {
+                    return null;
+                  }
+                },
               ),
               SizedBox(
                 height: 20,
@@ -103,13 +119,8 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        //// first check number register or not api call
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OtpVerificationScreen(
-                                      phoneNumber: "${phone.text.trim()}",
-                                    )));
+                        ApiService().mobileVerify(context,
+                            data: data(), mobile: "${phone.text.trim()}");
                       }
                     },
                     child: Text("Send the code")),
@@ -119,5 +130,11 @@ class _SignUpState extends State<SignUp> {
         )),
       ),
     );
+  }
+
+  FormData data() {
+    return FormData.fromMap({
+      "mobile": phone.text.trim(),
+    });
   }
 }
