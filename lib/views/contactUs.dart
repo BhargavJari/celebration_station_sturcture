@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,7 @@ class _ContactUs extends State<ContactUs> {
           "asset/images/logo.png",
           height: 60,
         ),
+        leading: BackButton(color: ColorUtils.blackColor),
         actions: [
           IconButton(
             iconSize: 30.0,

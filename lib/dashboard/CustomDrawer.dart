@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -58,7 +59,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                    return OurService();
+                    return BottomNavBar();
                   }));
                 }),
             ListTile(
@@ -84,7 +85,12 @@ class CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               leading: Icon(Icons.calendar_month, color: Colors.lime),
               title: Text('Event Booking'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return BottomNavBar();
+                    }));
+              },
             ),
             Divider(color: Colors.lime, indent: 20.0),
             ListTile(
@@ -112,8 +118,8 @@ class CustomDrawerState extends State<CustomDrawer> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.help, color: Colors.lime),
-              title: Text('Help Center'),
+              leading: Icon(Icons.question_answer_outlined, color: Colors.lime),
+              title: Text('FAQ'),
               onTap: () {},
             ),
             ListTile(
