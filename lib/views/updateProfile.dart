@@ -34,12 +34,14 @@ class _UpdateProfile extends State<UpdateProfile> {
   String dropdowncategory = "";
 
   String selectedStateValue = "";
-  List<dynamic> stateItemList = [];
-  String dropdownstate = "";
+  List<dynamic> StateItemList = [];
+  String dropdownState = "";
 
   String selectedDistrictValue = "";
-  List<dynamic> districtItemList = [];
-  String dropdowndistrict = "";
+  List<dynamic> DistrictItemList = [];
+  String dropdownDistrict = "";
+
+  String selectedStateRefer = "";
 
   getAllBusinessType? gabt;
   getState? gs;
@@ -69,17 +71,24 @@ class _UpdateProfile extends State<UpdateProfile> {
     }
   }
 
-  Future<void> _getAllState({
+  Future<void> _getAllStates({
     required BuildContext context,
   }) async {
     try {
       Map<String, dynamic> formdata = ({});
       final response = await Dio().post(
-        'https://celebrationstation.in/get_ajax/get_states/',
+        'https://celebrationstation.in/get_ajax/get_all_states/',
+        options: Options(headers: {
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
+          'User-ID': id,
+          'Authorization': token,
+          'type': type
+        }),
         queryParameters: formdata,
       );
 
-      print("get Api response data State:- ");
+      print("get State  Api response data :- ");
       print(response.data);
 
       gs = getState.fromJson(response.data);
@@ -91,14 +100,49 @@ class _UpdateProfile extends State<UpdateProfile> {
     }
   }
 
+  Future<void> _getAllDistrict({
+    required BuildContext context,
+  }) async {
+    try {
+      Map<String, dynamic> formdata = ({});
+      Map<String, dynamic> data = ({
+        'stateid': 1,
+      });
+      final response = await Dio().post(
+        'https://celebrationstation.in/get_ajax/get_all_district/',
+        // options: Options(headers: {
+        //   'Client-Service': 'frontend-client',
+        //   'Auth-Key': 'simplerestapi',
+        //   'User-ID': id,
+        //   'Authorization': token,
+        //   'type': type
+        // }),
+        data: data,
+        queryParameters: formdata,
+      );
+
+      print("get District  Api response data :- ");
+      print(response.data);
+
+      gd = getDistrict.fromJson(response.data);
+      setState(() {
+        gd;
+      });
+    } on DioError catch (e) {
+      print(e.toString());
+    }
+  }
+
+
 
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
     super.initState();
     _fetchLoginData();
     _getAllBusinessType(context: context);
-    _getAllState(context: context);
+    _getAllStates(context: context);
+    _getAllDistrict(context: context);
   }
 
   String selectedBusinessType = 'Select Business Type';
@@ -192,16 +236,6 @@ class _UpdateProfile extends State<UpdateProfile> {
                 ),
                 child: dropdownstatebutton(),
               ),
-              // CustomTextField(
-              //     hintName: "Select State",
-              //     fieldController: state,
-              //     maxLines: 1,
-              //     textInputAction: TextInputAction.next,
-              //     validator: (str) {
-              //       if (str!.isEmpty) {
-              //         return '* Is Required';
-              //       }
-              //     }),
               SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
@@ -214,16 +248,6 @@ class _UpdateProfile extends State<UpdateProfile> {
                 ),
                 child: dropdowndistrictbutton(),
               ),
-              // CustomTextField(
-              //     hintName: "Select District",
-              //     fieldController: district,
-              //     maxLines: 1,
-              //     textInputAction: TextInputAction.next,
-              //     validator: (str) {
-              //       if (str!.isEmpty) {
-              //         return '* Is Required';
-              //       }
-              //     }),
               SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
@@ -293,8 +317,8 @@ class _UpdateProfile extends State<UpdateProfile> {
                           return FormData.fromMap({
                             "business_name": businessName.text.toString(),
                             "owner_name": ownerName.text.toString(),
-                            "state": state.text.toString(),
-                            "district": district.text.toString(),
+                            "state": selectedState,
+                            "district": selectedDistrict,
                             "business_type": selectedBusinessType,
                             "pincode": pinCode.text.toString(),
                             "address": address.text.toString(),
@@ -303,17 +327,6 @@ class _UpdateProfile extends State<UpdateProfile> {
                             "email": emailid.text.toString(),
                           });
                         }
-                        // Map<String,dynamic> data = {
-                        //   'business_name': businessName.text.trim(),
-                        //   'owner_name': ownerName.text.trim(),
-                        //   'state': state.text.trim(),
-                        //   'district': district.text.trim(),
-                        //   'business_type': selectedBusinessType,
-                        //   'pincode': pinCode.text.trim(),
-                        //   'address': address.text.trim(),
-                        //   'whats_app': whatsappNo.text.trim(),
-                        //   'loginid': id!.replaceAll('"', '').replaceAll('"', '').toString(),
-                        // };
                         print(data);
                       ApiService().updateProfile(context, data: data());
                       },
@@ -353,7 +366,7 @@ class _UpdateProfile extends State<UpdateProfile> {
       value: dropdowncategory.isEmpty ? null : dropdowncategory,
       isExpanded: true,
       underline: Container(),
-      hint: Text("${selectedBusinessType}"),
+      hint: Text("$selectedBusinessType"),
       icon: const Icon(
         Icons.arrow_drop_down_outlined,
       ),
@@ -375,39 +388,40 @@ class _UpdateProfile extends State<UpdateProfile> {
   }
 
   Widget dropdownstatebutton() {
-    List<DropdownMenuItem<String>>? dropdownStateList = [];
-    if (gs != null) {
-      for (int i = 0; i < gs!.sTATENAME!.length; i++) {
+    List<DropdownMenuItem<String>>? dropdownstateList = [];
+    if (gs != null && gs?.states != null) {
+      for (int i = 0; i < gs!.states!.length; i++) {
         DropdownMenuItem<String> item = DropdownMenuItem<String>(
           child: Row(
             children: <Widget>[
-              Text(gs!.sTATENAME![i]),
+              Text(gs!.states![i].sTATENAME!),
             ],
           ),
-          value: gs!.sTATEID![i].toString(),
+          value: gs!.states![i].sTATEID!.toString(),
         );
 
-        dropdownStateList.add(item);
+        dropdownstateList.add(item);
       }
     }
     return DropdownButton<String>(
-      value: dropdownstate.isEmpty ? null : dropdownstate,
+      value: dropdownState.isEmpty ? null : dropdownState,
       isExpanded: true,
       underline: Container(),
-      hint: Text("${selectedState}"),
+      hint: Text("$selectedState"),
       icon: const Icon(
         Icons.arrow_drop_down_outlined,
       ),
       borderRadius: BorderRadius.circular(19),
       focusColor: Colors.black,
       // Array list of items
-      items: dropdownStateList,
+      items: dropdownstateList,
 
       onChanged: (newValue) {
         setState(() {
           print("newvalue:=$newValue");
 
           selectedState = newValue!;
+          selectedStateRefer = newValue;
           print("selectedRefer:=$selectedState");
           // dropdowncategory = newValue!;
         });
@@ -416,58 +430,44 @@ class _UpdateProfile extends State<UpdateProfile> {
   }
 
   Widget dropdowndistrictbutton() {
-    List<DropdownMenuItem<String>>? dropdownList = [];
-    if (gabt != null && gabt?.users != null) {
-      for (int i = 0; i < gabt!.users!.length; i++) {
+    List<DropdownMenuItem<String>>? dropdowndistrictList = [];
+    if (gd != null && gd?.district != null) {
+      for (int i = 0; i < gd!.district!.length; i++) {
         DropdownMenuItem<String> item = DropdownMenuItem<String>(
           child: Row(
             children: <Widget>[
-              Text(gabt!.users![i].gASNAME!),
+              Text(gd!.district![i].dISTRICTNAME!),
             ],
           ),
-          value: gabt!.users![i].gASID!.toString(),
+          value: gd!.district![i].dISTRICTID!.toString(),
         );
 
-        dropdownList.add(item);
+        dropdowndistrictList.add(item);
       }
     }
     return DropdownButton<String>(
-      value: dropdowncategory.isEmpty ? null : dropdowncategory,
+      value: dropdownDistrict.isEmpty ? null : dropdownDistrict,
       isExpanded: true,
       underline: Container(),
-      hint: Text("${selectedBusinessType}"),
+      hint: Text("$selectedDistrict"),
       icon: const Icon(
         Icons.arrow_drop_down_outlined,
       ),
       borderRadius: BorderRadius.circular(19),
       focusColor: Colors.black,
       // Array list of items
-      items: dropdownList,
+      items: dropdowndistrictList,
 
       onChanged: (newValue) {
         setState(() {
           print("newvalue:=$newValue");
 
-          selectedBusinessType = newValue!;
-          print("selectedRefer:=$selectedBusinessType");
+          selectedDistrict = newValue!;
+
+          print("selectedRefer:=$selectedDistrict");
           // dropdowncategory = newValue!;
         });
       },
     );
   }
 }
-
-// InputDecoration buildInputDecoration(String hinttext) {
-//   return InputDecoration(
-//     hintText: hinttext,
-//     focusedBorder: OutlineInputBorder(
-//         borderRadius: BorderRadius.circular(25.0),
-//         borderSide: const BorderSide(color: Colors.green, width: 1.5)),
-//     border: OutlineInputBorder(
-//         borderRadius: BorderRadius.circular(25.0),
-//         borderSide: const BorderSide(color: Colors.lime, width: 1.5)),
-//     enabledBorder: OutlineInputBorder(
-//         borderRadius: BorderRadius.circular(25.0),
-//         borderSide: const BorderSide(color: Colors.black, width: 1.5)),
-//   );
-// }
