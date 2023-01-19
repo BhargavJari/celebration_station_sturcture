@@ -57,9 +57,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'img/celebrationstation.png',
-                width: 150,
-                height: 150,
+                "asset/images/logo.png",
+                scale: 2,
               ),
               SizedBox(
                 height: 25,

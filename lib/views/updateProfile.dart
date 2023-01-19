@@ -8,7 +8,11 @@ import '../services/shared_preference.dart';
 import 'custom_widget/custom_text_field.dart';
 
 class UpdateProfile extends StatefulWidget {
-  const UpdateProfile({Key? key}) : super(key: key);
+  final String userId;
+  final String token;
+  final String type;
+
+  const UpdateProfile({Key? key,required this.userId,required this.token,required this.type}) : super(key: key);
 
   @override
   State<UpdateProfile> createState() => _UpdateProfile();
@@ -81,9 +85,9 @@ class _UpdateProfile extends State<UpdateProfile> {
         options: Options(headers: {
           'Client-Service': 'frontend-client',
           'Auth-Key': 'simplerestapi',
-          'User-ID': id,
-          'Authorization': token,
-          'type': type
+          'User-ID': widget.userId,
+          'Authorization': widget.token,
+          'type': widget.type
         }),
         queryParameters: formdata,
       );
@@ -101,13 +105,12 @@ class _UpdateProfile extends State<UpdateProfile> {
   }
 
   Future<void> _getAllDistrict({
-    required BuildContext context,
+    required BuildContext context,required FormData? data
   }) async {
     try {
       Map<String, dynamic> formdata = ({});
-      Map<String, dynamic> data = ({
-        'stateid': 1,
-      });
+
+
       final response = await Dio().post(
         'https://celebrationstation.in/get_ajax/get_all_district/',
         // options: Options(headers: {
@@ -139,24 +142,23 @@ class _UpdateProfile extends State<UpdateProfile> {
   void initState(){
     // TODO: implement initState
     super.initState();
-    _fetchLoginData();
+    //_fetchLoginData();
     _getAllBusinessType(context: context);
     _getAllStates(context: context);
-    _getAllDistrict(context: context);
+    //_getAllDistrict(context: context);
   }
 
   String selectedBusinessType = 'Select Business Type';
   String selectedState = 'Select State';
   String selectedDistrict = 'Select District';
 
-  _fetchLoginData() async {
-    setState(() async {
-      id = await Preferances.getString("id");
-      token = await Preferances.getString("token");
-      type = await Preferances.getString("type");
-      profileStatus = await Preferances.getString("PROFILE_STATUS");
-    });
-  }
+  // _fetchLoginData() async {
+  //   id = await Preferances.getString("id");
+  //   token = await Preferances.getString("token");
+  //   type = await Preferances.getString("type");
+  //   profileStatus = await Preferances.getString("PROFILE_STATUS");
+  //   print("id here my :=$id");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +182,7 @@ class _UpdateProfile extends State<UpdateProfile> {
           child: ListView(
             physics: BouncingScrollPhysics(),
             children: [
-              Center(
+              const Center(
                 child: Text(
                   "Update Profile",
                   style: TextStyle(
@@ -224,7 +226,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                       return '* Is Required';
                     }
                   }),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
                 height: 58,
@@ -236,7 +238,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                 ),
                 child: dropdownstatebutton(),
               ),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
                 height: 58,
@@ -260,7 +262,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                 ),
                 child: dropdowncategorybutton(),
               ),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               CustomTextField(
                   hintName: "Enter Pincode",
                   fieldController: pinCode,
@@ -274,7 +276,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                       return '* Pin code must be of 6 digit';
                     }
                   }),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               CustomTextField(
                   hintName: "Enter Address",
                   fieldController: address,
@@ -299,7 +301,7 @@ class _UpdateProfile extends State<UpdateProfile> {
                       return '* Phone number must be of 10 digit';
                     }
                   }),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Center(
                 child: SizedBox(
                     height: 50, //height of button
@@ -309,26 +311,26 @@ class _UpdateProfile extends State<UpdateProfile> {
                         primary: Colors.lime[200], //background color of button
                         elevation: 3,
                         shape: RoundedRectangleBorder(
-                            //to set border radius to button
+                          //to set border radius to button
                             borderRadius: BorderRadius.circular(20)),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         FormData data() {
                           return FormData.fromMap({
                             "business_name": businessName.text.toString(),
                             "owner_name": ownerName.text.toString(),
-                            "state": selectedState,
-                            "district": selectedDistrict,
+                            "state": selectedStateName,
+                            "district": selectedCityName,
                             "business_type": selectedBusinessType,
                             "pincode": pinCode.text.toString(),
                             "address": address.text.toString(),
                             "whats_app": whatsappNo.text.toString(),
-                            "loginid": id!.replaceAll('"', '').replaceAll('"', '').toString(),
+                            "loginid": widget.userId,
                             "email": emailid.text.toString(),
                           });
                         }
                         print(data);
-                      ApiService().updateProfile(context, data: data());
+                        await ApiService().updateProfile(context, data: data());
                       },
                       child: Text(
                         "Submit",
@@ -386,27 +388,32 @@ class _UpdateProfile extends State<UpdateProfile> {
       },
     );
   }
-
+  String? stateName;
+  String? cityName;
+  String? selectedCityName;
+  String? selectedStateName;
   Widget dropdownstatebutton() {
     List<DropdownMenuItem<String>>? dropdownstateList = [];
     if (gs != null && gs?.states != null) {
       for (int i = 0; i < gs!.states!.length; i++) {
+        // print("hello ${gs!.states![i].sTATENAME!}");
         DropdownMenuItem<String> item = DropdownMenuItem<String>(
+          value: gs!.states![i].sTATEID!.toString(),
           child: Row(
             children: <Widget>[
               Text(gs!.states![i].sTATENAME!),
             ],
           ),
-          value: gs!.states![i].sTATEID!.toString(),
         );
 
         dropdownstateList.add(item);
       }
     }
     return DropdownButton<String>(
-      value: dropdownState.isEmpty ? null : dropdownState,
+      value: stateName,
       isExpanded: true,
       underline: Container(),
+
       hint: Text("$selectedState"),
       icon: const Icon(
         Icons.arrow_drop_down_outlined,
@@ -416,15 +423,31 @@ class _UpdateProfile extends State<UpdateProfile> {
       // Array list of items
       items: dropdownstateList,
 
-      onChanged: (newValue) {
-        setState(() {
-          print("newvalue:=$newValue");
-
-          selectedState = newValue!;
-          selectedStateRefer = newValue;
-          print("selectedRefer:=$selectedState");
-          // dropdowncategory = newValue!;
-        });
+      onChanged: (newValue) async {
+        // setState(() async {
+        //   // print("newvalue:=$newValue");
+        //   //
+        //   // selectedState = newValue!;
+        //   // selectedStateRefer = newValue;
+        //   // print("selectedRefer:=$selectedState");
+        //
+        //   ////////
+        //
+        // });
+        print(newValue.toString() + 'DDD');
+        selectedStateName = newValue;
+        print("selectedStateName:=${selectedStateName}");
+        DistrictItemList = [];
+        cityName = null;
+        stateName = newValue;
+        FormData data() {
+          return FormData.fromMap({"stateid": newValue,});
+        }
+        await _getAllDistrict(context: context,data: data());
+        print("${newValue}");
+        setState(() {});
+        cityName = null;
+        print("selectedStateName :- ${stateName}");
       },
     );
   }
@@ -446,7 +469,7 @@ class _UpdateProfile extends State<UpdateProfile> {
       }
     }
     return DropdownButton<String>(
-      value: dropdownDistrict.isEmpty ? null : dropdownDistrict,
+      value: cityName,
       isExpanded: true,
       underline: Container(),
       hint: Text("$selectedDistrict"),
@@ -460,12 +483,13 @@ class _UpdateProfile extends State<UpdateProfile> {
 
       onChanged: (newValue) {
         setState(() {
-          print("newvalue:=$newValue");
 
-          selectedDistrict = newValue!;
-
-          print("selectedRefer:=$selectedDistrict");
-          // dropdowncategory = newValue!;
+          cityName = newValue;
+          setState(() {});
+          print("selectedCityName :- ${newValue}");
+          setState(() {
+            selectedCityName = newValue!;
+          });
         });
       },
     );

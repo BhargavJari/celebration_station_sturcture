@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:carousel_nullsafety/carousel_nullsafety.dart';
 
 import '../../../services/shared_preference.dart';
+import '../../../utils/loder.dart';
 
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class OurServices extends StatefulWidget {
 }
 
 class _OurServicesState extends State<OurServices> {
-  List images = [];
+  List? images = [];
   bool isLoading = false;
   List getEvent = [];
   var year = DateFormat('yyyy').format(DateTime.now());
@@ -29,11 +30,12 @@ class _OurServicesState extends State<OurServices> {
     getBookingDetails();
   }
 
-  getImages() async{
+  Future<void> getImages() async{
     setState(() {
       isLoading = true;
     });
     try{
+      Loader.showLoader();
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
@@ -50,20 +52,24 @@ class _OurServicesState extends State<OurServices> {
         body: {},
       );
       if(response.statusCode==200){
+
         var items = jsonDecode(response.body)['detail'];
         setState(() {
           images = items;
           isLoading = false;
         });
+        Loader.hideLoader();
         print("Images Fetched");
       }else{
         setState(() {
           images = [];
           isLoading = false;
         });
+        Loader.hideLoader();
         print("Error");
       }
     }catch(e){
+      Loader.hideLoader();
       print(e.toString());
     }
   }
@@ -153,15 +159,15 @@ class _OurServicesState extends State<OurServices> {
       body: Container(
         margin: EdgeInsets.all(20),
         child: ListView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           children: [
             SizedBox(
               height: 200,
               width: double.infinity,
               child: Carousel(
                 images:[
-                  for(var i=0; i<images.length ; i++)...[
-                    Image.network('https://celebrationstation.in/uploads/'+images[i]['IMAGE_URL'])
+                  for(var i=0; i<images!.length ; i++)...[
+                    Image.network('https://celebrationstation.in/uploads/'+images![i]['IMAGE_URL'])
                   ]
                 ],
                 //images.map((e) => Image.network('https://celebrationstation.in/uploads/'+images[e]['IMAGE_URL'])).toList(),
@@ -176,8 +182,8 @@ class _OurServicesState extends State<OurServices> {
                 indicatorBgPadding: 5,
               ),
             ),
-            SizedBox(height: 20),
-            Center(
+            const SizedBox(height: 20),
+            const Center(
               child: Text(
                 "Our Services",
                 style: TextStyle(
@@ -187,7 +193,7 @@ class _OurServicesState extends State<OurServices> {
                 ),
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Center(
               child: SizedBox(
                   height:50, //height of button
@@ -229,7 +235,7 @@ class _OurServicesState extends State<OurServices> {
                     onPressed: (){
 
                     },
-                    child: Text("Confirm Booking : "+getEvent.length.toString(),
+                    child: Text("Confirm Booking : ${getEvent.length}",
                       style:TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,

@@ -1,7 +1,10 @@
 import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../Utils/fontFamily_utils.dart';
+import '../custom_widget/custom_primary_button.dart';
 import '../custom_widget/custom_text_field.dart';
 import 'otp_verification_screen.dart';
 
@@ -35,9 +38,8 @@ class _SignUpState extends State<SignUp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'img/celebrationstation.png',
-                width: 150,
-                height: 150,
+                "asset/images/logo.png",
+                scale: 2,
               ),
               SizedBox(
                 height: 25,
@@ -109,6 +111,18 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: 20,
               ),
+              // CustomButton(
+              //   onTap: () async{
+              //     if (_formKey.currentState!.validate()) {
+              //       ApiService().mobileVerify(context,
+              //           data: data(), mobile: "${phone.text.trim()}");
+              //     }
+              //   },
+              //   buttonText: "set the code",
+              //   height: 5.h,
+              //
+              //   textStyle: FontTextStyle.poppinsS14W4WhiteColor,
+              // ),
               SizedBox(
                 width: double.infinity,
                 height: 45,

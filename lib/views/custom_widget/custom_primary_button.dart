@@ -1,8 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+
 import '../../Utils/colors_utils.dart';
 import '../../Utils/fontFamily_utils.dart';
 

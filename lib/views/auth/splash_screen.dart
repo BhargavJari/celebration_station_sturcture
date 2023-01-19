@@ -23,7 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future getData() async {
     Future.delayed(Duration(seconds: 3)).then((value) async {
       String? id = await Preferances.getString("id");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       print("userId:=${id}");
+     // print("userId:=${profileStatus}");
       if (id != null) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const BottomNavBar()),

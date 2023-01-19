@@ -59,8 +59,8 @@ class CustomDrawerState extends State<CustomDrawer> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                    return BottomNavBar();
-                  }));
+                        return BottomNavBar();
+                      }));
                 }),
             ListTile(
               leading: Icon(Icons.person, color: Colors.lime),
@@ -68,8 +68,8 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                  return EditProfile();
-                }));
+                      return EditProfile();
+                    }));
               },
             ),
             ListTile(
@@ -78,8 +78,8 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                  return OurServices();
-                }));
+                      return OurServices();
+                    }));
               },
             ),
             ListTile(
