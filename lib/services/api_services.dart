@@ -35,15 +35,16 @@ class ApiService {
 
         debugPrint('login data  ----- > ${response.data}');
 
-        Preferances.setString("id", responseData.id);
-        Preferances.setString("token", responseData.token);
-        Preferances.setString("type", responseData.type);
-        Preferances.setString("PROFILE_STATUS", responseData.pROFILESTATUS);
-        Preferances.setString("cookie",cookies[0].split(';')[0]);
+
         if(responseData.pROFILESTATUS=='0'){
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
           const UpdateProfile()), (Route<dynamic> route) => false);
         }else if(responseData.pROFILESTATUS=='1'){
+          Preferances.setString("id", responseData.id);
+          Preferances.setString("token", responseData.token);
+          Preferances.setString("type", responseData.type);
+          Preferances.setString("PROFILE_STATUS", responseData.pROFILESTATUS);
+          Preferances.setString("cookie",cookies[0].split(';')[0]);
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
           const BottomNavBar()), (Route<dynamic> route) => false);
         }
