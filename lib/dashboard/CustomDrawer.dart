@@ -71,7 +71,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 String? type = await Preferances.getString("type");
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
+                      return BottomNavBar(index: 3,);//EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
                     }));
               },
             ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:celebration_station_sturcture/views/auth/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -212,7 +213,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       if (result.message != null) {
         CommonFunctions.toast("Register successfully !!");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
+            context, MaterialPageRoute(builder: (context) => RegistrationScrenn(phone: widget.phoneNumber,)));
       }
       return AuthResult(status: false);
     }

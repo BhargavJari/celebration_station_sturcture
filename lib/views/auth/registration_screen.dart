@@ -1,3 +1,4 @@
+import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +8,8 @@ import '../../services/api_services.dart';
 import '../custom_widget/custom_text_field.dart';
 
 class RegistrationScrenn extends StatefulWidget {
-  const RegistrationScrenn({Key? key}) : super(key: key);
+  final String phone;
+  const RegistrationScrenn({Key? key,required this.phone}) : super(key: key);
 
   @override
   State<RegistrationScrenn> createState() => _RegistrationScrennState();
@@ -17,6 +19,11 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController referralController = TextEditingController();
+
+  @override
+  void setState(VoidCallback fn) {
+    phoneController =widget.phone as TextEditingController;
+  }
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -61,7 +68,6 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                               fieldController: phoneController,
                               keyboard: TextInputType.phone,
                               maxLines: 1,
-                              maxLength: 10,
                               textInputAction: TextInputAction.done,
                               validator: (str) {
                                 if (str!.isEmpty) {
@@ -73,6 +79,31 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                           SizedBox(
                             height: 3.h,
                           ),
+                          // CustomTextField(
+                          //   suffixIcon: GestureDetector(
+                          //       onTap: () {
+                          //         setState(() {
+                          //           obscurePassword = !obscurePassword;
+                          //         });
+                          //       },
+                          //       child: obscurePassword
+                          //           ? const Icon(Icons.visibility_off)
+                          //           : const Icon(Icons.visibility)),
+                          //   obscureText: obscurePassword,
+                          //   prefixIcon: const Icon(Icons.password),
+                          //   fieldController: passwordController,
+                          //   fieldName: "Password",
+                          //   hintName: " Password",
+                          //   keyboard: TextInputType.visiblePassword,
+                          //   maxLines: 1,
+                          //   textInputAction: TextInputAction.done,
+                          //   validator: (str) {
+                          //     if (str!.isEmpty) {
+                          //       return '* Is Required';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
                           CustomTextField(
                             suffixIcon: GestureDetector(
                                 onTap: () {
@@ -106,11 +137,7 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                               keyboard: TextInputType.text,
                               maxLines: 1,
                               textInputAction: TextInputAction.done,
-                              validator: (str) {
-                                if (str!.isEmpty) {
-                                  return '* Is Required';
-                                }
-                              }),
+                              ),
                           SizedBox(height: 3.h),
                           Center(
                             child: SizedBox(

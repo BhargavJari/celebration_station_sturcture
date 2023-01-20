@@ -61,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               fieldController: phoneController,
                               keyboard: TextInputType.phone,
                               maxLines: 1,
-                              maxLength: 10,
                               textInputAction: TextInputAction.done,
                               validator: (str) {
                                 if (str!.isEmpty) {
