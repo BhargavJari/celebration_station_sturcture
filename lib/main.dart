@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:celebration_station_sturcture/utils/screen_utils.dart';
 import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
+import 'package:celebration_station_sturcture/views/auth/registration_screen.dart';
 import 'package:celebration_station_sturcture/views/auth/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         initialRoute: "${SplashScreen()}",
         home: //SplashScreen(),
         LoginScreen(),
+        // RegistrationScrenn(),
         navigatorObservers: [BotToastNavigatorObserver()],
         builder: (context, child) {
           return ScrollConfiguration(

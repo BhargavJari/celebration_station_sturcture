@@ -16,67 +16,32 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  String id = "";
-  var data;
-  void get_profile_record(id) async{
-    try{
-      Response response= await post(
-        Uri.parse('https://celebrationstation.in/get_ajax/get_profile_record/'),
-        headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
-        },
-        // body: jsonEncode(<String, String>{'email': phone, 'password': password}),
-        // body: {
-        //   'email': phone,
-        //   'password': password,
-        // },
-        body: {
-          'loginid':id,
-        },
-      );
-
-      if(response.statusCode == 200){
-        data = new Map.from(json.decode(response.body));
-        print(data);
-        print('Data got');
-      }else{
-        print('Failed');
-      }
-    }catch(e){
-      print(e.toString());
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _fetchLoginData();
-
-  }
-
-  _fetchLoginData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = (prefs.getString('id') ?? '');
-    });
-    get_profile_record(id);
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80,
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         elevation: 0,
-        leading: BackButton(color: Colors.black),
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+        centerTitle: true,
+        title:  Image.asset(
+          "asset/images/logo.png",
+          height: 60,
+        ),
+        leading: Builder(
+            builder: (context) {
+              return IconButton(
+                iconSize: 30,
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
+            }
         ),
       ),
       body: const Body(),

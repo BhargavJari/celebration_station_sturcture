@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:celebration_station_sturcture/services/shared_preference.dart';
+import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -52,7 +53,7 @@ class ApiService {
         }else if(responseData.pROFILESTATUS=='1'){
 
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-          const BottomNavBar()), (Route<dynamic> route) => false);
+          const BottomNavBar(index: 0,)), (Route<dynamic> route) => false);
         }
         Fluttertoast.showToast(
           msg: 'Login Sucessfully...',
@@ -101,7 +102,7 @@ class ApiService {
 
         debugPrint('Update profile data  ----- > ${response.data}');
         Loader.hideLoader();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(index: 0,),));
         Fluttertoast.showToast(
           msg: 'Updated Sucessfully...',
           backgroundColor: Colors.grey,
@@ -213,7 +214,7 @@ class ApiService {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BottomNavBar(),
+              builder: (context) => BottomNavBar(index: 1,),
             ));
         Fluttertoast.showToast(
           msg: 'Enquiry Add Sucessfully...',
@@ -290,4 +291,53 @@ class ApiService {
       Loader.hideLoader();
     }
   }
+
+  Future addAccount(
+      BuildContext context, {
+        FormData? data,
+      }) async {
+    try {
+      Loader.showLoader();
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
+      Response response;
+      response = await dio.post("https://celebrationstation.in/post_ajax/add_account/",
+          options: Options(headers: {
+            'Client-Service': 'frontend-client',
+            'Auth-Key': 'simplerestapi',
+            'User-ID': id,
+            'Authorization': token,
+            'type': type
+          }),
+          data: data);
+      if (response.statusCode == 200) {
+
+        debugPrint('Add Account ----- > ${response.data}');
+        Loader.hideLoader();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ));
+        Fluttertoast.showToast(
+          msg: 'Add Account  Sucessfully...',
+          backgroundColor: Colors.grey,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );Loader.hideLoader();
+
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      Loader.hideLoader();
+    }
+  }
+
 }

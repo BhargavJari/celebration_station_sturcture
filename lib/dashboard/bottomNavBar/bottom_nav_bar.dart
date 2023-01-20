@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  final index;
+  const BottomNavBar({Key? key,required this.index}) : super(key: key);
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -16,6 +17,16 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   final controller = PageController();
   var selectedIndex=0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.index != 0){
+      selectedIndex = widget.index;
+    }
+  }
+
   List pages = [
     OurServices(),
     EventCalendarScreen(),

@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
      // print("userId:=${profileStatus}");
       if (id != null) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const BottomNavBar()),
+            MaterialPageRoute(builder: (context) => const BottomNavBar(index: 0,)),
             (Route<dynamic> route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(

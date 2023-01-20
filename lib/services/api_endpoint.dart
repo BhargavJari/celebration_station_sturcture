@@ -10,5 +10,4 @@ class ApiEndPoints {
   static const String imageSlidder = "${baseUrl}${getUrl}get_slidder/";
   static const String mobileVerify = "${baseUrl}${getUrl}mobile_verify/";
   static const String getAllApi = "${baseUrl}${getUrl}get_all_enquiry/";
-
 }
