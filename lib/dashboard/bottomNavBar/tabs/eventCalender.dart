@@ -162,14 +162,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
     loadPreviousEvents() {
     getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-    mySelectedEvents = {
+    /*mySelectedEvents = {
       "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ],
       "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ]
-    };
+    };*/
     print("loadPrevious");
   }
 
@@ -283,7 +283,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   if (mySelectedEvents[
                   DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
                       null) {
-                    /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
                         titleController.text.toString(),
                         descpController.text.toString(),
                         bookingAmountController.text.toString(),
@@ -291,8 +291,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         maleNameController.text.toString(),
                         femaleNameController.text.toString(),
                         phoneController.text.toString()
-                    );*/
-                    mySelectedEvents[
+                    );
+                    /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)]
                         ?.add({
                       "eventTitle": titleController.text,
@@ -301,9 +301,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       "advance" : advanceController.text,
                       "maleName" : maleNameController.text,
                       "femaleName" : femaleNameController.text,
-                    });
+                    });*/
                   } else {
-                    /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
                         titleController.text.toString(),
                         descpController.text.toString(),
                         bookingAmountController.text.toString(),
@@ -311,8 +311,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         maleNameController.text.toString(),
                         femaleNameController.text.toString(),
                         phoneController.text.toString()
-                    );*/
-                    mySelectedEvents[
+                    );
+                    /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
                       {
                         "eventTitle": titleController.text,
@@ -322,7 +322,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         "maleName" : maleNameController.text,
                         "femaleName" : femaleNameController.text,
                       }
-                    ];
+                    ];*/
                   }
                 });
                 _isVisible=false;
