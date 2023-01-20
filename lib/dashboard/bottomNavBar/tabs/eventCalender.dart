@@ -144,7 +144,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             mySelectedEvents.addEntries([
               MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
                 {"eventTitle": getEvent[i]['CBD_TITLE'],"eventDescp": getEvent[i]['CBD_DESC'], "bookingAmount" : getEvent[i]['CBD_BOOKING_AMOUNT'], "advance":getEvent[i]['CBD_BOOKING_ADVANCE'], "maleName" : getEvent[i]['CBD_MALE_NAME'], "femaleName" : getEvent[i]['CBD_FEMALE_NAME']},
-              ],)
+              ])
             ]);
           }
         });
@@ -162,14 +162,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
     loadPreviousEvents() {
     getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-   /* mySelectedEvents = {
-      "2022-12-12": [
+    mySelectedEvents = {
+      "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ],
       "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ]
-    };*/
+    };
     print("loadPrevious");
   }
 
@@ -270,7 +270,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 return;
               } else {
                 setState(() {
-                  addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                  /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
                       titleController.text.toString(),
                       descpController.text.toString(),
                     bookingAmountController.text.toString(),
@@ -278,11 +278,20 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     maleNameController.text.toString(),
                     femaleNameController.text.toString(),
                     phoneController.text.toString()
-                  );
+                  );*/
                   //addBooking();
-                  /*if (mySelectedEvents[
+                  if (mySelectedEvents[
                   DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
                       null) {
+                    /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                        titleController.text.toString(),
+                        descpController.text.toString(),
+                        bookingAmountController.text.toString(),
+                        advanceController.text.toString(),
+                        maleNameController.text.toString(),
+                        femaleNameController.text.toString(),
+                        phoneController.text.toString()
+                    );*/
                     mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)]
                         ?.add({
@@ -294,6 +303,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       "femaleName" : femaleNameController.text,
                     });
                   } else {
+                    /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                        titleController.text.toString(),
+                        descpController.text.toString(),
+                        bookingAmountController.text.toString(),
+                        advanceController.text.toString(),
+                        maleNameController.text.toString(),
+                        femaleNameController.text.toString(),
+                        phoneController.text.toString()
+                    );*/
                     mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
                       {
@@ -305,7 +323,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         "femaleName" : femaleNameController.text,
                       }
                     ];
-                  }*/
+                  }
                 });
                 _isVisible=false;
                 print("New Event for backend developer ${json.encode(mySelectedEvents)}");
@@ -325,7 +343,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       ),
     );
   }
-  _showCancelEventDialog() async {
+  /*_showCancelEventDialog() async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -369,7 +387,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         ],
       ),
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -386,15 +404,19 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: IconButton(
-          iconSize: 30,
-          icon: Icon(
-            Icons.menu,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            // CustomDrawer();
-          },
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              iconSize: 30,
+              icon: Icon(
+                Icons.menu,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         actions: [
           IconButton(
@@ -468,9 +490,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   ),
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child:/*List.generate(getEvent.length, (index){
-                      return ListView()
-                    })*/Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
+                    child: Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
                   ),
                   subtitle: Text(' Description:  ${myEvents['eventDescp']}'
                       '\n Booking Amount : ${myEvents['bookingAmount']}'
