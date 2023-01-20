@@ -59,6 +59,12 @@ class FontTextStyle {
       fontWeight: FontWeightClass.bold);
 
 
+  static TextStyle poppinsS12W7BlackColor = TextStyle(
+      fontFamily: poppinsFamily,
+      fontSize: 12.sp,
+      color: ColorUtils.blackColor,
+      fontWeight: FontWeightClass.medium);
+
 
 
 

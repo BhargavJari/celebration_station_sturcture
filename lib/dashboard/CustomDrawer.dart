@@ -59,16 +59,19 @@ class CustomDrawerState extends State<CustomDrawer> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                        return BottomNavBar();
+                        return BottomNavBar(index: 0,);
                       }));
                 }),
             ListTile(
               leading: Icon(Icons.person, color: Colors.lime),
               title: Text('My Acount'),
-              onTap: () {
+              onTap: () async{
+                String? id = await Preferances.getString("id");
+                String? token = await Preferances.getString("token");
+                String? type = await Preferances.getString("type");
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return EditProfile();
+                      return EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
                     }));
               },
             ),
@@ -78,7 +81,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return OurServices();
+                      return BottomNavBar(index: 2,);
                     }));
               },
             ),
@@ -88,7 +91,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return BottomNavBar();
+                      return BottomNavBar(index: 1,);
                     }));
               },
             ),
@@ -135,15 +138,15 @@ class CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),
               title: Text('Terms & Condition'),
-              onTap: () async{
-                var url =Uri.parse("https://celebrationstation.in/terms-conditions.html");
+                onTap: () async{
+                  var url =Uri.parse("https://celebrationstation.in/terms-conditions.html");
 
-                if (await canLaunchUrl(url)){
-                  await launchUrl(url);
-                }else{
-                  throw 'Could not launch $url';
-                }
-              },
+                  if (await canLaunchUrl(url)){
+                    await launchUrl(url);
+                  }else{
+                    throw 'Could not launch $url';
+                  }
+                },
             ),
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),

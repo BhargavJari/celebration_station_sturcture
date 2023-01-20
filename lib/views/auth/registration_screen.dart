@@ -1,22 +1,22 @@
-import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
-import 'package:celebration_station_sturcture/views/custom_widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:dio/dio.dart';
+import '../../Utils/colors_utils.dart';
 import '../../Utils/fontFamily_utils.dart';
 import '../../services/api_services.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import '../custom_widget/custom_text_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegistrationScrenn extends StatefulWidget {
+  const RegistrationScrenn({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistrationScrenn> createState() => _RegistrationScrennState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController referralController = TextEditingController();
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     child: Text(
-                      "Login Here",
+                      "Registration Here",
                       style: FontTextStyle.poppinsS24W7BlackColor,
                     ),
                   ),
@@ -99,6 +99,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           SizedBox(height: 3.h),
+                          CustomTextField(
+                              prefixIcon: const Icon(Icons.people),
+                              hintName: "Enter Referral Code",
+                              fieldController: referralController,
+                              keyboard: TextInputType.text,
+                              maxLines: 1,
+                              textInputAction: TextInputAction.done,
+                              validator: (str) {
+                                if (str!.isEmpty) {
+                                  return '* Is Required';
+                                }
+                              }),
+                          SizedBox(height: 3.h),
                           Center(
                             child: SizedBox(
                                 height: 50, //height of button
@@ -114,12 +127,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   onPressed: () async {
                                     if(_formKey.currentState!.validate()) {
-                                      ApiService().login(
+                                      ApiService().addAccount(
                                           context, data: data());
                                     }
                                   },
                                   child: Text(
-                                    "Login",
+                                    "Sign Up",
                                     style: FontTextStyle.poppinsS16W7BlackColor,
                                   ),
                                 )),
@@ -136,7 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   FormData data() {
-    return FormData.fromMap({"user_id": phoneController.text.trim(),"password":passwordController.text.trim()});
+    return FormData.fromMap({"referal_code": referralController.text.trim(),"phone":phoneController.text.trim(),"password":passwordController});
   }
 }
