@@ -8,8 +8,8 @@ import '../../services/api_services.dart';
 import '../custom_widget/custom_text_field.dart';
 
 class RegistrationScrenn extends StatefulWidget {
-  final String phone;
-  const RegistrationScrenn({Key? key,required this.phone}) : super(key: key);
+
+  const RegistrationScrenn({Key? key,}) : super(key: key);
 
   @override
   State<RegistrationScrenn> createState() => _RegistrationScrennState();
@@ -21,9 +21,18 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController referralController = TextEditingController();
 
   @override
-  void setState(VoidCallback fn) {
-    phoneController =widget.phone as TextEditingController;
-  }
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   //print(widget.phone);
+  //   setState(() {
+  //     phoneController=widget.phone as TextEditingController;
+  //   });
+  // }
+  // @override
+  // void setState(VoidCallback fn) {
+  //   phoneController =widget.phone as TextEditingController;
+  // }
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -178,6 +187,6 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   }
 
   FormData data() {
-    return FormData.fromMap({"referal_code": referralController.text.trim(),"phone":phoneController.text.trim(),"password":passwordController});
+    return FormData.fromMap({"referal_code": referralController.text.trim(),"phone":phoneController.text.trim(),"password":passwordController.text.trim()});
   }
 }

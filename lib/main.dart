@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         initialRoute: "${SplashScreen()}",
         home: SplashScreen(),
        // LoginScreen(),
-        // RegistrationScrenn(),
+        //RegistrationScrenn(),
         navigatorObservers: [BotToastNavigatorObserver()],
         builder: (context, child) {
           return ScrollConfiguration(

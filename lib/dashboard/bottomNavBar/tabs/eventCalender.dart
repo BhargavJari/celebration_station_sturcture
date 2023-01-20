@@ -508,7 +508,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: () => paymentStatus == '1' ? _showAddEventDialog() : Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)),
+          onPressed: (){
+            if(paymentStatus == 0){
+              _showAddEventDialog();
+            }else{
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen()));
+            }
+          },
+          // paymentStatus != 0 ? _showAddEventDialog() :Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) ,
           label: const Text('Add Event'),
         ),
         /*replacement: Align(
