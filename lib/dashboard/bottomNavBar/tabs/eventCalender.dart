@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -8,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../model/GetAllProfileModel.dart';
 import '../../../services/shared_preference.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
@@ -28,7 +30,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   Map<String, List<dynamic>> mySelectedEvents = {};
   var getData;
   var getEvent = [];
-  var paymentStatus=0;
+  var paymentStatus;
 
   final titleController = TextEditingController();
   final bookingAmountController = TextEditingController();
@@ -37,6 +39,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   final femaleNameController = TextEditingController();
   final descpController = TextEditingController();
   final phoneController = TextEditingController();
+  ProfileDetails? profileDetails;
 
   var client = http.Client();
 
@@ -46,14 +49,25 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     super.initState();
     _selectedDate = _focusedDay;
     loadPreviousEvents();
-    //this.getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-    /*getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!)).then((value) {
+    getprofile();
+    //paymentStatus = profileDetails?.pAYMENTSTATUS as int;
+    print(paymentStatus);
+  }
+
+  getprofile(){
+    ApiService().getProfileRecord(context).then((value) {
       if(value!.message == "ok"){
+        print("hhiii");
         setState(() {
-          getEvent = value.users!;
+          profileDetails = value.detail!;
+          paymentStatus = value.detail!.pAYMENTSTATUS;
         });
+        print('model:$profileDetails');
+        //print('model:${profileDetails?.pAYMENTSTATUS}');
+        print(paymentStatus);
       }
-    });*/
+
+    });
   }
 
     void addBooking (String date, String title, String desc, String bookingAmount, String advance, String maleName, String femaleName, String customerPhone) async{
@@ -130,7 +144,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             mySelectedEvents.addEntries([
               MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
                 {"eventTitle": getEvent[i]['CBD_TITLE'],"eventDescp": getEvent[i]['CBD_DESC'], "bookingAmount" : getEvent[i]['CBD_BOOKING_AMOUNT'], "advance":getEvent[i]['CBD_BOOKING_ADVANCE'], "maleName" : getEvent[i]['CBD_MALE_NAME'], "femaleName" : getEvent[i]['CBD_FEMALE_NAME']},
-              ],)
+              ])
             ]);
           }
         });
@@ -148,8 +162,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
     loadPreviousEvents() {
     getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-   /* mySelectedEvents = {
-      "2022-12-12": [
+    /*mySelectedEvents = {
+      "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
       ],
       "2023-01-12": [
@@ -256,7 +270,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 return;
               } else {
                 setState(() {
-                  addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                  /*addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
                       titleController.text.toString(),
                       descpController.text.toString(),
                     bookingAmountController.text.toString(),
@@ -264,12 +278,21 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     maleNameController.text.toString(),
                     femaleNameController.text.toString(),
                     phoneController.text.toString()
-                  );
+                  );*/
                   //addBooking();
-                  /*if (mySelectedEvents[
+                  if (mySelectedEvents[
                   DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
                       null) {
-                    mySelectedEvents[
+                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                        titleController.text.toString(),
+                        descpController.text.toString(),
+                        bookingAmountController.text.toString(),
+                        advanceController.text.toString(),
+                        maleNameController.text.toString(),
+                        femaleNameController.text.toString(),
+                        phoneController.text.toString()
+                    );
+                    /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)]
                         ?.add({
                       "eventTitle": titleController.text,
@@ -278,9 +301,18 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       "advance" : advanceController.text,
                       "maleName" : maleNameController.text,
                       "femaleName" : femaleNameController.text,
-                    });
+                    });*/
                   } else {
-                    mySelectedEvents[
+                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                        titleController.text.toString(),
+                        descpController.text.toString(),
+                        bookingAmountController.text.toString(),
+                        advanceController.text.toString(),
+                        maleNameController.text.toString(),
+                        femaleNameController.text.toString(),
+                        phoneController.text.toString()
+                    );
+                    /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
                       {
                         "eventTitle": titleController.text,
@@ -290,8 +322,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         "maleName" : maleNameController.text,
                         "femaleName" : femaleNameController.text,
                       }
-                    ];
-                  }*/
+                    ];*/
+                  }
                 });
                 _isVisible=false;
                 print("New Event for backend developer ${json.encode(mySelectedEvents)}");
@@ -311,7 +343,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       ),
     );
   }
-  _showCancelEventDialog() async {
+  /*_showCancelEventDialog() async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -355,7 +387,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         ],
       ),
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -372,15 +404,19 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: IconButton(
-          iconSize: 30,
-          icon: Icon(
-            Icons.menu,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            // CustomDrawer();
-          },
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              iconSize: 30,
+              icon: Icon(
+                Icons.menu,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         actions: [
           IconButton(
@@ -422,7 +458,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       _selectedDate = selectedDay;
                       _focusedDay = focusedDay;
                       if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDate!)] != null) {
-                        _isVisible=false;
+                        _isVisible=true;
                       }else{
                         _isVisible=true;
                       }
@@ -454,9 +490,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   ),
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child:/*List.generate(getEvent.length, (index){
-                      return ListView()
-                    })*/Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
+                    child: Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
                   ),
                   subtitle: Text(' Description:  ${myEvents['eventDescp']}'
                       '\n Booking Amount : ${myEvents['bookingAmount']}'
@@ -474,16 +508,16 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: () => paymentStatus == 0 ? Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) : _showAddEventDialog(),
+          onPressed: () => paymentStatus == '1' ? _showAddEventDialog() : Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)),
           label: const Text('Add Event'),
         ),
-        replacement: Align(
+        /*replacement: Align(
           alignment: Alignment.bottomRight,
           child: FloatingActionButton.extended(
             onPressed: () => _showCancelEventDialog(),
             label: const Text('Cancel Event'),
           ),
-        ),
+        ),*/
       ),
     );
   }

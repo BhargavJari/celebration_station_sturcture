@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import '../../../services/shared_preference.dart';
+import '../../../utils/loder.dart';
 import '../../CustomDrawer.dart';
 
 class BookingList extends StatefulWidget {
@@ -29,9 +30,7 @@ class _BookingListState extends State<BookingList> {
   }
 
   getBookingDetails() async{
-    setState(() {
-      isLoading = true;
-    });
+    Loader.showLoader();
     try{
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
@@ -57,14 +56,14 @@ class _BookingListState extends State<BookingList> {
         var items = jsonDecode(response.body)['\$booking'];
         setState(() {
           getEvent = items;
-          isLoading = false;
         });
+        Loader.hideLoader();
         print("Booking List Fetched");
       }else{
         setState(() {
           getEvent = [];
-          isLoading = false;
         });
+        Loader.hideLoader();
         print("Error");
       }
     }catch(e){
@@ -125,15 +124,19 @@ class _BookingListState extends State<BookingList> {
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: IconButton(
-          iconSize: 30,
-          icon: Icon(
-            Icons.menu,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            // CustomDrawer();
-          },
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              iconSize: 30,
+              icon: Icon(
+                Icons.menu,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         actions: [
           IconButton(
