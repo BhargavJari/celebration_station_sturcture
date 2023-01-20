@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -8,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../model/GetAllProfileModel.dart';
 import '../../../services/shared_preference.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
@@ -28,7 +30,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   Map<String, List<dynamic>> mySelectedEvents = {};
   var getData;
   var getEvent = [];
-  var paymentStatus=0;
+  var paymentStatus;
 
   final titleController = TextEditingController();
   final bookingAmountController = TextEditingController();
@@ -37,6 +39,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   final femaleNameController = TextEditingController();
   final descpController = TextEditingController();
   final phoneController = TextEditingController();
+  ProfileDetails? profileDetails;
 
   var client = http.Client();
 
@@ -46,14 +49,25 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     super.initState();
     _selectedDate = _focusedDay;
     loadPreviousEvents();
-    //this.getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
-    /*getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!)).then((value) {
+    getprofile();
+    //paymentStatus = profileDetails?.pAYMENTSTATUS as int;
+    print(paymentStatus);
+  }
+
+  getprofile(){
+    ApiService().getProfileRecord(context).then((value) {
       if(value!.message == "ok"){
+        print("hhiii");
         setState(() {
-          getEvent = value.users!;
+          profileDetails = value.detail!;
+          paymentStatus = value.detail!.pAYMENTSTATUS;
         });
+        print('model:$profileDetails');
+        //print('model:${profileDetails?.pAYMENTSTATUS}');
+        print(paymentStatus);
       }
-    });*/
+
+    });
   }
 
     void addBooking (String date, String title, String desc, String bookingAmount, String advance, String maleName, String femaleName, String customerPhone) async{
@@ -422,7 +436,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       _selectedDate = selectedDay;
                       _focusedDay = focusedDay;
                       if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDate!)] != null) {
-                        _isVisible=false;
+                        _isVisible=true;
                       }else{
                         _isVisible=true;
                       }
@@ -474,16 +488,16 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: () => paymentStatus == 0 ? Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) : _showAddEventDialog(),
+          onPressed: () => paymentStatus == '1' ? _showAddEventDialog() : Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)),
           label: const Text('Add Event'),
         ),
-        replacement: Align(
+        /*replacement: Align(
           alignment: Alignment.bottomRight,
           child: FloatingActionButton.extended(
             onPressed: () => _showCancelEventDialog(),
             label: const Text('Cancel Event'),
           ),
-        ),
+        ),*/
       ),
     );
   }
