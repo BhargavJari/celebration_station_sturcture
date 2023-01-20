@@ -45,14 +45,24 @@ class ApiService {
         Preferances.setString("token", responseData.token);
         Preferances.setString("type", responseData.type);
         Preferances.setString("PROFILE_STATUS", responseData.pROFILESTATUS);
-        Preferances.setString("cookie",cookies[0].split(';')[0]);
+        Preferances.setString("cookie", cookies[0].split(';')[0]);
 
-        if(responseData.pROFILESTATUS=='0'){
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-           UpdateProfile(userId: "${responseData.id}",token: "${responseData.token}",type: "${responseData.type}",)), (Route<dynamic> route) => false);
-        }else if(responseData.pROFILESTATUS=='1'){
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-          const BottomNavBar(index: 0,)), (Route<dynamic> route) => false);
+        if (responseData.pROFILESTATUS == '0') {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => UpdateProfile(
+                        userId: "${responseData.id}",
+                        token: "${responseData.token}",
+                        type: "${responseData.type}",
+                      )),
+              (Route<dynamic> route) => false);
+        } else if (responseData.pROFILESTATUS == '1') {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => const BottomNavBar(
+                        index: 0,
+                      )),
+              (Route<dynamic> route) => false);
         }
         Fluttertoast.showToast(
           msg: 'Login Sucessfully...',
@@ -98,10 +108,15 @@ class ApiService {
           }),
           data: data);
       if (response.statusCode == 200) {
-
         debugPrint('Update profile data  ----- > ${response.data}');
         Loader.hideLoader();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(index: 0,),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavBar(
+                index: 0,
+              ),
+            ));
         Fluttertoast.showToast(
           msg: 'Updated Sucessfully...',
           backgroundColor: Colors.grey,
@@ -144,7 +159,7 @@ class ApiService {
       print(id);
       response = await dio.post(
           "https://celebrationstation.in/get_ajax/get_profile_record/",
-      /*    options: Options(headers: {
+          /*    options: Options(headers: {
             'Client-Service': 'frontend-client',
             'Auth-Key': 'simplerestapi',
             'User-ID': id?.replaceAll('"', '').replaceAll('"', '').toString(),
@@ -157,10 +172,8 @@ class ApiService {
           GetAllProfileModel.fromJson(response.data);
       print("4");
       if (responseData.message == "ok") {
-
         debugPrint('Get Profile data  ----- > ${response.data}');
         print("4");
-
 
         Loader.hideLoader();
         Fluttertoast.showToast(
@@ -170,7 +183,6 @@ class ApiService {
 
         return responseData;
       } else {
-
         Fluttertoast.showToast(
           msg: "invalid",
           backgroundColor: Colors.grey,
@@ -207,13 +219,14 @@ class ApiService {
           }),
           data: data);
       if (response.statusCode == 200) {
-
         debugPrint('Add Enquiry ----- > ${response.data}');
         Loader.hideLoader();
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BottomNavBar(index: 1,),
+              builder: (context) => BottomNavBar(
+                index: 1,
+              ),
             ));
         Fluttertoast.showToast(
           msg: 'Enquiry Add Sucessfully...',
@@ -223,7 +236,8 @@ class ApiService {
         Fluttertoast.showToast(
           msg: "invalid",
           backgroundColor: Colors.grey,
-        );Loader.hideLoader();
+        );
+        Loader.hideLoader();
 
         throw Exception(response.data);
       }
@@ -265,6 +279,7 @@ class ApiService {
                         phoneNumber: "${mobile}",
                       )));
         } else if (responseData.count == 1) {
+          Loader.hideLoader();
           Fluttertoast.showToast(
             msg: 'Your number is already register please login',
             backgroundColor: Colors.grey,
@@ -276,12 +291,10 @@ class ApiService {
         Fluttertoast.showToast(
           msg: "invalid",
           backgroundColor: Colors.grey,
-
         );
 
         Loader.hideLoader();
         throw Exception(response.data);
-
       }
     } on DioError catch (e) {
       print("dio");
@@ -292,9 +305,9 @@ class ApiService {
   }
 
   Future addAccount(
-      BuildContext context, {
-        FormData? data,
-      }) async {
+    BuildContext context, {
+    FormData? data,
+  }) async {
     try {
       Loader.showLoader();
       String? id = await Preferances.getString("id");
@@ -302,17 +315,17 @@ class ApiService {
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
-      response = await dio.post("https://celebrationstation.in/post_ajax/add_account/",
-          options: Options(headers: {
-            'Client-Service': 'frontend-client',
-            'Auth-Key': 'simplerestapi',
-            'User-ID': id,
-            'Authorization': token,
-            'type': type
-          }),
-          data: data);
+      response =
+          await dio.post("https://celebrationstation.in/post_ajax/add_account/",
+              options: Options(headers: {
+                'Client-Service': 'frontend-client',
+                'Auth-Key': 'simplerestapi',
+                'User-ID': id,
+                'Authorization': token,
+                'type': type
+              }),
+              data: data);
       if (response.statusCode == 200) {
-
         debugPrint('Add Account ----- > ${response.data}');
         Loader.hideLoader();
         Navigator.push(
@@ -328,7 +341,8 @@ class ApiService {
         Fluttertoast.showToast(
           msg: "invalid",
           backgroundColor: Colors.grey,
-        );Loader.hideLoader();
+        );
+        Loader.hideLoader();
 
         throw Exception(response.data);
       }
@@ -338,5 +352,4 @@ class ApiService {
       Loader.hideLoader();
     }
   }
-
 }

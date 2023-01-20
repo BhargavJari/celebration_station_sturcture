@@ -120,6 +120,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     }
   }
 
+  List myEvent = [];
+
   getBookingDetails(String year, String month) async {
     try {
       String? id = await Preferances.getString("id");
@@ -150,6 +152,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         /*events = getEvent[index]['CBD_BOOKING_DATE'];*/
         setState(() {
           for (var i = 0; i < getEvent.length; i++) {
+            print("hello heena:=${getEvent.length}");
+            myEvent = getEvent;
+
+            print("hello myEvent list:=${myEvent.length}");
+            print(
+                "hello myEvent CBD_BOOKING_ADVANCE:=${myEvent[0]["CBD_BOOKING_ADVANCE"]}");
+            print(
+                "hello myEvent CBD_BOOKING_ADVANCE:=${myEvent[1]["CBD_BOOKING_ADVANCE"]}");
+
             mySelectedEvents.addEntries([
               MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
                 {
@@ -505,22 +516,25 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 eventLoader: _listOfDayEvents,
               ),
               ..._listOfDayEvents(_selectedDate!).map(
-                (myEvents) => ListTile(
-                  leading: const Icon(
-                    Icons.done,
-                    color: Colors.teal,
-                  ),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                        'Booking Details: \n \n ${myEvents['eventTitle']}'),
-                  ),
-                  subtitle: Text(' Description:  ${myEvents['eventDescp']}'
-                      '\n Booking Amount : ${myEvents['bookingAmount']}'
-                      '\n Advance : ${myEvents['advance']}'
-                      '\n Male Name : ${myEvents['maleName']}'
-                      '\n Female Name : ${myEvents['femaleName']}'),
-                ),
+                (myEvents) {
+                  print("myEvent length:=${myEvents}");
+                  return ListTile(
+                    leading: const Icon(
+                      Icons.done,
+                      color: Colors.teal,
+                    ),
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                          'Booking Details: \n \n ${myEvents['eventTitle']}'),
+                    ),
+                    subtitle: Text(' Description:  ${myEvents['eventDescp']}'
+                        '\n Booking Amount : ${myEvents['bookingAmount']}'
+                        '\n Advance : ${myEvents['advance']}'
+                        '\n Male Name : ${myEvents['maleName']}'
+                        '\n Female Name : ${myEvents['femaleName']}'),
+                  );
+                },
               ),
             ],
           ),

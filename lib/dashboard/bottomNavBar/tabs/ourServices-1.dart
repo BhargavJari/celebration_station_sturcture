@@ -176,11 +176,14 @@ class _OurServicesState extends State<OurServices> {
                           padding: EdgeInsets.only(right: 3.w, left: 3.w),
                           child: Container(
                             decoration: BoxDecoration(
+                                color: Colors.black,
                                 borderRadius: BorderRadius.circular(12),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'https://celebrationstation.in/uploads/' +
-                                            images![itemIndex]['IMAGE_URL']))),
+                                      'https://celebrationstation.in/uploads/' +
+                                          images![itemIndex]['IMAGE_URL'],
+                                    ),
+                                    fit: BoxFit.cover)),
                           )),
                   options: CarouselOptions(
                     onPageChanged: (index, _) {
@@ -199,6 +202,9 @@ class _OurServicesState extends State<OurServices> {
                     enlargeCenterPage: true,
                     scrollDirection: Axis.horizontal,
                   )),
+            ),
+            SizedBox(
+              height: 8,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
