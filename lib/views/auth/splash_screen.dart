@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
-import 'package:celebration_station_sturcture/views/auth/signUp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../dashboard/bottomNavBar/bottom_nav_bar.dart';
 import '../../services/shared_preference.dart';
+import '../home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,14 +24,17 @@ class _SplashScreenState extends State<SplashScreen> {
       String? id = await Preferances.getString("id");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       print("userId:=${id}");
-     print("ps:=${profileStatus}");
-      if (id != null && profileStatus==1) {
+      print("ps:=${profileStatus}");
+      if (id != null) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const BottomNavBar(index: 0,)),
+            MaterialPageRoute(
+                builder: (context) => const BottomNavBar(
+                      index: 0,
+                    )),
             (Route<dynamic> route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => SignUp()),
+            MaterialPageRoute(builder: (context) => Home()),
             (Route<dynamic> route) => false);
       }
     });

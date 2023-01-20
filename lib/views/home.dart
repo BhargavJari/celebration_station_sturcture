@@ -1,4 +1,3 @@
-
 import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,11 +42,14 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 120),
-                Image.asset("img/celebrationstation.png"),
+                Image.asset(
+                  "asset/images/logo.png",
+                  scale: 2,
+                ),
                 SizedBox(height: 30),
                 RichText(
                   textAlign: TextAlign.center,
-                  text:TextSpan(
+                  text: TextSpan(
                       style: TextStyle(
                         fontSize: 30,
                         color: Colors.black,
@@ -62,9 +64,10 @@ class _HomeState extends State<Home> {
                       ),
                       children: const <TextSpan>[
                         TextSpan(text: 'Welcome to'),
-                        TextSpan(text: ' Celebration Station',style: TextStyle(letterSpacing: 2.0))
-                      ]
-                  ),
+                        TextSpan(
+                            text: ' Celebration Station',
+                            style: TextStyle(letterSpacing: 2.0))
+                      ]),
                 ),
                 SizedBox(height: 30.0),
                 Center(
@@ -78,31 +81,34 @@ class _HomeState extends State<Home> {
                 SizedBox(height: 20.0),
                 Center(
                   child: SizedBox(
-                      height:50, //height of button
-                      width:double.infinity, //width of button
-                      child:ElevatedButton(
+                      height: 50, //height of button
+                      width: double.infinity, //width of button
+                      child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.lime[200], //background color of button
+                          primary:
+                              Colors.lime[200], //background color of button
                           elevation: 3,
-                          shape: RoundedRectangleBorder( //to set border radius to button
-                              borderRadius: BorderRadius.circular(20)
-                          ),
+                          shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)),
                         ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
                           );
                         },
-                        child: Text("Login",
-                          style:TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            color: Colors.black
-                          ),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              color: Colors.black),
                         ),
-                      )
-                  ),
+                      )),
                 ),
-                SizedBox(height:15.0),
+                SizedBox(height: 15.0),
                 Center(
                   child: Text(
                     'Or',
@@ -111,33 +117,35 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                SizedBox(height:15.0),
+                SizedBox(height: 15.0),
                 Center(
                   child: SizedBox(
-                      height:50, //height of button
-                      width:double.infinity, //width of button
-                      child:OutlinedButton(
+                      height: 50, //height of button
+                      width: double.infinity, //width of button
+                      child: OutlinedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
                           side: BorderSide(color: Colors.lime),
                           elevation: 3,
-                          shape: RoundedRectangleBorder( //to set border radius to button
-                              borderRadius: BorderRadius.circular(20)
-                          ),
+                          shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)),
                         ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SignUp()),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SignUp()),
                           );
                         },
-                        child: Text("Sign Up",
-                          style:TextStyle(
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,
                             color: Colors.black,
                           ),
                         ),
-                      )
-                  ),
+                      )),
                 ),
               ],
             ),

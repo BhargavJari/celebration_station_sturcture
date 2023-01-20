@@ -21,7 +21,6 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class CustomDrawerState extends State<CustomDrawer> {
-
   ProfileDetails? profileDetails;
   var formData;
   @override
@@ -29,7 +28,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     // TODO: implement initState
     super.initState();
     ApiService().getProfileRecord(context).then((value) {
-      if(value!.message == "ok"){
+      if (value!.message == "ok") {
         print("hhiii");
         setState(() {
           profileDetails = value.detail!;
@@ -46,8 +45,10 @@ class CustomDrawerState extends State<CustomDrawer> {
         child: Column(
           children: <Widget>[
             UserAccountsDrawerHeader(
-                accountName: Text("${profileDetails?.bRANCHNAME}"),
-                accountEmail: Text("${profileDetails?.bRANCHCONTACT}"),
+                accountName: Text(
+                    "${profileDetails?.bRANCHNAME != null ? profileDetails?.bRANCHNAME : ""}"),
+                accountEmail: Text(
+                    "${profileDetails?.bRANCHEMAIL != null ? profileDetails?.bRANCHEMAIL : ""}"),
                 currentAccountPicture: GestureDetector(
                     child: CircleAvatar(
                         backgroundColor: Colors.grey,
@@ -59,20 +60,24 @@ class CustomDrawerState extends State<CustomDrawer> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                        return BottomNavBar(index: 0,);
-                      }));
+                    return BottomNavBar(
+                      index: 0,
+                    );
+                  }));
                 }),
             ListTile(
               leading: Icon(Icons.person, color: Colors.lime),
               title: Text('My Acount'),
-              onTap: () async{
+              onTap: () async {
                 String? id = await Preferances.getString("id");
                 String? token = await Preferances.getString("token");
                 String? type = await Preferances.getString("type");
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return BottomNavBar(index: 3,);//EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
-                    }));
+                  return BottomNavBar(
+                    index: 3,
+                  ); //EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
+                }));
               },
             ),
             ListTile(
@@ -81,8 +86,10 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return BottomNavBar(index: 2,);
-                    }));
+                  return BottomNavBar(
+                    index: 2,
+                  );
+                }));
               },
             ),
             ListTile(
@@ -91,23 +98,25 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return BottomNavBar(index: 1,);
-                    }));
+                  return BottomNavBar(
+                    index: 1,
+                  );
+                }));
               },
             ),
             Divider(color: Colors.lime, indent: 20.0),
             ListTile(
               leading: Icon(Icons.privacy_tip_outlined, color: Colors.lime),
               title: Text('Privacy Policy'),
-              onTap: () async{
-                var url =Uri.parse("https://celebrationstation.in/privacy-policy.html");
+              onTap: () async {
+                var url = Uri.parse(
+                    "https://celebrationstation.in/privacy-policy.html");
 
-                if (await canLaunchUrl(url)){
+                if (await canLaunchUrl(url)) {
                   await launchUrl(url);
-                }else{
+                } else {
                   throw 'Could not launch $url';
                 }
-
               },
             ),
             ListTile(
@@ -116,8 +125,8 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return SubscriptionScreen();
-                    }));
+                  return SubscriptionScreen();
+                }));
               },
             ),
             ListTile(
@@ -131,22 +140,23 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return ContactUs();
-                    }));
+                  return ContactUs();
+                }));
               },
             ),
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),
               title: Text('Terms & Condition'),
-                onTap: () async{
-                  var url =Uri.parse("https://celebrationstation.in/terms-conditions.html");
+              onTap: () async {
+                var url = Uri.parse(
+                    "https://celebrationstation.in/terms-conditions.html");
 
-                  if (await canLaunchUrl(url)){
-                    await launchUrl(url);
-                  }else{
-                    throw 'Could not launch $url';
-                  }
-                },
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
             ),
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),
@@ -164,45 +174,44 @@ class CustomDrawerState extends State<CustomDrawer> {
               onTap: () async {
                 showDialog(
                   context: context,
-                  builder: (ctx) =>
-                      AlertDialog(
-                        title: const Text("Logout"),
-                        content: const Text("Are You Sure ?"),
-                        actions: <Widget>[
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.all(14),
-                                  child: const Text("Cancel"),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: ()async {
-                                  SharedPreferences sharedPreferences =
+                  builder: (ctx) => AlertDialog(
+                    title: const Text("Logout"),
+                    content: const Text("Are You Sure ?"),
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(14),
+                              child: const Text("Cancel"),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              SharedPreferences sharedPreferences =
                                   await SharedPreferences.getInstance();
-                                  sharedPreferences.clear();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(builder: (context) =>
-                                      const LoginScreen()), (
-                                      Route<dynamic> route) => false);
-                                },
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.all(14),
-                                  child: const Text("okay"),
-                                ),
-                              ),
-                            ],
+                              sharedPreferences.clear();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginScreen()),
+                                  (Route<dynamic> route) => false);
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(14),
+                              child: const Text("okay"),
+                            ),
                           ),
                         ],
                       ),
+                    ],
+                  ),
                 );
               },
             ),

@@ -8,8 +8,9 @@ import '../../services/api_services.dart';
 import '../custom_widget/custom_text_field.dart';
 
 class RegistrationScrenn extends StatefulWidget {
+  final String? mobileNumber;
 
-  const RegistrationScrenn({Key? key,}) : super(key: key);
+  const RegistrationScrenn({Key? key, this.mobileNumber}) : super(key: key);
 
   @override
   State<RegistrationScrenn> createState() => _RegistrationScrennState();
@@ -21,18 +22,13 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController referralController = TextEditingController();
 
   @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   //print(widget.phone);
-  //   setState(() {
-  //     phoneController=widget.phone as TextEditingController;
-  //   });
-  // }
-  // @override
-  // void setState(VoidCallback fn) {
-  //   phoneController =widget.phone as TextEditingController;
-  // }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {}
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -72,19 +68,14 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                         children: [
                           SizedBox(height: 3.h),
                           CustomTextField(
-                              prefixIcon: const Icon(Icons.phone),
-                              hintName: "Enter Phone No",
-                              fieldController: phoneController,
-                              keyboard: TextInputType.phone,
-                              maxLines: 1,
-                              textInputAction: TextInputAction.done,
-                              validator: (str) {
-                                if (str!.isEmpty) {
-                                  return '* Is Required';
-                                } else if (str.length != 10) {
-                                  return '* Phone number must be of 10 digit';
-                                }
-                              }),
+                            prefixIcon: const Icon(Icons.phone),
+                            hintName: "${widget.mobileNumber}",
+                            // fieldController: phoneController,
+                            keyboard: TextInputType.phone,
+                            readonly: true,
+                            maxLines: 1,
+                            textInputAction: TextInputAction.done,
+                          ),
                           SizedBox(
                             height: 3.h,
                           ),
@@ -140,13 +131,13 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                           ),
                           SizedBox(height: 3.h),
                           CustomTextField(
-                              prefixIcon: const Icon(Icons.people),
-                              hintName: "Enter Referral Code",
-                              fieldController: referralController,
-                              keyboard: TextInputType.text,
-                              maxLines: 1,
-                              textInputAction: TextInputAction.done,
-                              ),
+                            prefixIcon: const Icon(Icons.people),
+                            hintName: "Enter Referral Code",
+                            fieldController: referralController,
+                            keyboard: TextInputType.text,
+                            maxLines: 1,
+                            textInputAction: TextInputAction.done,
+                          ),
                           SizedBox(height: 3.h),
                           Center(
                             child: SizedBox(
@@ -154,17 +145,18 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                                 width: double.infinity, //width of button
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    primary:
-                                    Colors.lime[200], //background color of button
+                                    primary: Colors
+                                        .lime[200], //background color of button
                                     elevation: 3,
                                     shape: RoundedRectangleBorder(
-                                      //to set border radius to button
-                                        borderRadius: BorderRadius.circular(20)),
+                                        //to set border radius to button
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                   ),
                                   onPressed: () async {
-                                    if(_formKey.currentState!.validate()) {
-                                      ApiService().addAccount(
-                                          context, data: data());
+                                    if (_formKey.currentState!.validate()) {
+                                      ApiService()
+                                          .addAccount(context, data: data());
                                     }
                                   },
                                   child: Text(
@@ -187,6 +179,10 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   }
 
   FormData data() {
-    return FormData.fromMap({"referal_code": referralController.text.trim(),"phone":phoneController.text.trim(),"password":passwordController.text.trim()});
+    return FormData.fromMap({
+      "referal_code": referralController.text.trim(),
+      "phone": widget.mobileNumber,
+      "password": passwordController.text.trim()
+    });
   }
 }

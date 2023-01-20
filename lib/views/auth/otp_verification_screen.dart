@@ -213,7 +213,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       if (result.message != null) {
         CommonFunctions.toast("Register successfully !!");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RegistrationScrenn()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => RegistrationScrenn(
+                      mobileNumber: widget.phoneNumber,
+                    )));
       }
       return AuthResult(status: false);
     }

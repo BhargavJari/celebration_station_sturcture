@@ -13,7 +13,7 @@ import '../../../model/GetAllProfileModel.dart';
 import '../../../services/shared_preference.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
-
+import '../bottom_nav_bar.dart';
 
 class EventCalendarScreen extends StatefulWidget {
   const EventCalendarScreen({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
-  bool _isVisible=true;
+  bool _isVisible = true;
   Map<String, List<dynamic>> mySelectedEvents = {};
   var getData;
   var getEvent = [];
@@ -50,13 +50,12 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     _selectedDate = _focusedDay;
     loadPreviousEvents();
     getprofile();
-    //paymentStatus = profileDetails?.pAYMENTSTATUS as int;
     print(paymentStatus);
   }
 
-  getprofile(){
+  getprofile() {
     ApiService().getProfileRecord(context).then((value) {
-      if(value!.message == "ok"){
+      if (value!.message == "ok") {
         print("hhiii");
         setState(() {
           profileDetails = value.detail!;
@@ -66,22 +65,29 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         //print('model:${profileDetails?.pAYMENTSTATUS}');
         print(paymentStatus);
       }
-
     });
   }
 
-    void addBooking (String date, String title, String desc, String bookingAmount, String advance, String maleName, String femaleName, String customerPhone) async{
-    try{
+  void addBooking(
+      String date,
+      String title,
+      String desc,
+      String bookingAmount,
+      String advance,
+      String maleName,
+      String femaleName,
+      String customerPhone) async {
+    try {
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
-      Response response= await post(
+      Response response = await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/post_ajax/add_new_booking'),
         headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
           'User-ID': id.toString(),
           'token': token.toString(),
           'type': type.toString()
@@ -91,77 +97,88 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'booking_amount': bookingAmount,
           'booking_advance': advance,
-          'male_name':maleName,
-          'female_name':femaleName,
+          'male_name': maleName,
+          'female_name': femaleName,
           'description': desc,
           'customer_phone': customerPhone,
-          'title_name' : title
+          'title_name': title
         },
       );
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
-        getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('yyyy').format(_selectedDate!));
+        getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
+            DateFormat('yyyy').format(_selectedDate!));
         print(data);
         print('Event Added');
-      }else{
+      } else {
         var data = jsonDecode(response.body.toString());
         print(data);
         print('FAILED');
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
-  getBookingDetails(String year, String month) async{
-    try{
+
+  getBookingDetails(String year, String month) async {
+    try {
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
-      Response response= await post(
+      Response response = await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        Uri.parse(
+            'https://celebrationstation.in/get_ajax/get_booking_month_details'),
         headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
           'User-ID': id.toString(),
           'token': token.toString(),
           'type': type.toString()
         },
         body: {
-          'year' : year,
+          'year': year,
           'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
-          'month' : month
+          'month': month
         },
       );
 
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         var items = jsonDecode(response.body)['\$booking'];
         getEvent = items;
         /*events = getEvent[index]['CBD_BOOKING_DATE'];*/
         setState(() {
-          for(var i=0; i<getEvent.length; i++){
+          for (var i = 0; i < getEvent.length; i++) {
             mySelectedEvents.addEntries([
               MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
-                {"eventTitle": getEvent[i]['CBD_TITLE'],"eventDescp": getEvent[i]['CBD_DESC'], "bookingAmount" : getEvent[i]['CBD_BOOKING_AMOUNT'], "advance":getEvent[i]['CBD_BOOKING_ADVANCE'], "maleName" : getEvent[i]['CBD_MALE_NAME'], "femaleName" : getEvent[i]['CBD_FEMALE_NAME']},
+                {
+                  "eventTitle": getEvent[i]['CBD_TITLE'],
+                  "eventDescp": getEvent[i]['CBD_DESC'],
+                  "bookingAmount": getEvent[i]['CBD_BOOKING_AMOUNT'],
+                  "advance": getEvent[i]['CBD_BOOKING_ADVANCE'],
+                  "maleName": getEvent[i]['CBD_MALE_NAME'],
+                  "femaleName": getEvent[i]['CBD_FEMALE_NAME']
+                },
               ])
             ]);
           }
         });
-      }else{
+      } else {
         setState(() {
           getEvent = [];
         });
         print("Error");
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
     // return getEvent;
   }
 
-    loadPreviousEvents() {
-    getBookingDetails(DateFormat('yyyy').format(_selectedDate!), DateFormat('MM').format(_selectedDate!));
+  loadPreviousEvents() {
+    getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
+        DateFormat('MM').format(_selectedDate!));
     /*mySelectedEvents = {
       "2023-01-12": [
         {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
@@ -259,7 +276,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   advanceController.text.isEmpty ||
                   maleNameController.text.isEmpty ||
                   femaleNameController.text.isEmpty ||
-                  phoneController.text.isEmpty || phoneController.text.length !=10 ) {
+                  phoneController.text.isEmpty ||
+                  phoneController.text.length != 10) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter all the data correctly'),
@@ -281,17 +299,19 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   );*/
                   //addBooking();
                   if (mySelectedEvents[
-                  DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
+                          DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
                       null) {
-                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                    addBooking(
+                        DateFormat('yyyy-MM-dd')
+                            .format(_selectedDate!)
+                            .toString(),
                         titleController.text.toString(),
                         descpController.text.toString(),
                         bookingAmountController.text.toString(),
                         advanceController.text.toString(),
                         maleNameController.text.toString(),
                         femaleNameController.text.toString(),
-                        phoneController.text.toString()
-                    );
+                        phoneController.text.toString());
                     /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)]
                         ?.add({
@@ -303,15 +323,17 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       "femaleName" : femaleNameController.text,
                     });*/
                   } else {
-                    addBooking(DateFormat('yyyy-MM-dd').format(_selectedDate!).toString(),
+                    addBooking(
+                        DateFormat('yyyy-MM-dd')
+                            .format(_selectedDate!)
+                            .toString(),
                         titleController.text.toString(),
                         descpController.text.toString(),
                         bookingAmountController.text.toString(),
                         advanceController.text.toString(),
                         maleNameController.text.toString(),
                         femaleNameController.text.toString(),
-                        phoneController.text.toString()
-                    );
+                        phoneController.text.toString());
                     /*mySelectedEvents[
                     DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
                       {
@@ -325,8 +347,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     ];*/
                   }
                 });
-                _isVisible=false;
-                print("New Event for backend developer ${json.encode(mySelectedEvents)}");
+                _isVisible = false;
+                print(
+                    "New Event for backend developer ${json.encode(mySelectedEvents)}");
                 titleController.clear();
                 bookingAmountController.clear();
                 advanceController.clear();
@@ -400,24 +423,22 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
-        title:  Image.asset(
+        title: Image.asset(
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              iconSize: 30,
-              icon: Icon(
-                Icons.menu,
-                color: Colors.grey,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          }
-        ),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            iconSize: 30,
+            icon: Icon(
+              Icons.menu,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
         actions: [
           IconButton(
             iconSize: 30.0,
@@ -445,9 +466,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   ),
                 ),
               ),
-
               TableCalendar(
-                firstDay: DateTime.utc(2022)/*DateTime.now()*/,
+                firstDay: DateTime.utc(2022) /*DateTime.now()*/,
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
@@ -457,10 +477,12 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     setState(() {
                       _selectedDate = selectedDay;
                       _focusedDay = focusedDay;
-                      if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDate!)] != null) {
-                        _isVisible=true;
-                      }else{
-                        _isVisible=true;
+                      if (mySelectedEvents[DateFormat('yyyy-MM-dd')
+                              .format(_selectedDate!)] !=
+                          null) {
+                        _isVisible = true;
+                      } else {
+                        _isVisible = true;
                       }
                     });
                   }
@@ -483,36 +505,48 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 eventLoader: _listOfDayEvents,
               ),
               ..._listOfDayEvents(_selectedDate!).map(
-                    (myEvents) => ListTile(
+                (myEvents) => ListTile(
                   leading: const Icon(
                     Icons.done,
                     color: Colors.teal,
                   ),
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text('Booking Details: \n \n ${myEvents['eventTitle']}'),
+                    child: Text(
+                        'Booking Details: \n \n ${myEvents['eventTitle']}'),
                   ),
                   subtitle: Text(' Description:  ${myEvents['eventDescp']}'
                       '\n Booking Amount : ${myEvents['bookingAmount']}'
                       '\n Advance : ${myEvents['advance']}'
                       '\n Male Name : ${myEvents['maleName']}'
-                      '\n Female Name : ${myEvents['femaleName']}'
-                  ),
+                      '\n Female Name : ${myEvents['femaleName']}'),
                 ),
               ),
             ],
           ),
         ),
       ),
-
       floatingActionButton: new Visibility(
         visible: _isVisible,
         child: FloatingActionButton.extended(
-          onPressed: (){
-            if(paymentStatus == 0){
+          onPressed: () {
+            if (paymentStatus == 0) {
               _showAddEventDialog();
-            }else{
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen()));
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SubscriptionScreen(
+                            userEmail: profileDetails?.bRANCHEMAIL,
+                            userPhoneNumber: profileDetails?.bRANCHCONTACT,
+                          ))).then((value) {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const BottomNavBar(
+                              index: 1,
+                            )),
+                    (Route<dynamic> route) => false);
+              });
             }
           },
           // paymentStatus != 0 ? _showAddEventDialog() :Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) ,
