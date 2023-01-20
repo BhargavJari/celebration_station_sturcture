@@ -50,7 +50,6 @@ class ApiService {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
            UpdateProfile(userId: "${responseData.id}",token: "${responseData.token}",type: "${responseData.type}",)), (Route<dynamic> route) => false);
         }else if(responseData.pROFILESTATUS=='1'){
-
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
           const BottomNavBar()), (Route<dynamic> route) => false);
         }
