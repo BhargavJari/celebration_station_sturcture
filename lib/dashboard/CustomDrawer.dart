@@ -11,6 +11,7 @@ import '../services/shared_preference.dart';
 import '../views/auth/login_screen.dart';
 import '../views/contactUs.dart';
 import '../views/editProfile.dart';
+import '../views/faq.dart';
 import '../views/ourService.dart';
 import '../views/subscription_screen.dart';
 import 'bottomNavBar/tabs/ourServices-1.dart';
@@ -132,7 +133,12 @@ class CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               leading: Icon(Icons.question_answer_outlined, color: Colors.lime),
               title: Text('FAQ'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return faqScreen();
+                    }));
+              },
             ),
             ListTile(
               leading: Icon(Icons.contact_page, color: Colors.lime),
@@ -161,11 +167,15 @@ class CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               leading: Icon(Icons.help, color: Colors.lime),
               title: Text('About'),
-              onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (BuildContext context) {
-                //       return AboutUs();
-                //     }));
+              onTap: () async {
+                var url = Uri.parse(
+                    "https://celebrationstation.in/about-us.html");
+
+                if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+                } else {
+                throw 'Could not launch $url';
+                }
               },
             ),
             ListTile(

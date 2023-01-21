@@ -269,7 +269,7 @@ class ApiService {
       print("responseData:=${responseData}");
       print("responseData.status:=${responseData.status}");
       if (responseData.message == "ok") {
-        print("responseData.bjjhstatus:=${responseData.status}");
+        print("responseData.status:=${responseData.status}");
         if (responseData.count == 0) {
           Loader.hideLoader();
           Navigator.push(
