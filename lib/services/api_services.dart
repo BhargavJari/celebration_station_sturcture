@@ -65,14 +65,14 @@ class ApiService {
               (Route<dynamic> route) => false);
         }
         Fluttertoast.showToast(
-          msg: 'Login Sucessfully...',
+          msg: 'Login Sucessfully',
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
         return responseData;
       } else {
         Fluttertoast.showToast(
-          msg: "invalid",
+          msg: "Invalid Phone Number/Password",
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
@@ -176,15 +176,15 @@ class ApiService {
         print("4");
 
         Loader.hideLoader();
-        Fluttertoast.showToast(
+        /*Fluttertoast.showToast(
           msg: 'Get Profile Data Sucessfully...',
           backgroundColor: Colors.grey,
-        );
+        );*/
 
         return responseData;
       } else {
         Fluttertoast.showToast(
-          msg: "invalid",
+          msg: "Invalid",
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();

@@ -104,7 +104,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Only ₹499',
+                            'Only ₹500',
                             style: FontTextStyle.poppinsS24W7RedColor,
                           ),
                           Text(

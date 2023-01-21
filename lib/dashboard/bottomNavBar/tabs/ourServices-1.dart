@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
+import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -262,7 +263,14 @@ class _OurServicesState extends State<OurServices> {
                           //to set border radius to button
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return BottomNavBar(
+                              index: 1,
+                            );
+                          }));
+                    },
                     child: const Text(
                       "Add Booking",
                       style: TextStyle(

@@ -152,15 +152,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         /*events = getEvent[index]['CBD_BOOKING_DATE'];*/
         setState(() {
           for (var i = 0; i < getEvent.length; i++) {
-            print("hello heena:=${getEvent.length}");
+            /*print("hello heena:=${getEvent.length}");
             myEvent = getEvent;
 
             print("hello myEvent list:=${myEvent.length}");
             print(
                 "hello myEvent CBD_BOOKING_ADVANCE:=${myEvent[0]["CBD_BOOKING_ADVANCE"]}");
             print(
-                "hello myEvent CBD_BOOKING_ADVANCE:=${myEvent[1]["CBD_BOOKING_ADVANCE"]}");
-
+                "hello myEvent CBD_BOOKING_ADVANCE:=${myEvent[1]["CBD_BOOKING_ADVANCE"]}");*/
             mySelectedEvents.addEntries([
               MapEntry(getEvent[i]['CBD_BOOKING_DATE'].toString(), [
                 {
@@ -482,7 +481,23 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
-                onDaySelected: (selectedDay, focusedDay) {
+                  /*calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, day, events) => events.isNotEmpty
+                        ? Container(
+                      width: 24,
+                      height: 24,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        color: Colors.lightBlue,
+                      ),
+                      child: Text(
+                        '${events.length}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    )
+                        : null,
+                  ),*/
+                  onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDate, selectedDay)) {
                     // Call `setState()` when updating the selected day
                     setState(() {
@@ -544,7 +559,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         visible: _isVisible,
         child: FloatingActionButton.extended(
           onPressed: () {
-            if (paymentStatus == 0) {
+            if (paymentStatus != 0) {
               _showAddEventDialog();
             } else {
               Navigator.push(
