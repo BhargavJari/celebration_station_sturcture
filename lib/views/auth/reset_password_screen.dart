@@ -1,7 +1,8 @@
+import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:dio/dio.dart';
 import '../ourService.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -14,6 +15,9 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool? check1 = false;
+  TextEditingController _password = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 SizedBox(height: 30),
                 RichText(
                   textAlign: TextAlign.center,
-                  text:const TextSpan(
+                  text: TextSpan(
                       style: TextStyle(
                         fontSize: 30,
                         color: Colors.black,
@@ -45,13 +49,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ],
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: 'Reset Password Here',style: TextStyle(letterSpacing: 2.0))
+                        TextSpan(text: 'Reset Password Here',style: TextStyle(letterSpacing: 2.0)),
+                        TextSpan(text: widget.mobileNumber,style: TextStyle(letterSpacing: 2.0)),
                       ]
                   ),
                 ),
                 const SizedBox(height: 25.0),
                 TextFormField(
+                  controller: _password,
                   textInputAction: TextInputAction.next,
+                  validator: (str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -73,6 +85,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 const SizedBox(height: 15.0),
                 TextFormField(
                   textInputAction: TextInputAction.next,
+                  validator: (str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -106,6 +124,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                         ),
                         onPressed: (){
+                          if(_formKey.currentState!.validate()) {
+                            ApiService().resetPassword(
+                                context, data: data());
+                          }
                           Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()),
                           );
                         },
@@ -125,5 +147,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         ),
       ),
     );
+  }
+  FormData data() {
+    return FormData.fromMap({"phone": widget.mobileNumber,"password":_password.text.trim()});
   }
 }

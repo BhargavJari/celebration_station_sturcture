@@ -98,6 +98,7 @@ class _faqScreenState extends State<faqScreen> {
                     SizedBox(height: 2.h),
                     for (var i = 0; i < faq!.fquestion!.length; i++) ...{
                       GFAccordion(
+                        textStyle: FontTextStyle.poppinsS16W7BlackColor,
                           title: faq!.fquestion![i].fQUESTION!.toString(),
                           content: faq!.fquestion![i].fANSWER!.toString(),
                           collapsedIcon: Icon(Icons.add),

@@ -24,6 +24,7 @@ class _OurServicesState extends State<OurServices> {
   List? images = [];
   bool isLoading = false;
   List getEvent = [];
+  var count = 0;
   var year = DateFormat('yyyy').format(DateTime.now());
   var month = DateFormat('MM').format(DateTime.now());
   CarouselController buttonCarouselController = CarouselController();
@@ -108,6 +109,12 @@ class _OurServicesState extends State<OurServices> {
         var items = jsonDecode(response.body)['\$booking'];
         setState(() {
           getEvent = items;
+          for(var i=0;i<getEvent.length;i++){
+            if(items['CBD_STATUS'] == 0){
+              count++;
+            }
+          }
+          print(count);
         });
         print(getEvent);
       } else {
@@ -339,7 +346,7 @@ class _OurServicesState extends State<OurServices> {
                     ),
                     onPressed: () {},
                     child: const Text(
-                      "Canceled Booking : 20",
+                      "Canceled Booking : 20" ,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,
