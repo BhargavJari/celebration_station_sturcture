@@ -1,10 +1,15 @@
+import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:celebration_station_sturcture/utils/colors_utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import '../Utils/fontFamily_utils.dart';
+import '../services/shared_preference.dart';
+import '../utils/show_toast.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   final String? userPhoneNumber;
@@ -18,14 +23,14 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   late var _razorpay;
+  String? paymentId;
   var amountController = TextEditingController();
+  String? loginId;
 
   @override
   void initState() {
-    print("userEmail:=${widget.userEmail}");
-    print("userPhonenumber:=${widget.userPhoneNumber}");
-    amountController.text = "${500}";
-    print("amount:=${amountController.text}");
+    amountController.text = "${499}";
+
     // TODO: implement initState
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -37,6 +42,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
     print("Payment Done");
+    print("Payment Id here := ${response.paymentId}");
+    setState(() {
+      paymentId = response.paymentId;
+    });
+    print("SEND Payment Id here := ${paymentId}");
+    ApiService().paymentStatus(context, data: data());
+    //payment status change api call
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -46,6 +58,24 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Do something when an external wallet is selected
+  }
+
+  FormData data() {
+    final currentDate = DateTime.now();
+    var compeletedDate = DateFormat('MM-dd-yyyy').format(currentDate);
+    return FormData.fromMap({
+      "transactionid": paymentId,
+      "registrationfee": 499,
+      "payment_date": compeletedDate,
+      "loginid": loginId,
+    });
+  }
+
+  Future<void> getLoginId() async {
+    String? id = await Preferances.getString("id");
+    setState(() {
+      loginId = id;
+    });
   }
 
   @override
@@ -145,6 +175,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               };
 
                               razorpay.open(options);
+                              razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                                  _handlePaymentSuccess);
                             },
                             child: Text(
                               "Subscribe Now",

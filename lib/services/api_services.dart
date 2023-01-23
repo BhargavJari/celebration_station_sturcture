@@ -352,4 +352,53 @@ class ApiService {
       Loader.hideLoader();
     }
   }
+
+  Future<void> paymentStatus(BuildContext context, {FormData? data}) async {
+    try {
+      Loader.showLoader();
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      Response response;
+      response = await dio.post(ApiEndPoints.paymnetStatus,
+          options: Options(headers: {
+            'Client-Service': 'frontend-client',
+            'Auth-Key': 'simplerestapi',
+            'User-ID': id,
+            'Authorization': token,
+            'type': type
+          }),
+          data: data);
+
+      print("responseData:=${response}");
+      print("responseData.status:=${response.statusCode}");
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: "Payment successfully",
+          backgroundColor: Colors.grey,
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const BottomNavBar(
+                      index: 1,
+                    )),
+            (Route<dynamic> route) => false);
+
+        // return responseData;
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );
+
+        Loader.hideLoader();
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      debugPrint('Dio E  $e');
+      Loader.hideLoader();
+    }
+  }
 }

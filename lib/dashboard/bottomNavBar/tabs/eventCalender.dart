@@ -50,7 +50,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     _selectedDate = _focusedDay;
     loadPreviousEvents();
     getprofile();
-    print(paymentStatus);
   }
 
   getprofile() {
@@ -64,6 +63,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         print('model:$profileDetails');
         //print('model:${profileDetails?.pAYMENTSTATUS}');
         print(paymentStatus);
+        print("paymentStatus:=${paymentStatus}");
       }
     });
   }
@@ -559,9 +559,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         visible: _isVisible,
         child: FloatingActionButton.extended(
           onPressed: () {
-            if (paymentStatus == 0) {
-              _showAddEventDialog();
-            } else {
+            if (paymentStatus == "0") {
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -576,6 +574,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                             )),
                     (Route<dynamic> route) => false);
               });
+            } else {
+              _showAddEventDialog();
             }
           },
           // paymentStatus != 0 ? _showAddEventDialog() :Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionScreen(),)) ,
