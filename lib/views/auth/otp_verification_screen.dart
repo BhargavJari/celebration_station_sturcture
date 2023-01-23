@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:celebration_station_sturcture/views/auth/registration_screen.dart';
+import 'package:celebration_station_sturcture/views/auth/reset_password_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ import 'login_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
-  const OtpVerificationScreen({Key? key, required this.phoneNumber})
+  final String status;
+  const OtpVerificationScreen({Key? key, required this.phoneNumber,required this.status})
       : super(key: key);
 
   @override
@@ -211,13 +213,23 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         default:
       }
       if (result.message != null) {
-        CommonFunctions.toast("Register successfully !!");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RegistrationScrenn(
-                      mobileNumber: widget.phoneNumber,
-                    )));
+        if(widget.status=="0"){
+          CommonFunctions.toast("Register successfully !!");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RegistrationScrenn(
+                    mobileNumber: widget.phoneNumber,
+                  )));
+        }else{
+          CommonFunctions.toast("Register successfully !!");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>ResetPasswordScreen(
+                    mobileNumber: widget.phoneNumber,
+                  )));
+        }
       }
       return AuthResult(status: false);
     }

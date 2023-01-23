@@ -1,4 +1,5 @@
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
+import 'package:celebration_station_sturcture/views/auth/forgot_password_number_screen.dart';
 import 'package:celebration_station_sturcture/views/custom_widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -123,10 +124,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 )),
                           ),
+                          SizedBox(height: 2.h,),
+
                         ],
                       ),
                     ),
                   ),
+                GestureDetector(
+                  onTap:(){ Navigator.push(context, MaterialPageRoute(builder: (context) =>ForgotPasswordNumberScreen()));},
+                  child: Text("Forgot Password",style: FontTextStyle.poppinsS12W7BlackColor,)),
                 ],
               ),
             ),
