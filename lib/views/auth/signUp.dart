@@ -1,9 +1,11 @@
 import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../Utils/fontFamily_utils.dart';
+import '../../utils/loder.dart';
 import '../custom_widget/custom_primary_button.dart';
 import '../custom_widget/custom_text_field.dart';
 import 'otp_verification_screen.dart';
@@ -134,10 +136,26 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         ApiService().mobileVerify(context,
-                            data: data(), mobile: "${phone.text.trim()}");
+                            data: data(), mobile: phone.text.trim()).then((value){
+                          if (value?.count == 0) {
+                            Loader.hideLoader();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtpVerificationScreen(
+                                      phoneNumber: "${phone.text}",status: "0",
+                                    )));
+                          } else if (value?.count == 1) {
+                            Loader.hideLoader();
+                            Fluttertoast.showToast(
+                              msg: 'Your number is already register please login',
+                              backgroundColor: Colors.grey,
+                            );
+                          }
+                        });
                       }
                     },
-                    child: Text("Send the code")),
+                    child: const Text("Send the code")),
               )
             ],
           ),

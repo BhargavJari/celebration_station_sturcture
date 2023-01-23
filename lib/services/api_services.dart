@@ -269,22 +269,8 @@ class ApiService {
       print("responseData:=${responseData}");
       print("responseData.status:=${responseData.status}");
       if (responseData.message == "ok") {
+
         print("responseData.bjjhstatus:=${responseData.status}");
-        if (responseData.count == 0) {
-          Loader.hideLoader();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OtpVerificationScreen(
-                        phoneNumber: "${mobile}",
-                      )));
-        } else if (responseData.count == 1) {
-          Loader.hideLoader();
-          Fluttertoast.showToast(
-            msg: 'Your number is already register please login',
-            backgroundColor: Colors.grey,
-          );
-        }
 
         return responseData;
       } else {
@@ -331,7 +317,7 @@ class ApiService {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) =>LoginScreen(),
             ));
         Fluttertoast.showToast(
           msg: 'Add Account  Sucessfully...',
