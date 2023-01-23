@@ -124,10 +124,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                         ),
                         onPressed: (){
-                          if(_formKey.currentState!.validate()) {
-                            ApiService().resetPassword(
-                                context, data: data());
-                          }
+                          // if(_formKey.currentState!.validate()) {
+                          //
+                          // }
+                          ApiService().resetPassword(
+                              context, data: data());
                           Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()),
                           );
                         },

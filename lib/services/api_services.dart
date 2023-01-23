@@ -409,11 +409,7 @@ class ApiService {
         debugPrint('reset Password ----- > ${response.data}');
         Loader.hideLoader();
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BottomNavBar(
-                index: 1,
-              ),
+            context, MaterialPageRoute(builder: (context) => LoginScreen(),
             ));
         Fluttertoast.showToast(
           msg: 'reset Password Sucessfully...',
