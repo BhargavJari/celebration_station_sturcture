@@ -92,6 +92,7 @@ class ApiService {
   }) async {
     try {
       Loader.showLoader();
+
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");

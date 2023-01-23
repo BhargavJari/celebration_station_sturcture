@@ -49,8 +49,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ],
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: 'Reset Password Here',style: TextStyle(letterSpacing: 2.0)),
-                        TextSpan(text: widget.mobileNumber,style: TextStyle(letterSpacing: 2.0)),
+                        TextSpan(text: 'Reset Password',style: TextStyle(letterSpacing: 2.0)),
+
                       ]
                   ),
                 ),
