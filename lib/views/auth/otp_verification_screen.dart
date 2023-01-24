@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:celebration_station_sturcture/views/auth/registration_screen.dart';
+import 'package:celebration_station_sturcture/views/auth/reset_password_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ import 'login_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
-  const OtpVerificationScreen({Key? key, required this.phoneNumber})
+  final String status;
+  const OtpVerificationScreen({Key? key, required this.phoneNumber,required this.status})
       : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   int pinLength = 6;
   int _seconds = -1;
   Timer? _timer;
-  String _verificationId = '', otp = '';
+  String _verificationId = '';
 
   void _startTimer() {
     _seconds = 60;
@@ -125,10 +127,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
-                      AuthResult result = await _verify(otp);
-                      if (result.status) {
-                        Navigator.of(context).pop();
-                      }
+                     if(_controller.text == ""){
+
+                       CommonFunctions.toast("please enter otp code !!");
+                     }else{
+                       print("co_controller.text:=${_controller.text}");
+                       AuthResult result = await _verify(_controller.text);
+                       if (result.status) {
+                         //Navigator.of(context).pop();
+                       }
+                     }
                     },
                     child: Text("Verify")),
               ),
@@ -176,6 +184,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
+        print("verificationId:=$verificationId");
+        print("_verificationId_verificationId:=$_verificationId");
+
         setState(() {});
       },
     );
@@ -191,8 +202,23 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
       UserCredential credential =
           await FirebaseAuth.instance.signInWithCredential(authCredential);
-      // await _con.changePhoneNumberApi(
-      //     context, widget.phoneNumber, widget.countryCode);
+      if(widget.status=="0"){
+        CommonFunctions.toast("Register successfully !!");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => RegistrationScrenn(
+                  mobileNumber: widget.phoneNumber,
+                )));
+      }else{
+        CommonFunctions.toast("otp verify successfully !!");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>ResetPasswordScreen(
+                  mobileNumber: widget.phoneNumber,
+                )));
+      }
 
       Loader.hideLoader();
       return AuthResult(status: true, user: credential.user);
@@ -211,13 +237,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         default:
       }
       if (result.message != null) {
-        CommonFunctions.toast("Register successfully !!");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RegistrationScrenn(
-                      mobileNumber: widget.phoneNumber,
-                    )));
+        _controller.clear();
+        CommonFunctions.toast(result.message!);
       }
       return AuthResult(status: false);
     }

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
+import '../model/FaqModel.dart';
 import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
 import '../model/mobile_verify_model.dart';
@@ -92,6 +93,7 @@ class ApiService {
   }) async {
     try {
       Loader.showLoader();
+
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
@@ -269,22 +271,8 @@ class ApiService {
       print("responseData:=${responseData}");
       print("responseData.status:=${responseData.status}");
       if (responseData.message == "ok") {
+
         print("responseData.bjjhstatus:=${responseData.status}");
-        if (responseData.count == 0) {
-          Loader.hideLoader();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OtpVerificationScreen(
-                        phoneNumber: "${mobile}",
-                      )));
-        } else if (responseData.count == 1) {
-          Loader.hideLoader();
-          Fluttertoast.showToast(
-            msg: 'Your number is already register please login',
-            backgroundColor: Colors.grey,
-          );
-        }
 
         return responseData;
       } else {
@@ -331,7 +319,7 @@ class ApiService {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) =>LoginScreen(),
             ));
         Fluttertoast.showToast(
           msg: 'Add Account  Sucessfully...',
@@ -401,4 +389,48 @@ class ApiService {
       Loader.hideLoader();
     }
   }
+
+
+  Future resetPassword(
+      BuildContext context, {
+        FormData? data,
+      }) async {
+    try {
+      Loader.showLoader();
+      Response response;
+      response = await dio.post('https://celebrationstation.in/post_ajax/update_reset_pasword/',
+          // options: Options(headers: {
+          //   'Client-Service': 'frontend-client',
+          //   'Auth-Key': 'simplerestapi',
+          //   'User-ID': id,
+          //   'Authorization': token,
+          //   'type': type
+          // }),
+          data: data);
+      if (response.statusCode == 200) {
+        debugPrint('reset Password ----- > ${response.data}');
+        Loader.hideLoader();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginScreen(),
+            ));
+        Fluttertoast.showToast(
+          msg: 'reset Password Sucessfully...',
+          backgroundColor: Colors.grey,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );
+        Loader.hideLoader();
+
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      Loader.hideLoader();
+    }
+  }
+
 }

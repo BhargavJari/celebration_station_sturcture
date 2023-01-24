@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       print("userId:=${id}");
       print("ps:=${profileStatus}");
-      if (id != null) {
+      if (id != null ) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => const BottomNavBar(

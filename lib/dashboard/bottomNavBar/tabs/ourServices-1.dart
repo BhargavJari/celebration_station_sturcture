@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
-import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -13,6 +12,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
+import '../bottom_nav_bar.dart';
 
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
@@ -25,6 +25,7 @@ class _OurServicesState extends State<OurServices> {
   List? images = [];
   bool isLoading = false;
   List getEvent = [];
+  var count = 0;
   var year = DateFormat('yyyy').format(DateTime.now());
   var month = DateFormat('MM').format(DateTime.now());
   CarouselController buttonCarouselController = CarouselController();
@@ -109,6 +110,12 @@ class _OurServicesState extends State<OurServices> {
         var items = jsonDecode(response.body)['\$booking'];
         setState(() {
           getEvent = items;
+          for(var i=0;i<getEvent.length;i++){
+            if(items['CBD_STATUS'] == 0){
+              count++;
+            }
+          }
+          print(count);
         });
         print(getEvent);
       } else {
@@ -268,7 +275,7 @@ class _OurServicesState extends State<OurServices> {
                           MaterialPageRoute(builder: (BuildContext context) {
                             return BottomNavBar(
                               index: 1,
-                            );
+                            ); //EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
                           }));
                     },
                     child: const Text(
@@ -347,7 +354,7 @@ class _OurServicesState extends State<OurServices> {
                     ),
                     onPressed: () {},
                     child: const Text(
-                      "Canceled Booking : 20",
+                      "Canceled Booking : 20" ,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,

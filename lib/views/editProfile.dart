@@ -336,6 +336,7 @@ class _EditProfile extends State<EditProfile> {
                       ),
                       onPressed: () async {
                         FormData data() {
+                          print(widget.userId);
                           return FormData.fromMap({
                             "business_name": businessName.text.toString(),
                             "owner_name": ownerName.text.toString(),
@@ -345,7 +346,7 @@ class _EditProfile extends State<EditProfile> {
                             "pincode": pinCode.text.toString(),
                             "address": address.text.toString(),
                             "whats_app": whatsappNo.text.toString(),
-                            "loginid": widget.userId,
+                            "loginid": widget.userId.toString(),
                             "email": emailid.text.toString(),
                           });
                         }
