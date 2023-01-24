@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/tabs/profile/components/body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,
