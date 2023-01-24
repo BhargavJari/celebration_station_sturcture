@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
+import '../model/FaqModel.dart';
 import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
 import '../model/mobile_verify_model.dart';
@@ -431,4 +432,5 @@ class ApiService {
       Loader.hideLoader();
     }
   }
+
 }

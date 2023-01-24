@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
+import '../bottom_nav_bar.dart';
 
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
@@ -269,7 +270,14 @@ class _OurServicesState extends State<OurServices> {
                           //to set border radius to button
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return BottomNavBar(
+                              index: 1,
+                            ); //EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
+                          }));
+                    },
                     child: const Text(
                       "Add Booking",
                       style: TextStyle(
