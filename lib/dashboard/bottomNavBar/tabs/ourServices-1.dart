@@ -162,7 +162,7 @@ class _OurServicesState extends State<OurServices> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             onPressed: () {},
             icon: Icon(
-              CupertinoIcons.location,
+              CupertinoIcons.bell,
               color: Colors.grey,
             ),
           ),
