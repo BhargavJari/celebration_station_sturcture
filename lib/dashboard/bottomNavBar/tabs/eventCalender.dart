@@ -367,7 +367,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   maleNameController.text.isEmpty ||
                   femaleNameController.text.isEmpty ||
                   phoneController.text.isEmpty ||
-                  phoneController.text.length != 10) {
+                  phoneController.text.length != 10
+              ) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter all the data correctly'),

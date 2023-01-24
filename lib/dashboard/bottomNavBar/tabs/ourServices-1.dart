@@ -353,8 +353,8 @@ class _OurServicesState extends State<OurServices> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     onPressed: () {},
-                    child: const Text(
-                      "Canceled Booking : 20" ,
+                    child:  Text(
+                      "Canceled Booking : ${count}" ,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,
