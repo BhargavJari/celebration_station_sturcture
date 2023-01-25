@@ -483,14 +483,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   DataColumn(
                     label: Expanded(
                       child: Text(
-                        'Date',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
                         'Title',
                         style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                       ),
@@ -547,7 +539,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ],
                 rows: List.generate(getDateEvent.length, (index){
                   return DataRow(cells: [
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_BOOKING_DATE']))),
                     DataCell(Container(child: Text(getDateEvent[index]['CBD_TITLE']))),
                     DataCell(Container(child: Text(getDateEvent[index]['CBD_BOOKING_ADVANCE']))),
                     DataCell(Container(child: Text(getDateEvent[index]['CBD_BOOKING_AMOUNT']))),
