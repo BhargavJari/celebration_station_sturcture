@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:celebration_station_sturcture/Utils/fontFamily_utils.dart';
 import 'package:celebration_station_sturcture/services/api_services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:sizer/sizer.dart';
@@ -12,8 +14,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../main.dart';
 import '../../../model/GetAllProfileModel.dart';
 import '../../../services/shared_preference.dart';
+
 import '../../../utils/loder.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
@@ -55,12 +59,53 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/launcher_icon',
+              ),
+            ));
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body!)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
     _selectedDate = _focusedDay;
     loadPreviousEvents();
     getprofile();
   }
 
-  getprofile() {
+  getprofile() async {
     ApiService().getProfileRecord(context).then((value) {
       if (value!.message == "ok") {
         print("hhiii");
@@ -119,6 +164,31 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           msg: 'Booking Added Successfully',
           backgroundColor: Colors.grey,
         );
+
+        String? notificationToken =
+        await Preferances.getString("notificationToken");
+        print("notificationToken:==${notificationToken}");
+        flutterLocalNotificationsPlugin.show(
+            0,
+            "Booking confirm",
+            "your advance ₹${advance} received",
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description,
+                    importance: Importance.high,
+                    color: Colors.blue,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher')));
+        // callOnFcmApiSendPushNotifications(
+        //   title: "Celebration Station",
+        //   body: "Your booking confirm",
+        //   userToken: [
+        //     "${notificationToken?.replaceAll('"', '').replaceAll('"', '').toString()}"
+        //   ],
+        //   action: "job_successfully",
+        // );
+
+        ///notification call here....
         print('Event Added');
       } else {
         var data = jsonDecode(response.body.toString());
@@ -130,30 +200,79 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     }
   }
 
-  void cancelBooking (String bookingDate, String message, String bookingId) async{
-    try{
+  Future<bool> callOnFcmApiSendPushNotifications({
+    List<String>? userToken,
+    String? title,
+    String? body,
+    String? action,
+  }) async {
+    debugPrint('Push Notification Start');
+    debugPrint("user token $userToken");
+    Loader.showLoader();
+    const postUrl = 'https://fcm.googleapis.com/fcm/send';
+
+    final data = {
+      "registration_ids": userToken,
+      "notification": {
+        "title": title,
+        "body": body,
+      },
+      "data": {
+        "action": action,
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      }
+    };
+
+    ///'Authorization=YOUR_SERVER_KEY' -- you get from firebase
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization':
+      'key=AAAAwlp2Cyg:APA91bFuW0DXVnNghX7jQ7OsKZ12ihaxAAfaFNUOzKo3j3R00hGS4b-OiMOdXhHgwpv-Yu4ETGLZm5guNvzWi0eb-aYdQkjf86M8E5TiUkQCh8HAbK4OEWF3H-28D6RF1CM1mT8_IHdO'
+    };
+    final response = await http.post(Uri.parse(postUrl),
+        body: json.encode(data),
+        encoding: Encoding.getByName('utf-8'),
+        headers: headers);
+
+    debugPrint("Response is---> ${response.body}");
+    if (response.statusCode == 200) {
+      debugPrint('Push Notification end with successfully');
+      Loader.hideLoader();
+      return true;
+    } else {
+      debugPrint('Push Notification end with error ');
+      debugPrint('FCM error ${response.statusCode}');
+      Loader.hideLoader();
+      return false;
+    }
+  }
+
+  void cancelBooking(
+      String bookingDate, String message, String bookingId) async {
+    try {
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
-      Response response= await post(
+      Response response = await post(
         Uri.parse('https://celebrationstation.in/post_ajax/cancelled_booking'),
         headers: {
-          'Client-Service':'frontend-client',
-          'Auth-Key':'simplerestapi',
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
           'User-ID': id.toString(),
           'token': token.toString(),
           'type': type.toString()
         },
         body: {
           'booking_date': bookingDate,
-          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
+          'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'message': message,
           'booking_id': bookingId,
         },
       );
 
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         var data = json.decode(response.body);
         getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
             DateFormat('MM').format(_selectedDate!));
@@ -162,15 +281,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           msg: 'Booking Canceled!!',
           backgroundColor: Colors.grey,
         );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(index: 1)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BottomNavBar(index: 1)));
         print('Booking Canceled');
-
-      }else{
+      } else {
         var data = json.decode(response.body.toString());
         print(data);
         print('FAILED');
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -264,7 +383,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         print("Booking Date List Fetched");
       } else {
         setState(() {
-          getDateEvent =[];
+          getDateEvent = [];
         });
         Loader.hideLoader();
         print("Error");
@@ -324,7 +443,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Booking Amount/Total Amount*'),
+                decoration: const InputDecoration(labelText: 'Booking Amount*'),
               ),
               TextFormField(
                 controller: advanceController,
@@ -376,14 +495,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   advanceController.text.isEmpty ||
                   phoneController.text.isEmpty ||
                   phoneController.text.length != 10 ||
-                  int.parse(advanceController.text) > int.parse(bookingAmountController.text)
-              ) {
-                if(int.parse(advanceController.text) > int.parse(bookingAmountController.text)){
+                  int.parse(advanceController.text) >
+                      int.parse(bookingAmountController.text)) {
+                if (int.parse(advanceController.text) >
+                    int.parse(bookingAmountController.text)) {
                   Fluttertoast.showToast(
                     msg: 'Advance amount should be less than booking amount',
                     backgroundColor: Colors.grey,
                   );
-                }else{
+                } else {
                   Fluttertoast.showToast(
                     msg: 'Please enter valid Data',
                     backgroundColor: Colors.grey,
@@ -410,7 +530,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   );*/
                   //addBooking();
                   if (mySelectedEvents[
-                          DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
+                  DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
                       null) {
                     addBooking(
                         DateFormat('yyyy-MM-dd')
@@ -423,8 +543,18 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         maleNameController.text.toString(),
                         femaleNameController.text.toString(),
                         phoneController.text.toString());
+                    ////notification booking call
                     loadPreviousEvents();
-
+                    /*mySelectedEvents[
+                    DateFormat('yyyy-MM-dd').format(_selectedDate!)]
+                        ?.add({
+                      "eventTitle": titleController.text,
+                      "eventDescp": descpController.text,
+                      "bookingAmount" : bookingAmountController.text,
+                      "advance" : advanceController.text,
+                      "maleName" : maleNameController.text,
+                      "femaleName" : femaleNameController.text,
+                    });*/
                   } else {
                     addBooking(
                         DateFormat('yyyy-MM-dd')
@@ -470,6 +600,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       ),
     );
   }
+
   _showEventDetailDialog() async {
     await showDialog(
       context: context,
@@ -485,8 +616,10 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: DataTable(
-                headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
-                dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
+                headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.pink.shade50),
+                dataRowColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.grey.shade50),
                 headingRowHeight: 50,
                 border: TableBorder.all(width: 1),
                 columnSpacing: 20,
@@ -495,7 +628,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Title',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -503,7 +637,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Advance',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -511,7 +646,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Balance',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -519,7 +655,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Male Name',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -527,7 +664,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Female Name',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -535,7 +673,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Description',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -543,37 +682,52 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     label: Expanded(
                       child: Text(
                         'Cancel',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ],
-                rows: List.generate(getDateEvent.length, (index){
+                rows: List.generate(getDateEvent.length, (index) {
                   return DataRow(cells: [
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_TITLE']))),
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_BOOKING_ADVANCE']))),
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_BOOKING_AMOUNT']))),
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_MALE_NAME']))),
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_FEMALE_NAME']))),
-                    DataCell(Container(child: Text(getDateEvent[index]['CBD_DESC']))),
                     DataCell(Container(
-                        child: IconButton(
-                            onPressed: () {
-                              _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
-                            },
-                            icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
-                    ),
+                        child: Text(getDateEvent[index]['CBD_TITLE']))),
+                    DataCell(Container(
+                        child:
+                        Text(getDateEvent[index]['CBD_BOOKING_ADVANCE']))),
+                    DataCell(Container(
+                        child:
+                        Text(getDateEvent[index]['CBD_BOOKING_AMOUNT']))),
+                    DataCell(Container(
+                        child: Text(getDateEvent[index]['CBD_MALE_NAME']))),
+                    DataCell(Container(
+                        child: Text(getDateEvent[index]['CBD_FEMALE_NAME']))),
+                    DataCell(Container(
+                        child: Text(getDateEvent[index]['CBD_DESC']))),
+                    DataCell(
+                      Container(
+                          child: IconButton(
+                              onPressed: () {
+                                _showCancelEventDialog(
+                                    getEvent[index]['CBD_BOOKING_DATE'],
+                                    getEvent[index]['CBD_ID']);
+                              },
+                              icon: Icon(
+                                Icons.cancel,
+                                color: ColorUtils.redColor,
+                                size: 4.h,
+                              ))),
                     ),
                   ]);
                 }),
               ),
             ),
           ),
-
         ],
       ),
     );
   }
+
   _showCancelEventDialog(String bookingDate, String bookingId) async {
     await showDialog(
       context: context,
@@ -595,8 +749,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   maxLines: 3,
                   decoration: const InputDecoration(
                     labelText: 'Cancellation Reason',
-                  )
-              ),
+                  )),
             ],
           ),
         ),
@@ -623,23 +776,21 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       textAlign: TextAlign.right,
                       style: TextStyle(color: Colors.green, fontSize: 20),
                     ),
-                    onPressed: ()async {
-                      if(cancelMessageController.text.isEmpty){
+                    onPressed: () async {
+                      if (cancelMessageController.text.isEmpty) {
                         Fluttertoast.showToast(
                           msg: 'Please Enter Cancellation Reason!!',
                           backgroundColor: Colors.grey,
                         );
                         return;
-                      }else{
-                        cancelBooking(bookingDate, cancelMessageController.text.toString(),bookingId);
+                      } else {
+                        cancelBooking(bookingDate,
+                            cancelMessageController.text.toString(), bookingId);
                       }
                       Navigator.pop(context);
                       cancelMessageController.clear();
-                      setState(() {
-
-                      });
-                    }
-                ),
+                      setState(() {});
+                    }),
               ),
             ],
           ),
@@ -707,14 +858,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
-                  onDaySelected: (selectedDay, focusedDay) {
+                onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDate, selectedDay)) {
                     // Call `setState()` when updating the selected day
                     setState(() {
                       _selectedDate = selectedDay;
                       _focusedDay = focusedDay;
                       if (mySelectedEvents[DateFormat('yyyy-MM-dd')
-                              .format(_selectedDate!)] !=
+                          .format(_selectedDate!)] !=
                           null) {
                         _isVisible = true;
                       } else {
@@ -741,13 +892,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 eventLoader: _listOfDayEvents,
               ),
               ..._listOfDayEvents(_selectedDate!).map(
-                (myEvents) {
-                  getDateBookingDetails(DateFormat('yyyy-MM-dd').format(_selectedDate!));
+                    (myEvents) {
+                  getDateBookingDetails(
+                      DateFormat('yyyy-MM-dd').format(_selectedDate!));
                   //print("myEvent length:=${myEvents}");
                   return Padding(
                     padding: const EdgeInsets.only(top: 30.0),
                     child: ElevatedButton(
-
                       style: ElevatedButton.styleFrom(
                         primary: Colors.lime[200], //background color of button
                         elevation: 3,
@@ -760,10 +911,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       },
                       child: const Text(
                         "View Event Details",
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.black
-                        ),
+                        style: TextStyle(fontSize: 18.0, color: Colors.black),
                       ),
                     ),
                   );
@@ -785,15 +933,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubscriptionScreen(
-                            userEmail: profileDetails?.bRANCHEMAIL,
-                            userPhoneNumber: profileDetails?.bRANCHCONTACT,
-                          ))).then((value) {
+                        userEmail: profileDetails?.bRANCHEMAIL,
+                        userPhoneNumber: profileDetails?.bRANCHCONTACT,
+                      ))).then((value) {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                         builder: (context) => const BottomNavBar(
-                              index: 1,
-                            )),
-                    (Route<dynamic> route) => false);
+                          index: 1,
+                        )),
+                        (Route<dynamic> route) => false);
               });
             } else {
               _showAddEventDialog();

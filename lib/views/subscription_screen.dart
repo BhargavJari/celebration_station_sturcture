@@ -3,12 +3,16 @@ import 'package:celebration_station_sturcture/utils/colors_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import '../Utils/fontFamily_utils.dart';
+import '../dashboard/bottomNavBar/bottom_nav_bar.dart';
+import '../services/api_endpoint.dart';
 import '../services/shared_preference.dart';
+import '../utils/loder.dart';
 import '../utils/show_toast.dart';
 
 class SubscriptionScreen extends StatefulWidget {
@@ -30,7 +34,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void initState() {
     amountController.text = "${499}";
-
+    getLoginId();
     // TODO: implement initState
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -40,19 +44,22 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Do something when payment succeeds
-    print("Payment Done");
-    print("Payment Id here := ${response.paymentId}");
-    setState(() {
-      paymentId = response.paymentId;
-    });
-    print("SEND Payment Id here := ${paymentId}");
-    ApiService().paymentStatus(context, data: data());
-    //payment status change api call
+    paymentId = response.paymentId;
+    FormData data() {
+      final currentDate = DateTime.now();
+      var compeletedDate = DateFormat('MM-dd-yyyy').format(currentDate);
+      return FormData.fromMap({
+        "transactionid": paymentId,
+        "registrationfee": 499,
+        "payment_date": compeletedDate,
+        "loginid": loginId?.replaceAll('"', '').replaceAll('"', '').toString(),
+      });
+    }
+
+    paymentStatus(data: data());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Do something when payment fails
     print("Payment Fail");
   }
 
@@ -60,22 +67,57 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     // Do something when an external wallet is selected
   }
 
-  FormData data() {
-    final currentDate = DateTime.now();
-    var compeletedDate = DateFormat('MM-dd-yyyy').format(currentDate);
-    return FormData.fromMap({
-      "transactionid": paymentId,
-      "registrationfee": 499,
-      "payment_date": compeletedDate,
-      "loginid": loginId,
-    });
-  }
-
   Future<void> getLoginId() async {
     String? id = await Preferances.getString("id");
     setState(() {
       loginId = id;
     });
+  }
+
+  void paymentStatus({FormData? data}) async {
+    try {
+      Loader.showLoader();
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      Response response;
+      response = await dio.post(ApiEndPoints.paymnetStatus,
+          options: Options(headers: {
+            'Client-Service': 'frontend-client',
+            'Auth-Key': 'simplerestapi',
+            'User-ID': id?.replaceAll('"', '').replaceAll('"', '').toString(),
+            'Authorization':
+            token?.replaceAll('"', '').replaceAll('"', '').toString(),
+            'type': type?.replaceAll('"', '').replaceAll('"', '').toString()
+          }),
+          data: data);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: "Payment successfully",
+          backgroundColor: Colors.grey,
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const BottomNavBar(
+                  index: 1,
+                )),
+                (Route<dynamic> route) => false);
+
+        // return responseData;
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );
+        Loader.hideLoader();
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      debugPrint('Dio E  $e');
+      Loader.hideLoader();
+    }
   }
 
   @override
@@ -128,7 +170,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               color: ColorUtils.darkBlueColor, width: 0.5.w),
                           color: ColorUtils.BlueColor,
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(25))),
+                          const BorderRadius.all(Radius.circular(25))),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -152,10 +194,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               primary:
-                                  Colors.lime[200], //background color of button
+                              Colors.lime[200], //background color of button
                               elevation: 3,
                               shape: RoundedRectangleBorder(
-                                  //to set border radius to button
+                                //to set border radius to button
                                   borderRadius: BorderRadius.circular(20)),
                             ),
                             onPressed: () async {
@@ -164,7 +206,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               var options = {
                                 'key': 'rzp_test_YoriHE0YT6XVEs',
                                 'amount':
-                                    int.parse(amountController.text) * 100,
+                                int.parse(amountController.text) * 100,
                                 'name': 'Celebration Station',
                                 'description': 'subscription plan',
                                 'send_sms_hash': true,

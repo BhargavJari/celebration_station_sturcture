@@ -1,12 +1,15 @@
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:celebration_station_sturcture/views/auth/forgot_password_number_screen.dart';
 import 'package:celebration_station_sturcture/views/custom_widget/custom_text_field.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../Utils/fontFamily_utils.dart';
 import '../../services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../services/shared_preference.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -113,9 +116,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                         borderRadius: BorderRadius.circular(20)),
                                   ),
                                   onPressed: () async {
-                                    if(_formKey.currentState!.validate()) {
-                                      ApiService().login(
-                                          context, data: data());
+                                    if (_formKey.currentState!.validate()) {
+                                      ApiService()
+                                          .login(context, data: data())
+                                          .then((value) async {
+                                        String? token = await FirebaseMessaging
+                                            .instance
+                                            .getToken();
+                                        Preferances.setString(
+                                            "notificationToken", token);
+                                      });
                                     }
                                   },
                                   child: Text(
