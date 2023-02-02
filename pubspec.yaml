@@ -42,8 +42,8 @@ dependencies:
   fluttertoast: ^8.1.2
   connectivity_plus: ^3.0.2
   shared_preferences: ^2.0.16
-  table_calendar: ^3.0.8
-  intl: ^0.17.0
+  table_calendar: ^3.0.9
+  intl: ^0.18.0
   bottom_bar: ^2.0.3
   http: ^0.13.5
   simple_gesture_detector: ^0.2.0

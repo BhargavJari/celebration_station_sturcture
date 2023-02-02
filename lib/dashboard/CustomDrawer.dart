@@ -121,16 +121,6 @@ class CustomDrawerState extends State<CustomDrawer> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.payment, color: Colors.lime),
-              title: Text('Payment Refund'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return SubscriptionScreen();
-                }));
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.question_answer_outlined, color: Colors.lime),
               title: Text('FAQ'),
               onTap: () {

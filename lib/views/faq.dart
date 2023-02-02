@@ -6,6 +6,8 @@ import 'package:sizer/sizer.dart';
 import 'package:getwidget/getwidget.dart';
 import '../Utils/fontFamily_utils.dart';
 import '../model/FaqModel.dart';
+import '../../../utils/loder.dart';
+
 
 class faqScreen extends StatefulWidget {
   final String? userPhoneNumber;
@@ -99,10 +101,11 @@ class _faqScreenState extends State<faqScreen> {
                     for (var i = 0; i < faq!.fquestion!.length; i++) ...{
                       GFAccordion(
                         textStyle: FontTextStyle.poppinsS16W7BlackColor,
-                          title: faq!.fquestion![i].fQUESTION!.toString(),
-                          content: faq!.fquestion![i].fANSWER!.toString(),
-                          collapsedIcon: Icon(Icons.add),
-                          expandedIcon: Icon(Icons.minimize)),
+                          title: faq?.fquestion![i].fQUESTION ?? "",
+                          content: faq?.fquestion![i].fANSWER ?? "",
+                          // collapsedIcon: Icon(Icons.add),
+                          // expandedIcon: Icon(Icons.minimize)
+                      ),
                     }
                   ],
                 ),

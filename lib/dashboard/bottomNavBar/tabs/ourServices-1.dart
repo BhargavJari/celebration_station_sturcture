@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
+import 'package:celebration_station_sturcture/views/notification/notificationPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -12,6 +13,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
+import '../../../views/notification/notificationList.dart';
+import '../bottom_nav_bar.dart';
 
 class OurServices extends StatefulWidget {
   const OurServices({Key? key}) : super(key: key);
@@ -159,9 +162,11 @@ class _OurServicesState extends State<OurServices> {
           IconButton(
             iconSize: 30.0,
             padding: EdgeInsets.symmetric(horizontal: 20),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationList()));
+            },
             icon: Icon(
-              CupertinoIcons.location,
+              CupertinoIcons.bell,
               color: Colors.grey,
             ),
           ),
@@ -269,7 +274,14 @@ class _OurServicesState extends State<OurServices> {
                           //to set border radius to button
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return BottomNavBar(
+                              index: 1,
+                            ); //EditProfile(userId: '${id}', token: '${token}', type: '${type}',);
+                          }));
+                    },
                     child: const Text(
                       "Add Booking",
                       style: TextStyle(
@@ -345,8 +357,8 @@ class _OurServicesState extends State<OurServices> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     onPressed: () {},
-                    child: const Text(
-                      "Canceled Booking : 20" ,
+                    child:  Text(
+                      "Canceled Booking : ${count}" ,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,

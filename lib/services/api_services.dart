@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
+import '../model/FaqModel.dart';
 import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
 import '../model/mobile_verify_model.dart';
@@ -65,14 +66,14 @@ class ApiService {
               (Route<dynamic> route) => false);
         }
         Fluttertoast.showToast(
-          msg: 'Login Sucessfully...',
+          msg: 'Login Sucessfully',
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
         return responseData;
       } else {
         Fluttertoast.showToast(
-          msg: "invalid",
+          msg: "Invalid Phone Number/Password",
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
@@ -177,15 +178,15 @@ class ApiService {
         print("4");
 
         Loader.hideLoader();
-        Fluttertoast.showToast(
+        /*Fluttertoast.showToast(
           msg: 'Get Profile Data Sucessfully...',
           backgroundColor: Colors.grey,
-        );
+        );*/
 
         return responseData;
       } else {
         Fluttertoast.showToast(
-          msg: "invalid",
+          msg: "Invalid",
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
@@ -431,4 +432,5 @@ class ApiService {
       Loader.hideLoader();
     }
   }
+
 }
