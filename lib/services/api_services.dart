@@ -433,4 +433,46 @@ class ApiService {
     }
   }
 
+  Future receivePayment(
+      BuildContext context, {
+        FormData? data,
+      }) async {
+    try {
+      Loader.showLoader();
+      Response response;
+      response = await dio.post('https://celebrationstation.in/post_ajax/update_receive_payment',
+          // options: Options(headers: {
+          //   'Client-Service': 'frontend-client',
+          //   'Auth-Key': 'simplerestapi',
+          //   'User-ID': id,
+          //   'Authorization': token,
+          //   'type': type
+          // }),
+          data: data);
+      if (response.statusCode == 200) {
+        debugPrint('reset Password ----- > ${response.data}');
+        Loader.hideLoader();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginScreen(),
+        ));
+        Fluttertoast.showToast(
+          msg: 'reset Password Sucessfully...',
+          backgroundColor: Colors.grey,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "invalid",
+          backgroundColor: Colors.grey,
+        );
+        Loader.hideLoader();
+
+        throw Exception(response.data);
+      }
+    } on DioError catch (e) {
+      print("dio");
+      debugPrint('Dio E  $e');
+      Loader.hideLoader();
+    }
+  }
+
 }

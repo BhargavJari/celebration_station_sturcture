@@ -324,7 +324,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Booking Amount*'),
+                decoration: const InputDecoration(labelText: 'Booking Amount/Total Amount*'),
               ),
               TextFormField(
                 controller: advanceController,
@@ -424,16 +424,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         femaleNameController.text.toString(),
                         phoneController.text.toString());
                     loadPreviousEvents();
-                    /*mySelectedEvents[
-                    DateFormat('yyyy-MM-dd').format(_selectedDate!)]
-                        ?.add({
-                      "eventTitle": titleController.text,
-                      "eventDescp": descpController.text,
-                      "bookingAmount" : bookingAmountController.text,
-                      "advance" : advanceController.text,
-                      "maleName" : maleNameController.text,
-                      "femaleName" : femaleNameController.text,
-                    });*/
+
                   } else {
                     addBooking(
                         DateFormat('yyyy-MM-dd')

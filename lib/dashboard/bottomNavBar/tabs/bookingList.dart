@@ -8,8 +8,10 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../services/api_services.dart';
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
+import '../../../views/auth/login_screen.dart';
 import '../../../views/custom_widget/custom_text_field.dart';
 import '../../CustomDrawer.dart';
 
@@ -28,6 +30,8 @@ class _BookingListState extends State<BookingList> {
   var month = DateFormat('MM').format(DateTime.now());
   final cancelMessageController = TextEditingController();
   final receiveController = TextEditingController();
+  final descriptionController = TextEditingController();
+   String bid='0';
 
   void initState() {
     // TODO: implement initState
@@ -77,6 +81,42 @@ class _BookingListState extends State<BookingList> {
     }
   }
 
+  receivePayment() async{
+    Loader.showLoader();
+    try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
+      Response response= await post(
+        Uri.parse('https://celebrationstation.in/post_ajax/update_receive_payment'),
+        // headers: {
+        //   'Client-Service':'frontend-client',
+        //   'Auth-Key':'simplerestapi',
+        //   'User-ID': id.toString(),
+        //   'token': token.toString(),
+        //   'type': type.toString()
+        // },
+        body: {
+          'amount' : receiveController.text,
+          'desc' : descriptionController.text,
+          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
+          'bookingid' :bid,
+        },
+      );
+      if(response.statusCode==200){
+        print('hi payment');
+        Loader.hideLoader();
+        Fluttertoast.showToast(msg: 'payment received');
+      }else{
+        Loader.hideLoader();
+        print("Error");
+      }
+    }catch(e){
+      print(e.toString());
+    }
+  }
+
   void cancelBooking (String bookingDate, String message, String bookingId) async{
     try{
       String? id = await Preferances.getString("id");
@@ -114,6 +154,8 @@ class _BookingListState extends State<BookingList> {
       print(e.toString());
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +234,11 @@ class _BookingListState extends State<BookingList> {
                           ),
                         ),
                       ),
+
                       DataColumn(
                         label: Expanded(
                           child: Text(
-                            'Advance',
+                            'Total Amount',
                             style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -203,7 +246,7 @@ class _BookingListState extends State<BookingList> {
                       DataColumn(
                         label: Expanded(
                           child: Text(
-                            'Balance',
+                            'Advance',
                             style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -234,12 +277,17 @@ class _BookingListState extends State<BookingList> {
                       ),
                     ],
                     rows: List.generate(getEvent.length, (index){
+                      setState(() {
+                       bid=getEvent[index]['CBD_BOOKING_ID'];
+                      });
+
                       return DataRow(cells: [
-                        DataCell(Container(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
-                        DataCell(Container(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
-                        DataCell(Container(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
-                        DataCell(Container(child: Text(getEvent[index]['CBD_MALE_NAME']))),
-                        DataCell(Container(
+                        DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
+                        DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
+                        DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
+
+                        DataCell(Center(child: Text(getEvent[index]['CBD_MALE_NAME']))),
+                        DataCell(Center(
                             child: IconButton(
                                 onPressed: () {
                                   _showReceiveEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
@@ -247,7 +295,7 @@ class _BookingListState extends State<BookingList> {
                                 icon: Icon(Icons.payment_outlined, color: ColorUtils.green, size: 4.h,))
                           ),
                         ),
-                        DataCell(Container(
+                        DataCell(Center(
                             child: IconButton(
                                 onPressed: () {
                                   _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
@@ -300,7 +348,7 @@ class _BookingListState extends State<BookingList> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => {Navigator.pop(context)},
                   child: const Text(
                     'No',
                     textAlign: TextAlign.left,
@@ -363,6 +411,13 @@ class _BookingListState extends State<BookingList> {
                   }
                 },
               ),
+              SizedBox(height: 2.h,),
+              CustomTextField(
+                hintName: "Enter Description.",
+                fieldController: descriptionController,
+                keyboard: TextInputType.text,
+                maxLines: 5,
+              ),
             ],
           ),
         ),
@@ -373,7 +428,10 @@ class _BookingListState extends State<BookingList> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    descriptionController.clear();
+                    receiveController.clear();
+                    Navigator.pop(context);},
                   child: const Text(
                     'No',
                     textAlign: TextAlign.left,
@@ -394,14 +452,13 @@ class _BookingListState extends State<BookingList> {
                         Fluttertoast.showToast(msg: 'Enter Amount!!');
                         return;
                       }else{
-                      // Pay Api
+                        receivePayment();
                         getBookingDetails();
                       }
                       Navigator.pop(context);
                       receiveController.clear();
-                      setState(() {
+                      descriptionController.clear();
 
-                      });
                     }
                 ),
               ),
