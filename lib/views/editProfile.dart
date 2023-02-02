@@ -54,6 +54,7 @@ class _EditProfile extends State<EditProfile> {
   getDistrict? gd;
   ProfileDetails? profileDetails;
 
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> _getAllBusinessType({
@@ -101,7 +102,11 @@ class _EditProfile extends State<EditProfile> {
       gs = getState.fromJson(response.data);
       setState(() {
         gs;
-      });
+
+      }
+
+
+      );
     } on DioError catch (e) {
       print(e.toString());
     }
@@ -165,11 +170,14 @@ class _EditProfile extends State<EditProfile> {
     _getAllBusinessType(context: context);
     _getAllStates(context: context);
     //_getAllDistrict(context: context);
+
   }
 
   String selectedBusinessType = 'Select Business Type';
   String selectedState = 'Select State';
   String selectedDistrict = 'Select District';
+
+
 
   // _fetchLoginData() async {
   //   id = await Preferances.getString("id");

@@ -26,6 +26,7 @@ class EventCalendarScreen extends StatefulWidget {
 }
 
 class _EventCalendarScreenState extends State<EventCalendarScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
@@ -296,60 +297,92 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           'Add New Event',
           textAlign: TextAlign.center,
         ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: titleController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
+        content: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  validator: (str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                  ),
                 ),
-              ),
-              TextFormField(
-                controller: bookingAmountController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Booking Amount'),
-              ),
-              TextFormField(
-                controller: advanceController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Advance'),
-              ),
-              TextFormField(
-                controller: maleNameController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(labelText: 'Male Name'),
-              ),
-              TextFormField(
-                controller: femaleNameController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(labelText: 'Female Name'),
-              ),
-              TextFormField(
-                controller: phoneController,
-                keyboardType: TextInputType.phone,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(labelText: 'Mobile Number'),
-              ),
-              TextFormField(
-                controller: descpController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.newline,
-                maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Description'),
-              ),
-            ],
+                TextFormField(
+                  controller: bookingAmountController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  validator: (str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }
+                  },
+                  decoration: const InputDecoration(labelText: 'Booking Amount'),
+                ),
+                TextFormField(
+                  controller: advanceController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  // validator:(str) {
+                  //     if (str!.isEmpty) {
+                  //       return '* Is Required';
+                  //     }else if (str < bookingAmountController) {
+                  //       return '* Phone number must be of 10 digit';
+                  //     }
+                  //   },
+                  decoration: const InputDecoration(labelText: 'Advance'),
+                ),
+                TextFormField(
+                  controller: maleNameController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Male Name'),
+                ),
+                TextFormField(
+                  controller: femaleNameController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Female Name'),
+                ),
+                TextFormField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  validator:(str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }else if (str.length != 10) {
+                      return '* Phone number must be of 10 digit';
+                    }
+                  },
+                  decoration: const InputDecoration(labelText: 'Mobile Number'),
+                ),
+                TextFormField(
+                  controller: descpController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.newline,
+                  maxLines: 4,
+                  validator: (str) {
+                    if (str!.isEmpty) {
+                      return '* Is Required';
+                    }
+                  },
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -360,15 +393,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           TextButton(
             child: const Text('Save'),
             onPressed: () {
-              if (titleController.text.isEmpty ||
-                  descpController.text.isEmpty ||
-                  bookingAmountController.text.isEmpty ||
-                  advanceController.text.isEmpty ||
-                  maleNameController.text.isEmpty ||
-                  femaleNameController.text.isEmpty ||
-                  phoneController.text.isEmpty ||
-                  phoneController.text.length != 10
-              ) {
+              if (_formKey.currentState!.validate()){
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter all the data correctly'),
