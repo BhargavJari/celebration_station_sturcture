@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
+import '../../../views/custom_widget/custom_text_field.dart';
 import '../../CustomDrawer.dart';
 
 class BookingList extends StatefulWidget {
@@ -25,6 +27,7 @@ class _BookingListState extends State<BookingList> {
   var year = DateFormat('yyyy').format(DateTime.now());
   var month = DateFormat('MM').format(DateTime.now());
   final cancelMessageController = TextEditingController();
+  final receiveController = TextEditingController();
 
   void initState() {
     // TODO: implement initState
@@ -216,6 +219,14 @@ class _BookingListState extends State<BookingList> {
                       DataColumn(
                         label: Expanded(
                           child: Text(
+                            'Pay Now',
+                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text(
                             'Cancel',
                             style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                           ),
@@ -231,10 +242,18 @@ class _BookingListState extends State<BookingList> {
                         DataCell(Container(
                             child: IconButton(
                                 onPressed: () {
+                                  _showReceiveEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
+                                },
+                                icon: Icon(Icons.payment_outlined, color: ColorUtils.green, size: 4.h,))
+                          ),
+                        ),
+                        DataCell(Container(
+                            child: IconButton(
+                                onPressed: () {
                                   _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
                                 },
                                 icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
-                          ),
+                        ),
                         ),
                       ]);
                     }),
@@ -307,6 +326,79 @@ class _BookingListState extends State<BookingList> {
                       }
                       Navigator.pop(context);
                       cancelMessageController.clear();
+                      setState(() {
+
+                      });
+                    }
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  _showReceiveEventDialog(String bookingDate, String bookingId) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Pay Pending Amount',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 25),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomTextField(
+                hintName: "Enter Amount.",
+                fieldController: receiveController,
+                keyboard: TextInputType.phone,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter mobile number ';
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'No',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.red, fontSize: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: TextButton(
+                    child: const Text(
+                      'Yes',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                    onPressed: ()async {
+                      if(receiveController.text.isEmpty){
+                        Fluttertoast.showToast(msg: 'Enter Amount!!');
+                        return;
+                      }else{
+                      // Pay Api
+                        getBookingDetails();
+                      }
+                      Navigator.pop(context);
+                      receiveController.clear();
                       setState(() {
 
                       });
