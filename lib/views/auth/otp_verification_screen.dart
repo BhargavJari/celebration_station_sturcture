@@ -67,7 +67,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 height: 25,
               ),
               Text(
-                "Otp Verification",
+                "OTP Verification",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -129,7 +129,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     onPressed: () async {
                      if(_controller.text == ""){
 
-                       CommonFunctions.toast("please enter otp code !!");
+                       CommonFunctions.toast("please enter OTP !!");
                      }else{
                        print("co_controller.text:=${_controller.text}");
                        AuthResult result = await _verify(_controller.text);
