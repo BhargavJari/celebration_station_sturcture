@@ -108,7 +108,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   getprofile() async {
     ApiService().getProfileRecord(context).then((value) {
       if (value!.message == "ok") {
-        print("hhiii");
+
         setState(() {
           profileDetails = value.detail!;
           paymentStatus = value.detail!.pAYMENTSTATUS;
@@ -165,9 +165,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           backgroundColor: Colors.grey,
         );
 
-        String? notificationToken =
-        await Preferances.getString("notificationToken");
-        print("notificationToken:==${notificationToken}");
+
         flutterLocalNotificationsPlugin.show(
             0,
             "Booking confirm",
@@ -176,9 +174,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 android: AndroidNotificationDetails(channel.id, channel.name,
                     channelDescription: channel.description,
                     importance: Importance.high,
-                    color: Colors.blue,
+                    color: ColorUtils.orange,
                     playSound: true,
-                    icon: '@mipmap/ic_launcher')));
+                    icon: '@mipmap/launcher_icon')));
         // callOnFcmApiSendPushNotifications(
         //   title: "Celebration Station",
         //   body: "Your booking confirm",

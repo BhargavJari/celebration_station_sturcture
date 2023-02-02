@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../main.dart';
 import '../../../services/api_services.dart';
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
@@ -36,6 +39,47 @@ class _BookingListState extends State<BookingList> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/launcher_icon',
+              ),
+            ));
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body!)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
     getBookingDetails();
   }
 
@@ -108,6 +152,17 @@ class _BookingListState extends State<BookingList> {
         print('hi payment');
         Loader.hideLoader();
         Fluttertoast.showToast(msg: 'payment received');
+        flutterLocalNotificationsPlugin.show(
+            0,
+            "Payment Received",
+            "Your payment received",
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description,
+                    importance: Importance.high,
+                    color: ColorUtils.orange,
+                    playSound: true,
+                    icon: '@mipmap/launcher_icon')));
       }else{
         Loader.hideLoader();
         print("Error");
@@ -143,7 +198,21 @@ class _BookingListState extends State<BookingList> {
       if(response.statusCode==200){
         var data = json.decode(response.body);
         print(data);
-        print('Booking Canceled');
+        Fluttertoast.showToast(
+          msg: 'Booking Cancelled',
+          backgroundColor: Colors.grey,
+        );
+        flutterLocalNotificationsPlugin.show(
+            0,
+            "Booking canceled",
+            "Your booking cancelled of ${bookingDate}",
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description,
+                    importance: Importance.high,
+                    color: ColorUtils.orange,
+                    playSound: true,
+                    icon: '@mipmap/launcher_icon')));
         getBookingDetails();
       }else{
         var data = json.decode(response.body.toString());
