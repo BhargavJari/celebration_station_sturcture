@@ -4,6 +4,7 @@ import 'package:celebration_station_sturcture/Utils/fontFamily_utils.dart';
 import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:sizer/sizer.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
@@ -114,6 +115,10 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         var data = jsonDecode(response.body.toString());
         print(data);
         loadPreviousEvents();
+        Fluttertoast.showToast(
+          msg: 'Booking Added Successfully',
+          backgroundColor: Colors.grey,
+        );
         print('Event Added');
       } else {
         var data = jsonDecode(response.body.toString());
@@ -153,6 +158,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
             DateFormat('MM').format(_selectedDate!));
         print(data);
+        Fluttertoast.showToast(
+          msg: 'Booking Canceled!!',
+          backgroundColor: Colors.grey,
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(index: 1)));
         print('Booking Canceled');
 
       }else{
@@ -306,7 +316,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
-                  labelText: 'Title',
+                  labelText: 'Title*',
                 ),
               ),
               TextFormField(
@@ -314,14 +324,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Booking Amount'),
+                decoration: const InputDecoration(labelText: 'Booking Amount*'),
               ),
               TextFormField(
                 controller: advanceController,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Advance'),
+                decoration: const InputDecoration(labelText: 'Advance*'),
               ),
               TextFormField(
                 controller: maleNameController,
@@ -340,14 +350,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(labelText: 'Mobile Number'),
+                decoration: const InputDecoration(labelText: 'Mobile Number*'),
               ),
               TextFormField(
                 controller: descpController,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.newline,
                 maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description*'),
               ),
             ],
           ),
@@ -364,17 +374,27 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   descpController.text.isEmpty ||
                   bookingAmountController.text.isEmpty ||
                   advanceController.text.isEmpty ||
-                  maleNameController.text.isEmpty ||
-                  femaleNameController.text.isEmpty ||
                   phoneController.text.isEmpty ||
-                  phoneController.text.length != 10
+                  phoneController.text.length != 10 ||
+                  int.parse(advanceController.text) > int.parse(bookingAmountController.text)
               ) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                if(int.parse(advanceController.text) > int.parse(bookingAmountController.text)){
+                  Fluttertoast.showToast(
+                    msg: 'Advance amount should be less than booking amount',
+                    backgroundColor: Colors.grey,
+                  );
+                }else{
+                  Fluttertoast.showToast(
+                    msg: 'Please enter valid Data',
+                    backgroundColor: Colors.grey,
+                  );
+                }
+                /*ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter all the data correctly'),
                     duration: Duration(seconds: 2),
                   ),
-                );
+                );*/
                 //Navigator.pop(context);
                 return;
               } else {
@@ -546,25 +566,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     DataCell(Container(child: Text(getDateEvent[index]['CBD_FEMALE_NAME']))),
                     DataCell(Container(child: Text(getDateEvent[index]['CBD_DESC']))),
                     DataCell(Container(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, //background color of button
-                            elevation: 2,
-                            shape: RoundedRectangleBorder( //to set border radius to button
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                          ),
-                          onPressed: () {
-                            _showCancelEventDialog(getDateEvent[index]['CBD_BOOKING_DATE'], getDateEvent[index]['CBD_ID']);
-                          },
-                          child: Text('Cancel',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                color: Colors.white
-                            ),
-                          ),
-                        )
+                        child: IconButton(
+                            onPressed: () {
+                              _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
+                            },
+                            icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
                     ),
                     ),
                   ]);
@@ -628,16 +634,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     ),
                     onPressed: ()async {
                       if(cancelMessageController.text.isEmpty){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Enter Cancellation reason!!'),
-                              duration: Duration(seconds: 2),
-                            )
+                        Fluttertoast.showToast(
+                          msg: 'Please Enter Cancellation Reason!!',
+                          backgroundColor: Colors.grey,
                         );
                         return;
                       }else{
                         cancelBooking(bookingDate, cancelMessageController.text.toString(),bookingId);
-                        getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
-                            DateFormat('MM').format(_selectedDate!));
                       }
                       Navigator.pop(context);
                       cancelMessageController.clear();
@@ -713,22 +716,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
-                  /*calendarBuilders: CalendarBuilders(
-                    markerBuilder: (context, day, events) => events.isNotEmpty
-                        ? Container(
-                      width: 24,
-                      height: 24,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: Colors.lightBlue,
-                      ),
-                      child: Text(
-                        '${events.length}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    )
-                        : null,
-                  ),*/
                   onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDate, selectedDay)) {
                     // Call `setState()` when updating the selected day
@@ -789,22 +776,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                       ),
                     ),
                   );
-                  /*return ListTile(
-                    leading: const Icon(
-                      Icons.done,
-                      color: Colors.teal,
-                    ),
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                          'Booking Details: \n \n ${myEvents['eventTitle']}'),
-                    ),
-                    subtitle: Text(' Description:  ${myEvents['eventDescp']}'
-                        '\n Booking Amount : ${myEvents['bookingAmount']}'
-                        '\n Advance : ${myEvents['advance']}'
-                        '\n Male Name : ${myEvents['maleName']}'
-                        '\n Female Name : ${myEvents['femaleName']}'),
-                  );*/
                 },
               ),
             ],

@@ -3,6 +3,7 @@ import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import '../custom_widget/custom_text_field.dart';
 import '../ourService.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool? check1 = false;
   TextEditingController _password = TextEditingController();
+  bool obscurePassword = true;
+  bool obscureConfirmPassword = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -55,61 +58,56 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 25.0),
-                TextFormField(
-                  controller: _password,
-                  textInputAction: TextInputAction.next,
+                CustomTextField(
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscurePassword = !obscurePassword;
+                        });
+                      },
+                      child: obscurePassword
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility)),
+                  obscureText: obscurePassword,
+                  prefixIcon: const Icon(Icons.password),
+                  fieldController: _password,
+                  fieldName: "Password",
+                  hintName: " Password",
+                  keyboard: TextInputType.visiblePassword,
+                  maxLines: 1,
+                  textInputAction: TextInputAction.done,
                   validator: (str) {
                     if (str!.isEmpty) {
                       return '* Is Required';
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                        width: 2.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    hintText: 'Enter Password',
-                  ),
                 ),
                 const SizedBox(height: 15.0),
-                TextFormField(
-                  textInputAction: TextInputAction.next,
+                CustomTextField(
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscureConfirmPassword = !obscureConfirmPassword;
+                        });
+                      },
+                      child: obscureConfirmPassword
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility)),
+                  obscureText: obscureConfirmPassword,
+                  prefixIcon: const Icon(Icons.password),
+                  fieldName: "Password",
+                  hintName: "Confirm Password",
+                  keyboard: TextInputType.visiblePassword,
+                  maxLines: 1,
+                  textInputAction: TextInputAction.done,
                   validator: (str) {
                     if (str!.isEmpty) {
                       return '* Is Required';
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                        width: 2.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    hintText: 'Confirm Password',
-                  ),
                 ),
-
                 SizedBox(height: 25.0),
                 Center(
                   child: SizedBox(

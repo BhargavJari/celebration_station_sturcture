@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
@@ -226,25 +229,11 @@ class _BookingListState extends State<BookingList> {
                         DataCell(Container(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
                         DataCell(Container(child: Text(getEvent[index]['CBD_MALE_NAME']))),
                         DataCell(Container(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.red, //background color of button
-                                elevation: 2,
-                                shape: RoundedRectangleBorder( //to set border radius to button
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                              ),
-                              onPressed: () {
-                                _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
-                              },
-                              child: Text('Cancel',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                    color: Colors.white
-                                ),
-                              ),
-                            )
+                            child: IconButton(
+                                onPressed: () {
+                                  _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
+                                },
+                                icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
                           ),
                         ),
                       ]);
@@ -310,11 +299,7 @@ class _BookingListState extends State<BookingList> {
                     ),
                     onPressed: ()async {
                       if(cancelMessageController.text.isEmpty){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Enter Cancellation reason!!'),
-                              duration: Duration(seconds: 2),
-                            )
-                        );
+                        Fluttertoast.showToast(msg: 'Enter Cancellation Reason!!');
                         return;
                       }else{
                         cancelBooking(bookingDate, cancelMessageController.text.toString(),bookingId);
