@@ -15,6 +15,7 @@ import '../../../../../services/shared_preference.dart';
 import '../../../../../views/auth/login_screen.dart';
 import '../../../../../views/contactUs.dart';
 import '../../../../../views/editProfile.dart';
+import '../../../../../views/profileDetails.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -62,12 +63,12 @@ class _BodyState extends State<Body> {
             SizedBox(height: 20),
             ProfileMenu(
               icon: CupertinoIcons.profile_circled,
-              text: "Edit Profile",
+              text: "Profile Information",
               press: () async{
                 String? id = await Preferances.getString("id");
                 String? token = await Preferances.getString("token");
                 String? type = await Preferances.getString("type");
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>  EditProfile(userId: '${id}', token: '${token}', type: '${type}',)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>  ProfileDetailsScreen(userId: '${id}', token: '${token}', type: '${type}',)));
               },
             ),
             ProfileMenu(
