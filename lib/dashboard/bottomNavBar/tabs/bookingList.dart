@@ -38,7 +38,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
   final receiveController = TextEditingController();
   final descriptionController = TextEditingController();
    String bid='0';
-  List<String> tabs = ['Dues Amount', 'Canceled Bookings','Bookings History'];
+  List<String> tabs = ['Dues Amount', 'Cancelled Bookings','Bookings History'];
   TabController? _tabController;
 
   void initState() {
@@ -174,7 +174,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
     }
   }
 
-  receivePayment(String bookingId) async{
+  receivePayment(String bookingId,String amount,String description) async{
     Loader.showLoader();
     try{
       String? id = await Preferances.getString("id");
@@ -183,23 +183,21 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         Uri.parse('https://celebrationstation.in/post_ajax/update_receive_payment/'),
-        // headers: {
-        //   'Client-Service':'frontend-client',
-        //   'Auth-Key':'simplerestapi',
-        //   'User-ID': id.toString(),
-        //   'token': token.toString(),
-        //   'type': type.toString()
-        // },
+        /*headers: {
+          'Client-Service':'frontend-client',
+          'Auth-Key':'simplerestapi',
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
+        },*/
         body: {
-          'amount' : receiveController.text,
-          'desc' : descriptionController.text,
+          'amount' : amount,
+          'desc' : description,
           'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
           'bookingid' :bookingId,
         },
       );
       if(response.statusCode==200){
-        print(bookingId);
-        print('hi payment');
         Loader.hideLoader();
         Fluttertoast.showToast(msg: 'payment received');
         flutterLocalNotificationsPlugin.show(
@@ -254,7 +252,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         );
         flutterLocalNotificationsPlugin.show(
             0,
-            "Booking canceled",
+            "Booking cancelled",
             "Your booking cancelled of ${bookingDate}",
             NotificationDetails(
                 android: AndroidNotificationDetails(channel.id, channel.name,
@@ -314,7 +312,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
     }
   }
 
-  cancleReceivePayment(String bookingId,String paymentId) async{
+  cancelReceivePayment(String bookingId,String paymentId) async{
     Loader.showLoader();
     try{
       String? id = await Preferances.getString("id");
@@ -323,7 +321,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_payment_history/'),
+        Uri.parse('https://celebrationstation.in/post_ajax/cancelled_receive_payment/'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
@@ -338,11 +336,14 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         },
       );
       if(response.statusCode==200){
+        print("payment id= ${paymentId}");
+        print("booking id= ${bookingId}");
+        print("login id= ${id}");
         Loader.hideLoader();
-        print("Cancle Receive Payment done");
+        print("Cancel Receive Payment done");
       }else{
         Loader.hideLoader();
-        print("Cancle Receive Payment Error");
+        print("Cancel Receive Payment Error");
       }
     }catch(e){
       print(e.toString());
@@ -542,8 +543,8 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                             DataCell(Center(
                                 child: IconButton(
                                     onPressed: () {
-                                      _showPaymentEventHistoryDialog(getEvent[index]['CBD_BOOKING_ID']);
                                       getPaymentHistoryDetails(getEvent[index]['CBD_BOOKING_ID']);
+                                      _showPaymentEventHistoryDialog(getEvent[index]['CBD_BOOKING_ID']);
                                     },
                                     icon: Icon(Icons.remove_red_eye_rounded, color: ColorUtils.blackColor, size: 4.h,))
                             ),
@@ -564,7 +565,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
               children: [
                 Center(
                   child: Text(
-                    "Canceled Bookings",
+                    "Cancelled Bookings",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
@@ -827,20 +828,19 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(bookingId),
               CustomTextField(
-                hintName: "Enter Amount.",
+                hintName: "Enter Amount",
                 fieldController: receiveController,
                 keyboard: TextInputType.phone,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter mobile number ';
+                    return 'Please enter amount ';
                   }
                 },
               ),
               SizedBox(height: 2.h,),
               CustomTextField(
-                hintName: "Enter Description.",
+                hintName: "Enter Description",
                 fieldController: descriptionController,
                 keyboard: TextInputType.text,
                 maxLines: 5,
@@ -879,7 +879,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                         Fluttertoast.showToast(msg: 'Enter Amount!!');
                         return;
                       }else{
-                        receivePayment(bookingId);
+                        receivePayment(bookingId,receiveController.text,descriptionController.text);
                         getBookingDetails();
                       }
                       Navigator.pop(context);
@@ -975,7 +975,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                       Container(
                           child: IconButton(
                               onPressed: () {
-                                cancleReceivePayment(bookingId, getPaymentHistory[index]['RP_ID']);
+                                cancelReceivePayment(bookingId, getPaymentHistory[index]['RP_ID']);
                               },
                               icon: Icon(
                                 Icons.cancel,

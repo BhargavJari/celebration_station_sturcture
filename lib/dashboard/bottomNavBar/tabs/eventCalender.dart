@@ -274,7 +274,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         var data = json.decode(response.body);
         getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
             DateFormat('MM').format(_selectedDate!));
-        print(data);
         Fluttertoast.showToast(
           msg: 'Booking Canceled!!',
           backgroundColor: Colors.grey,
@@ -376,7 +375,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         var items = jsonDecode(response.body)['\$booking'];
         getDateEvent = items;
         //Loader.hideLoader();
-        print(getDateEvent.length);
         Loader.hideLoader();
         print("Booking Date List Fetched");
       } else {
@@ -395,16 +393,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   loadPreviousEvents() {
     getBookingDetails(DateFormat('yyyy').format(_selectedDate!),
         DateFormat('MM').format(_selectedDate!));
-
-    /*mySelectedEvents = {
-      "2023-01-12": [
-        {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
-      ],
-      "2023-01-12": [
-        {"eventDescp": "HELLLO", "bookingAmount" : "20000", "advance":"2000", "maleName" : "ABC", "femaleName" : "XYZ"},
-      ]
-    };*/
-    print("loadPrevious");
   }
 
   List _listOfDayEvents(DateTime dateTime) {
@@ -580,8 +568,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   }
                 });
                 _isVisible = false;
-                print(
-                    "New Event for backend developer ${json.encode(mySelectedEvents)}");
                 titleController.clear();
                 bookingAmountController.clear();
                 advanceController.clear();

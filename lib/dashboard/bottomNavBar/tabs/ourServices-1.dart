@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:carousel_nullsafety/carousel_nullsafety.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../services/shared_preference.dart';
