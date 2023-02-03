@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'package:celebration_station_sturcture/Utils/colors_utils.dart';
 import 'package:celebration_station_sturcture/Utils/fontFamily_utils.dart';
+import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -336,9 +337,6 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         },
       );
       if(response.statusCode==200){
-        print("payment id= ${paymentId}");
-        print("booking id= ${bookingId}");
-        print("login id= ${id}");
         Loader.hideLoader();
         print("Cancel Receive Payment done");
       }else{
@@ -975,7 +973,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                       Container(
                           child: IconButton(
                               onPressed: () {
-                                cancelReceivePayment(bookingId, getPaymentHistory[index]['RP_ID']);
+                                _showPaymentCancelEventDialog(bookingId, getPaymentHistory[index]['RP_ID']);
                               },
                               icon: Icon(
                                 Icons.cancel,
@@ -987,6 +985,55 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                 }),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+  _showPaymentCancelEventDialog(String bookingId, String paymentId) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Cancel Booking ?',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 25),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: TextButton(
+                  onPressed: () => {Navigator.pop(context)},
+                  child: const Text(
+                    'No',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.red, fontSize: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: TextButton(
+                    child: const Text(
+                      'Yes',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                    onPressed: ()async {
+                      cancelReceivePayment(bookingId, paymentId);
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(index: 2),));
+                      cancelMessageController.clear();
+                      setState(() {
+
+                      });
+                    }
+                ),
+              ),
+            ],
           ),
         ],
       ),
