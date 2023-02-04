@@ -445,14 +445,14 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                                 ),
                               ),
                             ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text(
-                                  'Booking Id',
-                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
+                            // DataColumn(
+                            //   label: Expanded(
+                            //     child: Text(
+                            //       'Booking Id',
+                            //       style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            //     ),
+                            //   ),
+                            // ),
                             DataColumn(
                               label: Expanded(
                                 child: Text(
@@ -517,7 +517,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
 
                             return DataRow(cells: [
                               DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
-                              DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_ID']))),
+                              //DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_ID']))),
                               DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
@@ -924,14 +924,14 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                       ),
                     ),
                   ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'Booking id',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                  // DataColumn(
+                  //   label: Expanded(
+                  //     child: Text(
+                  //       'Booking id',
+                  //       style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                  //     ),
+                  //   ),
+                  // ),
                   DataColumn(
                     label: Expanded(
                       child: Text(
@@ -961,8 +961,8 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                   return DataRow(cells: [
                     DataCell(Container(
                         child: Text(getPaymentHistory[index]['RP_PAYMENT_DATE']))),
-                    DataCell(Container(
-                        child: Text(getPaymentHistory[index]['RP_BOOKING_ID']))),
+                    // DataCell(Container(
+                    //     child: Text(getPaymentHistory[index]['RP_BOOKING_ID']))),
                     DataCell(Container(
                         child:
                         Text(getPaymentHistory[index]['RP_DESC']))),
