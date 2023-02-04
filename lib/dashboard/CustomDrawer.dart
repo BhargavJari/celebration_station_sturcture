@@ -107,12 +107,24 @@ class CustomDrawerState extends State<CustomDrawer> {
             ),
             Divider(color: Colors.lime, indent: 20.0),
             ListTile(
+              leading: Icon(Icons.currency_rupee_outlined, color: Colors.lime),
+              title: Text('Paymeny Refund'),
+              onTap: () async {
+                var url = Uri.parse(
+                    "https://celebrationstation.in/payment-refund.html");
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.privacy_tip_outlined, color: Colors.lime),
-              title: Text('Privacy Policy'),
+              title: const Text('Privacy Policy'),
               onTap: () async {
                 var url = Uri.parse(
                     "https://celebrationstation.in/privacy-policy.html");
-
                 if (await canLaunchUrl(url)) {
                   await launchUrl(url);
                 } else {
@@ -122,7 +134,7 @@ class CustomDrawerState extends State<CustomDrawer> {
             ),
             ListTile(
               leading: Icon(Icons.question_answer_outlined, color: Colors.lime),
-              title: Text('FAQ'),
+              title: const Text('FAQ'),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
