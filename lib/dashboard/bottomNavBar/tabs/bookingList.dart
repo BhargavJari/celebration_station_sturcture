@@ -42,6 +42,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
   List<String> tabs = ['Dues Amount', 'Cancelled Bookings','Bookings History'];
   TabController? _tabController;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -100,7 +101,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_balance/'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
@@ -111,7 +112,6 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         body: {
           'year' : year,
           'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
-          'month' : month
         },
       );
       if(response.statusCode==200){
@@ -301,6 +301,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         });
         Loader.hideLoader();
         print("Get Payment History List Fetched");
+        print(getPaymentHistory);
       }else{
         setState(() {
           getPaymentHistory = [];
@@ -480,6 +481,14 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                             DataColumn(
                               label: Expanded(
                                 child: Text(
+                                  'Balance',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
                                   'Refer By',
                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                                 ),
@@ -521,7 +530,8 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                               DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
-                              DataCell(Center(child: Text(getEvent[index]['CBD_MALE_NAME']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BALANCE']))),
+                              DataCell(Center(child: getEvent[index]['CBB_REFER_BY'] == "0" ? Text('Me') : Text('Admin') )),
                               DataCell(Center(
                                   child: IconButton(
                                       onPressed: () {
@@ -540,8 +550,8 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                               ),
                               DataCell(Center(
                                   child: IconButton(
-                                      onPressed: () {
-                                        getPaymentHistoryDetails(getEvent[index]['CBD_BOOKING_ID']);
+                                      onPressed: () async {
+                                        await getPaymentHistoryDetails(getEvent[index]['CBD_BOOKING_ID']);
                                         _showPaymentEventHistoryDialog(getEvent[index]['CBD_BOOKING_ID']);
                                       },
                                       icon: Icon(Icons.remove_red_eye_rounded, color: ColorUtils.blackColor, size: 4.h,))
@@ -723,7 +733,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                               DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
                               DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
-                              DataCell(Center(child: Text(getEvent[index]['CBD_MALE_NAME']))),
+                              DataCell(Center(child: getEvent[index]['CBB_REFER_BY'] == "0" ? Text('Me') : Text('Admin') )),
                             ]);
                           }),
                         ),
@@ -738,7 +748,6 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
 
       ),
     );
-
   }
 
   _showCancelEventDialog(String bookingDate, String bookingId) async {
@@ -958,6 +967,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                   ),
                 ],
                 rows: List.generate(getPaymentHistory.length, (index) {
+
                   return DataRow(cells: [
                     DataCell(Container(
                         child: Text(getPaymentHistory[index]['RP_PAYMENT_DATE']))),

@@ -82,7 +82,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.fitness_center, color: Colors.lime),
+              leading: Icon(Icons.event, color: Colors.lime),
               title: Text('Event Details'),
               onTap: () {
                 Navigator.push(context,
