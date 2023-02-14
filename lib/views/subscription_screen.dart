@@ -35,7 +35,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void initState() {
     amountController.text = "${499}";
     getLoginId();
-    // TODO: implement initState
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -45,22 +44,31 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     paymentId = response.paymentId;
-    FormData data() {
-      final currentDate = DateTime.now();
-      var compeletedDate = DateFormat('MM-dd-yyyy').format(currentDate);
-      return FormData.fromMap({
-        "transactionid": paymentId,
-        "registrationfee": 499,
-        "payment_date": compeletedDate,
-        "loginid": loginId?.replaceAll('"', '').replaceAll('"', '').toString(),
-      });
+    print("Payment Success");
+    final currentDate = DateTime.now();
+    var compeletedDate = DateFormat('MM-dd-yyyy').format(currentDate);
+    print(
+        "Id here:=== ${loginId?.replaceAll('"', '').replaceAll('"', '').toString()}");
+    print("Payemnt id heere:= ${paymentId}");
+    try {
+      paymentStatus(
+          data: FormData.fromMap({
+            "transactionid": paymentId,
+            "registrationfee": 499,
+            "payment_date": compeletedDate,
+            "loginid": loginId?.replaceAll('"', '').replaceAll('"', '').toString(),
+          }));
+    } catch (e) {
+      debugPrint(e.toString());
     }
-
-    paymentStatus(data: data());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("Payment Fail");
+    Fluttertoast.showToast(
+      msg: 'Payment Fail Please try again',
+      backgroundColor: Colors.grey,
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -74,12 +82,14 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     });
   }
 
-  void paymentStatus({FormData? data}) async {
+  Future<void> paymentStatus({FormData? data}) async {
     try {
       Loader.showLoader();
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
+      print(
+          "id here:=${id?.replaceAll('"', '').replaceAll('"', '').toString()}");
       Response response;
       response = await dio.post(ApiEndPoints.paymnetStatus,
           options: Options(headers: {
@@ -96,28 +106,43 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           msg: "Payment successfully",
           backgroundColor: Colors.grey,
         );
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (context) => const BottomNavBar(
-                  index: 1,
-                )),
-                (Route<dynamic> route) => false);
-
-        // return responseData;
+        // Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(
+        //         builder: (context) => const BottomNavBar(
+        //               index: 1,
+        //             )),
+        //     (Route<dynamic> route) => false);
+        Loader.showLoader();
       } else {
         Fluttertoast.showToast(
-          msg: "invalid",
+          msg: 'Invalid ',
           backgroundColor: Colors.grey,
         );
         Loader.hideLoader();
         throw Exception(response.data);
       }
     } on DioError catch (e) {
-      print("dio");
+      Loader.hideLoader();
       debugPrint('Dio E  $e');
-      debugPrint('Dio E  $e');
+    } finally {
       Loader.hideLoader();
     }
+    return null;
+    // return responseData;
+    //   } else {
+    //     Fluttertoast.showToast(
+    //       msg: "invalid",
+    //       backgroundColor: Colors.grey,
+    //     );
+    //     Loader.hideLoader();
+    //     throw Exception(response.data);
+    //   }
+    // } on DioError catch (e) {
+    //   print("dio");
+    //   debugPrint('Dio E  $e');
+    //   debugPrint('Dio E  $e');
+    //   Loader.hideLoader();
+    // }
   }
 
   @override
@@ -201,7 +226,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   borderRadius: BorderRadius.circular(20)),
                             ),
                             onPressed: () async {
-                              Razorpay razorpay = Razorpay();
                               Navigator.pop(context);
                               var options = {
                                 'key': 'rzp_test_YoriHE0YT6XVEs',
@@ -216,9 +240,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 },
                               };
 
-                              razorpay.open(options);
-                              razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-                                  _handlePaymentSuccess);
+                              _razorpay.open(options);
+                              // razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                              //     _handlePaymentSuccess);
                             },
                             child: Text(
                               "Subscribe Now",
@@ -236,10 +260,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _razorpay.clear();
-    super.dispose();
-  }
+// @override
+// void dispose() {
+//   // TODO: implement dispose
+//   _razorpay.clear();
+//   super.dispose();
+// }
 }
