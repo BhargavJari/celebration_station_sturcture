@@ -26,6 +26,7 @@ class _OurServicesState extends State<OurServices> {
   List? images = [];
   bool isLoading = false;
   List getEvent = [];
+  List getCancelEvent = [];
   var count = 0;
   var year = DateFormat('yyyy').format(DateTime.now());
   var month = DateFormat('MM').format(DateTime.now());
@@ -36,6 +37,7 @@ class _OurServicesState extends State<OurServices> {
     super.initState();
     getImages();
     getBookingDetails();
+    getCancleBookingDetails();
   }
 
   Future<void> getImages() async {
@@ -81,51 +83,85 @@ class _OurServicesState extends State<OurServices> {
     }
   }
 
-  getBookingDetails() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
+  getBookingDetails() async{
+    Loader.showLoader();
+    try{
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
-      Response response = await post(
+      Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse(
-            'https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_balance/'),
         headers: {
-          'Client-Service': 'frontend-client',
-          'Auth-Key': 'simplerestapi',
+          'Client-Service':'frontend-client',
+          'Auth-Key':'simplerestapi',
           'User-ID': id.toString(),
           'token': token.toString(),
           'type': type.toString()
         },
         body: {
-          'year': year,
-          'loginid': id?.replaceAll('"', '').replaceAll('"', '').toString(),
-          'month': month
+          'year' : year,
+          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
         },
       );
-      if (response.statusCode == 200) {
+      if(response.statusCode==200){
         var items = jsonDecode(response.body)['\$booking'];
         setState(() {
           getEvent = items;
-          for(var i=0;i<getEvent.length;i++){
-            if(items['CBD_STATUS'] == 0){
-              count++;
-            }
-          }
-          print(count);
         });
-        print(getEvent);
-      } else {
+        Loader.hideLoader();
+        print("Booking List Fetched");
+      }else{
         setState(() {
           getEvent = [];
         });
+        Loader.hideLoader();
         print("Error");
       }
-    } catch (e) {
+    }catch(e){
+      print(e.toString());
+    }
+  }
+
+  getCancleBookingDetails() async{
+    Loader.showLoader();
+    try{
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
+      Response response= await post(
+        //Uri.parse('https://reqres.in/api/login'),
+        Uri.parse('https://celebrationstation.in/get_ajax/get_cancelled_booking_month_details/'),
+        headers: {
+          'Client-Service':'frontend-client',
+          'Auth-Key':'simplerestapi',
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
+        },
+        body: {
+          'year' : year,
+          'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
+          'month' : month
+        },
+      );
+      if(response.statusCode==200){
+        var items = jsonDecode(response.body)['\$booking'];
+        setState(() {
+          getCancelEvent = items;
+        });
+        Loader.hideLoader();
+        print("Booking List Fetched");
+      }else{
+        setState(() {
+          getCancelEvent = [];
+        });
+        Loader.hideLoader();
+        print("Error");
+      }
+    }catch(e){
       print(e.toString());
     }
   }
@@ -357,7 +393,7 @@ class _OurServicesState extends State<OurServices> {
                     ),
                     onPressed: () {},
                     child:  Text(
-                      "Canceled Booking : ${count}" ,
+                      "Canceled Booking : ${getCancelEvent.length}" ,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,

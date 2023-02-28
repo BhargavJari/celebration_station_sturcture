@@ -49,10 +49,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(
-              'Profile Information',
-              style: TextStyle(color: ColorUtils.blackColor),
-            ),
             iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Colors.transparent,
             elevation: 0,

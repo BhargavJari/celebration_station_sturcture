@@ -38,10 +38,11 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
   final cancelMessageController = TextEditingController();
   final receiveController = TextEditingController();
   final descriptionController = TextEditingController();
-   String bid='0';
+  String bid='0';
   List<String> tabs = ['Dues Amount', 'Cancelled Bookings','Bookings History'];
   TabController? _tabController;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -100,7 +101,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
       String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response= await post(
         //Uri.parse('https://reqres.in/api/login'),
-        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_month_details'),
+        Uri.parse('https://celebrationstation.in/get_ajax/get_booking_balance/'),
         headers: {
           'Client-Service':'frontend-client',
           'Auth-Key':'simplerestapi',
@@ -111,7 +112,6 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         body: {
           'year' : year,
           'loginid':id?.replaceAll('"', '').replaceAll('"', '').toString(),
-          'month' : month
         },
       );
       if(response.statusCode==200){
@@ -301,6 +301,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
         });
         Loader.hideLoader();
         print("Get Payment History List Fetched");
+        print(getPaymentHistory);
       }else{
         setState(() {
           getPaymentHistory = [];
@@ -366,33 +367,33 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
             height: 60,
           ),
           bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          labelColor: ColorUtils.blackColor,
-          unselectedLabelColor: ColorUtils.grey,
-          indicatorColor: ColorUtils.blackColor,
-          tabs: List<Widget>.generate(tabs.length, (int index) {
-            return Tab(
-              child: Text(
-                tabs[index],
-                style: FontTextStyle.poppinsS12W7BlackColor,
-              ),
-            );
-          }),
-        ),
-          leading: Builder(
-            builder: (context) {
-              return IconButton(
-                iconSize: 30,
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.grey,
+            controller: _tabController,
+            isScrollable: true,
+            labelColor: ColorUtils.blackColor,
+            unselectedLabelColor: ColorUtils.grey,
+            indicatorColor: ColorUtils.blackColor,
+            tabs: List<Widget>.generate(tabs.length, (int index) {
+              return Tab(
+                child: Text(
+                  tabs[index],
+                  style: FontTextStyle.poppinsS12W7BlackColor,
                 ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
               );
-            }
+            }),
+          ),
+          leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  iconSize: 30,
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                );
+              }
           ),
           actions: [
             IconButton(
@@ -407,338 +408,346 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
           ],
         ),
         body:TabBarView(
-        controller: _tabController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                Center(
-                  child: Text(
-                    "Dues Amount",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
-                        dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
-                        headingRowHeight: 80,
-                        border: TableBorder.all(width: 1),
-                        columnSpacing: 20,
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Date',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Booking Id',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Description',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Total Amount',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Advance',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Refer By',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Pay Now',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Pay History',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ],
-                        rows: List.generate(getEvent.length, (index){
-                          setState(() {
-                            bid=getEvent[index]['CBD_BOOKING_ID'];
-                          });
-
-                          return DataRow(cells: [
-                            DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
-                            DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_ID']))),
-                            DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_MALE_NAME']))),
-                            DataCell(Center(
-                                child: IconButton(
-                                    onPressed: () {
-                                      _showReceiveEventDialog(getEvent[index]['CBD_BOOKING_ID']);
-                                    },
-                                    icon: Icon(Icons.payment_outlined, color: ColorUtils.green, size: 4.h,))
-                            ),
-                            ),
-                            DataCell(Center(
-                                child: IconButton(
-                                    onPressed: () {
-                                      _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
-                                    },
-                                    icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
-                            ),
-                            ),
-                            DataCell(Center(
-                                child: IconButton(
-                                    onPressed: () {
-                                      getPaymentHistoryDetails(getEvent[index]['CBD_BOOKING_ID']);
-                                      _showPaymentEventHistoryDialog(getEvent[index]['CBD_BOOKING_ID']);
-                                    },
-                                    icon: Icon(Icons.remove_red_eye_rounded, color: ColorUtils.blackColor, size: 4.h,))
-                            ),
-                            ),
-                          ]);
-                        }),
+          controller: _tabController,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  Center(
+                    child: Text(
+                      "Dues Amount",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                Center(
-                  child: Text(
-                    "Cancelled Bookings",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
+                  SizedBox(height: 20),
+                  Center(
                     child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
-                        dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
-                        headingRowHeight: 80,
-                        border: TableBorder.all(width: 1),
-                        columnSpacing: 20,
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Date',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
+                          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
+                          headingRowHeight: 80,
+                          border: TableBorder.all(width: 1),
+                          columnSpacing: 20,
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Date',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Description',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            // DataColumn(
+                            //   label: Expanded(
+                            //     child: Text(
+                            //       'Booking Id',
+                            //       style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            //     ),
+                            //   ),
+                            // ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Description',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Total Amount',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Total Amount',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Advance',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Advance',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Refer By',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Balance',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                        rows: List.generate(getCancelEvent.length, (index){
-                          setState(() {
-                            bid=getCancelEvent[index]['CBD_BOOKING_ID'];
-                          });
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Refer By',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Pay Now',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Pay History',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows: List.generate(getEvent.length, (index){
+                            setState(() {
+                              bid=getEvent[index]['CBD_BOOKING_ID'];
+                            });
 
-                          return DataRow(cells: [
-                            DataCell(SizedBox(width: 75, child: Text(getCancelEvent[index]['CBD_BOOKING_DATE']))),
-                            DataCell(SizedBox(width: 75, child: Text(getCancelEvent[index]['CBD_DESC']))),
-                            DataCell(Center(child: Text(getCancelEvent[index]['CBD_BOOKING_AMOUNT']))),
-                            DataCell(Center(child: Text(getCancelEvent[index]['CBD_BOOKING_ADVANCE']))),
-                            DataCell(Center(child: Text(getCancelEvent[index]['CBD_MALE_NAME']))),
-                          ]);
-                        }),
+                            return DataRow(cells: [
+                              DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
+                              //DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_ID']))),
+                              DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BALANCE']))),
+                              DataCell(Center(child: getEvent[index]['CBB_REFER_BY'] == "0" ? Text('Me') : Text('Admin') )),
+                              DataCell(Center(
+                                  child: IconButton(
+                                      onPressed: () {
+                                        _showReceiveEventDialog(getEvent[index]['CBD_BOOKING_ID']);
+                                      },
+                                      icon: Icon(Icons.payment_outlined, color: ColorUtils.green, size: 4.h,))
+                              ),
+                              ),
+                              DataCell(Center(
+                                  child: IconButton(
+                                      onPressed: () {
+                                        _showCancelEventDialog(getEvent[index]['CBD_BOOKING_DATE'], getEvent[index]['CBD_ID']);
+                                      },
+                                      icon: Icon(Icons.cancel, color: ColorUtils.redColor, size: 4.h,))
+                              ),
+                              ),
+                              DataCell(Center(
+                                  child: IconButton(
+                                      onPressed: () async {
+                                        await getPaymentHistoryDetails(getEvent[index]['CBD_BOOKING_ID']);
+                                        _showPaymentEventHistoryDialog(getEvent[index]['CBD_BOOKING_ID']);
+                                      },
+                                      icon: Icon(Icons.remove_red_eye_rounded, color: ColorUtils.blackColor, size: 4.h,))
+                              ),
+                              ),
+                            ]);
+                          }),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                Center(
-                  child: Text(
-                    "Bookings History",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
-                        dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
-                        headingRowHeight: 80,
-                        border: TableBorder.all(width: 1),
-                        columnSpacing: 20,
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Date',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Description',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Total Amount',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Advance',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Refer By',
-                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ],
-                        rows: List.generate(getEvent.length, (index){
-                          setState(() {
-                            bid=getEvent[index]['CBD_BOOKING_ID'];
-                          });
-
-                          return DataRow(cells: [
-                            DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
-                            DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
-                            DataCell(Center(child: Text(getEvent[index]['CBD_MALE_NAME']))),
-                          ]);
-                        }),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  Center(
+                    child: Text(
+                      "Cancelled Bookings",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
+                          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
+                          headingRowHeight: 80,
+                          border: TableBorder.all(width: 1),
+                          columnSpacing: 20,
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Date',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Description',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Total Amount',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Advance',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Refer By',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows: List.generate(getCancelEvent.length, (index){
+                            setState(() {
+                              bid=getCancelEvent[index]['CBD_BOOKING_ID'];
+                            });
+
+                            return DataRow(cells: [
+                              DataCell(SizedBox(width: 75, child: Text(getCancelEvent[index]['CBD_BOOKING_DATE']))),
+                              DataCell(SizedBox(width: 75, child: Text(getCancelEvent[index]['CBD_DESC']))),
+                              DataCell(Center(child: Text(getCancelEvent[index]['CBD_BOOKING_AMOUNT']))),
+                              DataCell(Center(child: Text(getCancelEvent[index]['CBD_BOOKING_ADVANCE']))),
+                              DataCell(Center(child: Text(getCancelEvent[index]['CBD_MALE_NAME']))),
+                            ]);
+                          }),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  Center(
+                    child: Text(
+                      "Bookings History",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.pink.shade50),
+                          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade50),
+                          headingRowHeight: 80,
+                          border: TableBorder.all(width: 1),
+                          columnSpacing: 20,
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Date',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Description',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Total Amount',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Advance',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Refer By',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows: List.generate(getEvent.length, (index){
+                            setState(() {
+                              bid=getEvent[index]['CBD_BOOKING_ID'];
+                            });
+
+                            return DataRow(cells: [
+                              DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_BOOKING_DATE']))),
+                              DataCell(SizedBox(width: 75, child: Text(getEvent[index]['CBD_DESC']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_AMOUNT']))),
+                              DataCell(Center(child: Text(getEvent[index]['CBD_BOOKING_ADVANCE']))),
+                              DataCell(Center(child: getEvent[index]['CBB_REFER_BY'] == "0" ? Text('Me') : Text('Admin') )),
+                            ]);
+                          }),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
 
-          ),
-        );
-
+      ),
+    );
   }
 
   _showCancelEventDialog(String bookingDate, String bookingId) async {
@@ -924,14 +933,14 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                       ),
                     ),
                   ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'Booking id',
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                  // DataColumn(
+                  //   label: Expanded(
+                  //     child: Text(
+                  //       'Booking id',
+                  //       style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                  //     ),
+                  //   ),
+                  // ),
                   DataColumn(
                     label: Expanded(
                       child: Text(
@@ -958,11 +967,12 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                   ),
                 ],
                 rows: List.generate(getPaymentHistory.length, (index) {
+
                   return DataRow(cells: [
                     DataCell(Container(
                         child: Text(getPaymentHistory[index]['RP_PAYMENT_DATE']))),
-                    DataCell(Container(
-                        child: Text(getPaymentHistory[index]['RP_BOOKING_ID']))),
+                    // DataCell(Container(
+                    //     child: Text(getPaymentHistory[index]['RP_BOOKING_ID']))),
                     DataCell(Container(
                         child:
                         Text(getPaymentHistory[index]['RP_DESC']))),

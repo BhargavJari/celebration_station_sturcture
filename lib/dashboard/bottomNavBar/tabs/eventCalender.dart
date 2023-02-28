@@ -629,7 +629,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   DataColumn(
                     label: Expanded(
                       child: Text(
-                        'Balance',
+                        'Total Amount',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -838,7 +838,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ),
               ),
               TableCalendar(
-                firstDay: DateTime.utc(2022) /*DateTime.now()*/,
+                firstDay: /*DateTime.utc(2022)*/ DateTime.now(),
                 lastDay: DateTime(2024),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
