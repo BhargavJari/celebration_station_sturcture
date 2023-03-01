@@ -2,11 +2,7 @@ import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sizer/sizer.dart';
-
-import '../../Utils/fontFamily_utils.dart';
 import '../../utils/loder.dart';
-import '../custom_widget/custom_primary_button.dart';
 import '../custom_widget/custom_text_field.dart';
 import 'otp_verification_screen.dart';
 

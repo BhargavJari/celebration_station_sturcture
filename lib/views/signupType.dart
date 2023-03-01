@@ -1,36 +1,16 @@
-import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
-import 'package:celebration_station_sturcture/views/signupType.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import 'auth/login_screen.dart';
 import 'auth/signUp.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class SignupType extends StatefulWidget {
+  const SignupType({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<SignupType> createState() => _SignupTypeState();
 }
 
-class _HomeState extends State<Home> {
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _fetchLoginData();
-  // }
-  // _fetchLoginData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     if(prefs.containsKey('id'))
-  //       {
-  //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OurServices(),));
-  //       }
-  //     else
-  //       {
-  //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
-  //       }
-  // }
-
+class _SignupTypeState extends State<SignupType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,22 +44,12 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                       children: const <TextSpan>[
-                        TextSpan(text: 'Welcome to'),
                         TextSpan(
                             text: ' Celebration Station',
                             style: TextStyle(letterSpacing: 2.0))
                       ]),
                 ),
-                SizedBox(height: 30.0),
-                Center(
-                  child: Text(
-                    'Already Have an Account?',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 60),
                 Center(
                   child: SizedBox(
                       height: 50, //height of button
@@ -87,21 +57,21 @@ class _HomeState extends State<Home> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary:
-                              Colors.lime[200], //background color of button
+                          Colors.lime[200], //background color of button
                           elevation: 3,
                           shape: RoundedRectangleBorder(
-                              //to set border radius to button
+                            //to set border radius to button
                               borderRadius: BorderRadius.circular(20)),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginScreen()),
+                                builder: (context) => const SignUp()),
                           );
                         },
                         child: Text(
-                          "Login",
+                          "Signup as a Customer",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16.0,
@@ -129,17 +99,17 @@ class _HomeState extends State<Home> {
                           side: BorderSide(color: Colors.lime),
                           elevation: 3,
                           shape: RoundedRectangleBorder(
-                              //to set border radius to button
+                            //to set border radius to button
                               borderRadius: BorderRadius.circular(20)),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SignupType()),
+                            MaterialPageRoute(builder: (context) => SignUp()),
                           );
                         },
                         child: Text(
-                          "Sign Up",
+                          "Signup as a Business",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,

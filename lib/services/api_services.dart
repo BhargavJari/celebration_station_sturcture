@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../dashboard/bottomNavBar/tabs/ourServices-1.dart';
+import '../dashboard/bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 import '../model/FaqModel.dart';
 import '../model/GetAllProfileModel.dart';
 import '../model/LoginModel.dart';
@@ -46,6 +47,7 @@ class ApiService {
         Preferances.setString("token", responseData.token);
         Preferances.setString("type", responseData.type);
         Preferances.setString("PROFILE_STATUS", responseData.pROFILESTATUS);
+        Preferances.setString("USER_TYPE", responseData.cOMPANYHRMTYPE);
         Preferances.setString("cookie", cookies[0].split(';')[0]);
 
         if (responseData.pROFILESTATUS == '0') {
@@ -57,13 +59,28 @@ class ApiService {
                         type: "${responseData.type}",
                       )),
               (Route<dynamic> route) => false);
-        } else if (responseData.pROFILESTATUS == '1') {
-          Navigator.of(context).pushAndRemoveUntil(
+        } else if (responseData.pROFILESTATUS == "1") {
+          if(responseData.cOMPANYHRMTYPE == "2"){
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => const BottomNavBar(
+                      index: 0,
+                    )),
+                    (Route<dynamic> route) => false);
+          }else if(responseData.cOMPANYHRMTYPE == "3"){
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => const BottomNavBarCustomer(
+                      index: 0,
+                    )),
+                    (Route<dynamic> route) => false);
+          }
+          /*Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) => const BottomNavBar(
                         index: 0,
                       )),
-              (Route<dynamic> route) => false);
+              (Route<dynamic> route) => false);*/
         }
         Fluttertoast.showToast(
           msg: 'Login Sucessfully',

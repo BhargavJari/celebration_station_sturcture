@@ -5,6 +5,7 @@ class LoginModel {
   String? token;
   int? type;
   String? pROFILESTATUS;
+  String? cOMPANYHRMTYPE;
 
   LoginModel(
       {this.status,
@@ -12,7 +13,8 @@ class LoginModel {
         this.id,
         this.token,
         this.type,
-        this.pROFILESTATUS});
+        this.pROFILESTATUS,
+        this.cOMPANYHRMTYPE});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -21,6 +23,7 @@ class LoginModel {
     token = json['token'];
     type = json['type'];
     pROFILESTATUS = json['PROFILE_STATUS'];
+    cOMPANYHRMTYPE = json['COMPANY_HRM_TYPE'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class LoginModel {
     data['token'] = this.token;
     data['type'] = this.type;
     data['PROFILE_STATUS'] = this.pROFILESTATUS;
+    data['COMPANY_HRM_TYPE'] = this.cOMPANYHRMTYPE;
     return data;
   }
 }
