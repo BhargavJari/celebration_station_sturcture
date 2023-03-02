@@ -20,6 +20,7 @@ import '../../../views/custom_widget/custom_text_field.dart';
 import '../../../views/custom_widget/dialogs/location_dialog.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
+import '../../CustomDrawerCustomer.dart';
 import '../bottom_nav_bar_customer.dart';
 
 
@@ -410,7 +411,7 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
-        drawer: CustomDrawer(),
+        drawer: CustomDrawerCustomer(),
         backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 80,

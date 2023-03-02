@@ -15,7 +15,8 @@ import 'login_screen.dart';
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
   final String status;
-  const OtpVerificationScreen({Key? key, required this.phoneNumber,required this.status})
+  final String? userType;
+  const OtpVerificationScreen({Key? key, required this.phoneNumber,required this.status, this.userType})
       : super(key: key);
 
   @override
@@ -209,6 +210,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             MaterialPageRoute(
                 builder: (context) => RegistrationScrenn(
                   mobileNumber: widget.phoneNumber,
+                  userType: widget.userType,
                 )));
       }else{
         CommonFunctions.toast("otp verify successfully !!");

@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "834741340968-c4gatl2cge5bfgtfq2hl6hiaulh9b9fp.apps.googleusercontent.com",
+          "client_id": "834741340968-0km765et4bs3g7vvselgeku7cponvg3a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.celebration.station",
@@ -22,27 +22,19 @@
           }
         },
         {
-          "client_id": "834741340968-h0vc27c9k409u375svh6k7fovm8mhafo.apps.googleusercontent.com",
+          "client_id": "834741340968-dsbhpq2336l7ohm1qvj6su2s65n76mvu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.celebration.station",
-            "certificate_hash": "32317591a4618e69ab720ef2e2b1fd62624b69d1"
+            "certificate_hash": "311aa7356546861b4fcce9113a60716630bc2c66"
           }
         },
         {
-          "client_id": "834741340968-m6o7citv3etki6t82h3nou4qoqq1oqqi.apps.googleusercontent.com",
+          "client_id": "834741340968-gr4ve2jakvjg6uc9rd8ufshsrjaceta6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.celebration.station",
-            "certificate_hash": "73094a4d4d043475ebabea1cecbb48156a3f16d3"
-          }
-        },
-        {
-          "client_id": "834741340968-unj37f6kreh2ou0g18kdjv6tbn16v5a6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.celebration.station",
-            "certificate_hash": "b163786f029455cb595b60e022dbefa922908687"
+            "certificate_hash": "ee3e00e133617fd4e4c5d878e1f6380c5a019a35"
           }
         },
         {
@@ -75,11 +67,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "834741340968-tl1t6771c5ipkd9jq1o7839ob34v9vfo.apps.googleusercontent.com",
+          "client_id": "834741340968-etnfiesuqpbqir7medgl3bnalc67v7ns.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.celebration_station",
-            "certificate_hash": "32317591a4618e69ab720ef2e2b1fd62624b69d1"
+            "certificate_hash": "ee3e00e133617fd4e4c5d878e1f6380c5a019a35"
+          }
+        },
+        {
+          "client_id": "834741340968-mfio45dk8727q33snm7561s9641jku9r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.celebration_station",
+            "certificate_hash": "295424483e570c759b9814e555045aebf526943c"
+          }
+        },
+        {
+          "client_id": "834741340968-rui6klqimfvacc4q4g8loqh2kgi5pcv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.celebration_station",
+            "certificate_hash": "311aa7356546861b4fcce9113a60716630bc2c66"
           }
         },
         {

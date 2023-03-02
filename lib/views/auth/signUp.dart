@@ -7,7 +7,8 @@ import '../custom_widget/custom_text_field.dart';
 import 'otp_verification_screen.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+  final userType;
+  const SignUp({Key? key, required this.userType}) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -21,6 +22,7 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("User Ty:- ${widget.userType}");
   }
 
   @override
@@ -139,7 +141,7 @@ class _SignUpState extends State<SignUp> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OtpVerificationScreen(
-                                      phoneNumber: "${phone.text}",status: "0",
+                                      phoneNumber: "${phone.text}",status: "0",userType: widget.userType,
                                     )));
                           } else if (value?.count == 1) {
                             Loader.hideLoader();

@@ -132,7 +132,7 @@ class ApiService {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BottomNavBar(
+              builder: (context) => BottomNavBarCustomer(
                 index: 0,
               ),
             ));
@@ -318,7 +318,6 @@ class ApiService {
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
-      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
       response =
           await dio.post("https://celebrationstation.in/post_ajax/add_account/",

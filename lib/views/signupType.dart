@@ -67,7 +67,7 @@ class _SignupTypeState extends State<SignupType> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignUp()),
+                                builder: (context) => const SignUp(userType: "3")),
                           );
                         },
                         child: Text(
@@ -105,7 +105,7 @@ class _SignupTypeState extends State<SignupType> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SignUp()),
+                            MaterialPageRoute(builder: (context) => SignUp(userType: "2",)),
                           );
                         },
                         child: Text(

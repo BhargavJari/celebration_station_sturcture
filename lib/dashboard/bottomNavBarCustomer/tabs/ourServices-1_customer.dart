@@ -12,8 +12,7 @@ import '../../../Utils/fontFamily_utils.dart';
 import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
 import '../../../views/custom_widget/dialogs/location_dialog.dart';
-import '../../../views/notification/notificationList.dart';
-import '../../CustomDrawer.dart';
+import '../../CustomDrawerCustomer.dart';
 import '../../bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 
 class OurServices extends StatefulWidget {
@@ -225,7 +224,7 @@ class _OurServicesState extends State<OurServices> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomDrawer(),
+      drawer: CustomDrawerCustomer(),
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,

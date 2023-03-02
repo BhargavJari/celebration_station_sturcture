@@ -9,8 +9,9 @@ import '../custom_widget/custom_text_field.dart';
 
 class RegistrationScrenn extends StatefulWidget {
   final String? mobileNumber;
+  final userType;
 
-  const RegistrationScrenn({Key? key, this.mobileNumber}) : super(key: key);
+  const RegistrationScrenn({Key? key, this.mobileNumber, required this.userType}) : super(key: key);
 
   @override
   State<RegistrationScrenn> createState() => _RegistrationScrennState();
@@ -25,6 +26,7 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("User Ty:- ${widget.userType}");
   }
 
   @override
@@ -182,7 +184,8 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
     return FormData.fromMap({
       "referal_code": referralController.text.trim(),
       "phone": widget.mobileNumber,
-      "password": passwordController.text.trim()
+      "password": passwordController.text.trim(),
+      "profile_type": widget.userType
     });
   }
 }

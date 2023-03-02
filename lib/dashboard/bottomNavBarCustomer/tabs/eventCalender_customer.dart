@@ -20,6 +20,7 @@ import '../../../utils/loder.dart';
 import '../../../views/custom_widget/dialogs/location_dialog.dart';
 import '../../../views/subscription_screen.dart';
 import '../../CustomDrawer.dart';
+import '../../CustomDrawerCustomer.dart';
 import '../../bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 
 class EventCalendarScreen extends StatefulWidget {
@@ -785,7 +786,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: CustomDrawerCustomer(),
       backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 80,

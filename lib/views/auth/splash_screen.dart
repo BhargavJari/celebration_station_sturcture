@@ -30,28 +30,20 @@ class _SplashScreenState extends State<SplashScreen> {
       print("ps:=${profileStatus}");
       print("User Type:=${userType.toString()}");
       if (id != null ) {
-        if(userType == "2"){
+        if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "2"){
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => const BottomNavBar(
                       index: 0,
                     )),
             (Route<dynamic> route) => false);
-        }else if(userType == "3"){
+        }else if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "3"){
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) => const BottomNavBarCustomer(
                     index: 0,
                   )),
                   (Route<dynamic> route) => false);
-        }else{
-          /*Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => const BottomNavBar(
-                    index: 0,
-                  )),
-                  (Route<dynamic> route) => false);*/
-          Fluttertoast.showToast(msg: userType.toString());
         }
       } else {
         Navigator.of(context).pushAndRemoveUntil(

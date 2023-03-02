@@ -11,6 +11,7 @@ import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
 import '../../../views/custom_widget/dialogs/location_dialog.dart';
 import '../../CustomDrawer.dart';
+import '../../CustomDrawerCustomer.dart';
 import '../bottom_nav_bar_customer.dart';
 import '../../bottomNavBarCustomer/tabs/eventCalender_customer.dart';
 
@@ -129,7 +130,7 @@ class _HomeState extends State<OurService> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomDrawer(),
+      drawer: CustomDrawerCustomer(),
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,
