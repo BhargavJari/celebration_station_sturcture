@@ -21,18 +21,17 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController referralController = TextEditingController();
+  bool obscurePassword = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("User Ty:- ${widget.userType}");
   }
+  /*@override
+  void setState(VoidCallback fn) {}*/
 
-  @override
-  void setState(VoidCallback fn) {}
-  bool obscurePassword = true;
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +57,7 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                   ),
                   Container(
                     child: Text(
-                      "Registration Here",
+                      "Register Here",
                       style: FontTextStyle.poppinsS24W7BlackColor,
                     ),
                   ),
@@ -120,7 +119,7 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                             prefixIcon: const Icon(Icons.password),
                             fieldController: passwordController,
                             fieldName: "Password",
-                            hintName: " Password",
+                            hintName: "Password",
                             keyboard: TextInputType.visiblePassword,
                             maxLines: 1,
                             textInputAction: TextInputAction.done,
@@ -134,7 +133,7 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
                           SizedBox(height: 3.h),
                           CustomTextField(
                             prefixIcon: const Icon(Icons.people),
-                            hintName: "Enter Referral Code",
+                            hintName: "Referral Code (Optional)",
                             fieldController: referralController,
                             keyboard: TextInputType.text,
                             maxLines: 1,

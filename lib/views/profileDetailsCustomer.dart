@@ -10,19 +10,19 @@ import '../model/GetState.dart';
 import '../model/getAllbusineesType.dart';
 import '../services/api_services.dart';
 
-class ProfileDetailsScreen extends StatefulWidget {
+class ProfileDetailsCustomerScreen extends StatefulWidget {
   final String userId;
   final String token;
   final String type;
-  const ProfileDetailsScreen(
+  const ProfileDetailsCustomerScreen(
       {Key? key, required this.userId, required this.token, required this.type})
       : super(key: key);
 
   @override
-  State<ProfileDetailsScreen> createState() => _ProfileDetailsScreenState();
+  State<ProfileDetailsCustomerScreen> createState() => _ProfileDetailsCustomerScreenState();
 }
 
-class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
+class _ProfileDetailsCustomerScreenState extends State<ProfileDetailsCustomerScreen> {
   ProfileDetails? profileDetails;
 
   @override
@@ -91,13 +91,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildTextField("Business Name:",'${profileDetails?.bRANCHFIRMNAME ?? ""}'),
                             buildTextField("Owner Name:",'${profileDetails?.bRANCHNAME ?? ""}'),
                             buildTextField("Contact No:",'${profileDetails?.bRANCHCONTACT ?? ""}'),
                             buildTextField("Email Id: ",'${profileDetails?.bRANCHEMAIL ?? ""}'),
                             buildTextField("State:",'${profileDetails?.sTATENAME ?? ""}'),
                             buildTextField("District:",'${profileDetails?.dISTRICTNAME ?? ""}'),
-                            buildTextField("Business type:",'${profileDetails?.gASNAME ?? ""}'),
                             buildTextField("Pincode:",'${profileDetails?.bRANCHPINCODE ?? ""}'),
                             buildTextField("Address:",'${profileDetails?.bRANCHADDRESS ?? ""}'),
                             buildTextField("Whatsapp Number:",'${profileDetails?.bRANCHPHONE ?? ""}'),

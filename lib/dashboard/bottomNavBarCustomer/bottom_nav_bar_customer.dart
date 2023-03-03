@@ -1,7 +1,7 @@
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/tabs/bookingList_customer.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/tabs/ourService_customer.dart';
-import 'package:celebration_station_sturcture/dashboard/bottomNavBar/tabs/profile/profileScreen.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/tabs/ourServices-1_customer.dart';
+import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/tabs/profile/profileScreenCustomer.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 
@@ -27,10 +27,10 @@ class _BottomNavBarCustomerState extends State<BottomNavBarCustomer> {
   }
 
   List pages = [
-    OurServices(),
-    OurService(),
-    BookingList(),
-    ProfileScreen()
+    OurServicesCustomer(),
+    OurServiceCustomer(),
+    BookingListCustomer(),
+    ProfileScreenCustomer()
   ];
 
   void onTap(int index){

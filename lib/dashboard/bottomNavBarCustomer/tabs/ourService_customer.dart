@@ -15,14 +15,14 @@ import '../../CustomDrawerCustomer.dart';
 import '../bottom_nav_bar_customer.dart';
 import '../../bottomNavBarCustomer/tabs/eventCalender_customer.dart';
 
-class OurService extends StatefulWidget {
-  const OurService({Key? key}) : super(key: key);
+class OurServiceCustomer extends StatefulWidget {
+  const OurServiceCustomer({Key? key}) : super(key: key);
 
   @override
-  State<OurService> createState() => _HomeState();
+  State<OurServiceCustomer> createState() => _HomeState();
 }
 
-class _HomeState extends State<OurService> {
+class _HomeState extends State<OurServiceCustomer> {
   List services = [];
   var cityName;
   var cityId;
@@ -173,7 +173,7 @@ class _HomeState extends State<OurService> {
                 Container(
                   margin: EdgeInsets.only(top: 3.5.h, right: 3.w),
                   child: Text(
-                    "${cityName.replaceAll('"', '').toString()}",
+                      "${cityName == null ? "" : cityName}",
                     style: FontTextStyle.poppinsS14HintColor
               ),
                 )
@@ -272,7 +272,7 @@ class _HomeState extends State<OurService> {
                   msg: cityId.toString(),
                   backgroundColor: Colors.grey,
                 );*/
-                Navigator.push(context, MaterialPageRoute(builder: (context) => EventCalendarScreen(serviceId: serviceId)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EventCalendarCustomerScreen(serviceId: serviceId)));
               }
             },
             child: Text(serviceName.toString(),

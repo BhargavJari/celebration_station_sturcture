@@ -2,6 +2,9 @@ import 'package:celebration_station_sturcture/services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sizer/sizer.dart';
+import '../../Utils/colors_utils.dart';
+import '../../Utils/fontFamily_utils.dart';
 import '../../utils/loder.dart';
 import '../custom_widget/custom_text_field.dart';
 import 'otp_verification_screen.dart';
@@ -28,28 +31,38 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorUtils.whiteColor,
+      appBar: AppBar(
+        toolbarHeight: 50,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        leading: BackButton(
+          color: ColorUtils.blackColor,
+        ),
+      ),
       body: Container(
         margin: EdgeInsets.only(left: 25, right: 25),
-        alignment: Alignment.center,
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 8.h),
               Image.asset(
                 "asset/images/logo.png",
                 scale: 2,
               ),
               SizedBox(
-                height: 25,
+                height: 3.h,
               ),
               Text(
                 "Sign Up",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: FontTextStyle.poppinsS24W7BlackColor,
               ),
               SizedBox(
-                height: 10,
+                height: 3.h,
               ),
               Text(
                 "We need to register your phone without getting started!",
@@ -59,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: 30,
+                height: 5.h,
               ),
               // Row(
               //   children: [
@@ -109,7 +122,7 @@ class _SignUpState extends State<SignUp> {
                 },
               ),
               SizedBox(
-                height: 20,
+                height: 3.h,
               ),
               // CustomButton(
               //   onTap: () async{

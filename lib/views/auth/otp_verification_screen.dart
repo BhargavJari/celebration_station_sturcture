@@ -204,7 +204,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       UserCredential credential =
           await FirebaseAuth.instance.signInWithCredential(authCredential);
       if(widget.status=="0"){
-        CommonFunctions.toast("Register successfully !!");
+        CommonFunctions.toast("Registered successfully !!");
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -213,7 +213,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   userType: widget.userType,
                 )));
       }else{
-        CommonFunctions.toast("otp verify successfully !!");
+        CommonFunctions.toast("otp verified successfully !!");
         Navigator.push(
             context,
             MaterialPageRoute(

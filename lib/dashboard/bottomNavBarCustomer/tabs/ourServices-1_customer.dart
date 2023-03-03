@@ -15,14 +15,14 @@ import '../../../views/custom_widget/dialogs/location_dialog.dart';
 import '../../CustomDrawerCustomer.dart';
 import '../../bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 
-class OurServices extends StatefulWidget {
-  const OurServices({Key? key}) : super(key: key);
+class OurServicesCustomer extends StatefulWidget {
+  const OurServicesCustomer({Key? key}) : super(key: key);
 
   @override
-  State<OurServices> createState() => _OurServicesState();
+  State<OurServicesCustomer> createState() => _OurServicesCustomerState();
 }
 
-class _OurServicesState extends State<OurServices> {
+class _OurServicesCustomerState extends State<OurServicesCustomer> {
   List? images = [];
   bool isLoading = false;
   List getEvent = [];
@@ -267,7 +267,7 @@ class _OurServicesState extends State<OurServices> {
               Container(
                 margin: EdgeInsets.only(top: 3.5.h, right: 3.w),
                 child: Text(
-                    "${cityName.replaceAll('"', '').toString()}",
+                    "${cityName == null ? "" : cityName}",
                     style: FontTextStyle.poppinsS14HintColor
                 ),
               )

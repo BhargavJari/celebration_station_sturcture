@@ -23,15 +23,15 @@ import '../../CustomDrawer.dart';
 import '../../CustomDrawerCustomer.dart';
 import '../../bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 
-class EventCalendarScreen extends StatefulWidget {
+class EventCalendarCustomerScreen extends StatefulWidget {
   final String serviceId;
-  const EventCalendarScreen({Key? key, required this.serviceId}) : super(key: key);
+  const EventCalendarCustomerScreen({Key? key, required this.serviceId}) : super(key: key);
 
   @override
-  State<EventCalendarScreen> createState() => _EventCalendarScreenState();
+  State<EventCalendarCustomerScreen> createState() => _EventCalendarCustomerScreenState();
 }
 
-class _EventCalendarScreenState extends State<EventCalendarScreen> {
+class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
@@ -53,10 +53,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   var cityName;
   var client = http.Client();
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
@@ -183,6 +186,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       String? type = await Preferances.getString("type");
       String? stateid = await Preferances.getString("stateId");
       String? cityid = await Preferances.getString("cityName");
+      String? userType = await Preferances.getString("USER_TYPE");
       http.Response response = await post(
         //Uri.parse('https://reqres.in/api/login'),
         Uri.parse('https://celebrationstation.in/post_ajax/add_new_customer_enquiry'),
@@ -208,6 +212,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       print("State ID =====${stateid}");
       print("City ID =====${cityid}");
       print("Service ID =====${widget.serviceId}");
+      print("user type =====${userType}");
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
         print(data);
@@ -217,7 +222,19 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           backgroundColor: Colors.grey,
         );
 
-
+        if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "2"){
+          flutterLocalNotificationsPlugin.show(
+              0,
+              "New Enquiry",
+              "A new enquiry has received",
+              NotificationDetails(
+                  android: AndroidNotificationDetails(channel.id, channel.name,
+                      channelDescription: channel.description,
+                      importance: Importance.high,
+                      color: ColorUtils.orange,
+                      playSound: true,
+                      icon: '@mipmap/launcher_icon')));
+        }
         // callOnFcmApiSendPushNotifications(
         //   title: "Celebration Station",
         //   body: "Your booking confirm",
@@ -239,53 +256,53 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     }
   }
 
-  Future<bool> callOnFcmApiSendPushNotifications({
-    List<String>? userToken,
-    String? title,
-    String? body,
-    String? action,
-  }) async {
-    debugPrint('Push Notification Start');
-    debugPrint("user token $userToken");
-    Loader.showLoader();
-    const postUrl = 'https://fcm.googleapis.com/fcm/send';
-
-    final data = {
-      "registration_ids": userToken,
-      "notification": {
-        "title": title,
-        "body": body,
-      },
-      "data": {
-        "action": action,
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-      }
-    };
-
-    ///'Authorization=YOUR_SERVER_KEY' -- you get from firebase
-
-    final headers = {
-      'content-type': 'application/json',
-      'Authorization':
-      'key=AAAAwlp2Cyg:APA91bFuW0DXVnNghX7jQ7OsKZ12ihaxAAfaFNUOzKo3j3R00hGS4b-OiMOdXhHgwpv-Yu4ETGLZm5guNvzWi0eb-aYdQkjf86M8E5TiUkQCh8HAbK4OEWF3H-28D6RF1CM1mT8_IHdO'
-    };
-    final response = await http.post(Uri.parse(postUrl),
-        body: json.encode(data),
-        encoding: Encoding.getByName('utf-8'),
-        headers: headers);
-
-    debugPrint("Response is---> ${response.body}");
-    if (response.statusCode == 200) {
-      debugPrint('Push Notification end with successfully');
-      Loader.hideLoader();
-      return true;
-    } else {
-      debugPrint('Push Notification end with error ');
-      debugPrint('FCM error ${response.statusCode}');
-      Loader.hideLoader();
-      return false;
-    }
-  }
+  // Future<bool> callOnFcmApiSendPushNotifications({
+  //   List<String>? userToken,
+  //   String? title,
+  //   String? body,
+  //   String? action,
+  // }) async {
+  //   debugPrint('Push Notification Start');
+  //   debugPrint("user token $userToken");
+  //   Loader.showLoader();
+  //   const postUrl = 'https://fcm.googleapis.com/fcm/send';
+  //
+  //   final data = {
+  //     "registration_ids": userToken,
+  //     "notification": {
+  //       "title": title,
+  //       "body": body,
+  //     },
+  //     "data": {
+  //       "action": action,
+  //       "click_action": "FLUTTER_NOTIFICATION_CLICK",
+  //     }
+  //   };
+  //
+  //   ///'Authorization=YOUR_SERVER_KEY' -- you get from firebase
+  //
+  //   final headers = {
+  //     'content-type': 'application/json',
+  //     'Authorization':
+  //     'key=AAAAwlp2Cyg:APA91bFuW0DXVnNghX7jQ7OsKZ12ihaxAAfaFNUOzKo3j3R00hGS4b-OiMOdXhHgwpv-Yu4ETGLZm5guNvzWi0eb-aYdQkjf86M8E5TiUkQCh8HAbK4OEWF3H-28D6RF1CM1mT8_IHdO'
+  //   };
+  //   final response = await http.post(Uri.parse(postUrl),
+  //       body: json.encode(data),
+  //       encoding: Encoding.getByName('utf-8'),
+  //       headers: headers);
+  //
+  //   debugPrint("Response is---> ${response.body}");
+  //   if (response.statusCode == 200) {
+  //     debugPrint('Push Notification end with successfully');
+  //     Loader.hideLoader();
+  //     return true;
+  //   } else {
+  //     debugPrint('Push Notification end with error ');
+  //     debugPrint('FCM error ${response.statusCode}');
+  //     Loader.hideLoader();
+  //     return false;
+  //   }
+  // }
 
   void cancelBooking(
       String bookingDate, String message, String bookingId) async {
@@ -798,18 +815,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           "asset/images/logo.png",
           height: 60,
         ),
-        leading: Builder(builder: (context) {
-          return IconButton(
-            iconSize: 30,
-            icon: Icon(
-              Icons.menu,
-              color: Colors.grey,
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        }),
+        leading: BackButton(
+          color: ColorUtils.blackColor,
+        ),
         actions: [
           IconButton(
               iconSize: 30,
@@ -830,7 +838,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 Container(
                   margin: EdgeInsets.only(top: 3.5.h, right: 3.w),
                   child: Text(
-                      "${cityName.replaceAll('"', '').toString()}",
+                      "${cityName == null ? "" : cityName}",
                       style: FontTextStyle.poppinsS14HintColor
                   ),
                 )

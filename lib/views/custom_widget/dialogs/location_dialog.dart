@@ -1,3 +1,4 @@
+import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -185,9 +186,7 @@ class _LocationDailogState extends State<LocationDailog> with ValidationMixin {
                           Preferances.setString("stateName", setLocationModel.state);
                           Preferances.setString("stateId", setLocationModel.stateId);
                           Preferances.setString("cityName", setLocationModel.city);
-                          setState(() {
-
-                          });
+                          Navigator.pushAndRemoveUntil(context , MaterialPageRoute(builder: (context) => BottomNavBarCustomer(index: 1)), (route) => false);
                         },
                         child: Text(
                           "Done",

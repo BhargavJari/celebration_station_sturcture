@@ -24,14 +24,14 @@ import '../../CustomDrawerCustomer.dart';
 import '../bottom_nav_bar_customer.dart';
 
 
-class BookingList extends StatefulWidget {
-  const BookingList({Key? key}) : super(key: key);
+class BookingListCustomer extends StatefulWidget {
+  const BookingListCustomer({Key? key}) : super(key: key);
 
   @override
-  State<BookingList> createState() => _BookingListState();
+  State<BookingListCustomer> createState() => _BookingListCustomerState();
 }
 
-class _BookingListState extends State<BookingList> with TickerProviderStateMixin {
+class _BookingListCustomerState extends State<BookingListCustomer> with TickerProviderStateMixin {
 
   List getEvent = [];
   List getCancelEvent = [];
@@ -470,11 +470,10 @@ class _BookingListState extends State<BookingList> with TickerProviderStateMixin
                 Container(
                   margin: EdgeInsets.only(top: 3.5.h, right: 3.w),
                   child: Text(
-                      "${cityName.replaceAll('"', '').toString()}",
+                      "${cityName == null ? "" : cityName}",
                       style: FontTextStyle.poppinsS14HintColor
                   ),
-                )
-                    : SizedBox.shrink()
+                ) : SizedBox.shrink()
           ],
         ),
         body:TabBarView(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
+import '../Utils/colors_utils.dart';
 import 'auth/login_screen.dart';
 import 'auth/signUp.dart';
 
@@ -15,6 +17,15 @@ class _SignupTypeState extends State<SignupType> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        toolbarHeight: 50,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        leading: BackButton(
+          color: ColorUtils.blackColor,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
@@ -22,12 +33,12 @@ class _SignupTypeState extends State<SignupType> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 120),
+                SizedBox(height: 4.h),
                 Image.asset(
                   "asset/images/logo.png",
                   scale: 2,
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 3.h),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(

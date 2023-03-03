@@ -1,24 +1,17 @@
-import 'dart:convert';
-
-import 'package:celebration_station_sturcture/dashboard/CustomDrawer.dart';
-import 'package:celebration_station_sturcture/dashboard/bottomNavBar/tabs/profile/components/body.dart';
+import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/tabs/profile/components/body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../CustomDrawer.dart';
 import '../../../CustomDrawerCustomer.dart';
 
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileScreenCustomer extends StatefulWidget {
+  const ProfileScreenCustomer({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileScreenCustomer> createState() => _ProfileScreenCustomerState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenCustomerState extends State<ProfileScreenCustomer> {
 
   @override
   Widget build(BuildContext context) {

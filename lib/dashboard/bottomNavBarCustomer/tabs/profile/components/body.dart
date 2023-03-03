@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:celebration_station_sturcture/Utils/fontFamily_utils.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/tabs/profile/components/profilePic.dart';
+import 'package:celebration_station_sturcture/views/profileDetailsCustomer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -51,7 +52,6 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-
       physics: BouncingScrollPhysics(),
       child: Padding(
         padding: EdgeInsets.only(top: 2.h),
@@ -68,7 +68,7 @@ class _BodyState extends State<Body> {
                 String? id = await Preferances.getString("id");
                 String? token = await Preferances.getString("token");
                 String? type = await Preferances.getString("type");
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>  ProfileDetailsScreen(userId: '${id}', token: '${token}', type: '${type}',)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>  ProfileDetailsCustomerScreen(userId: '${id}', token: '${token}', type: '${type}',)));
               },
             ),
             ProfileMenu(

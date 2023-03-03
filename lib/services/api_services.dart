@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
 import 'package:celebration_station_sturcture/services/shared_preference.dart';
+import 'package:celebration_station_sturcture/views/updateProfileCustomer.dart';
 import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -51,14 +52,33 @@ class ApiService {
         Preferances.setString("cookie", cookies[0].split(';')[0]);
 
         if (responseData.pROFILESTATUS == '0') {
-          Navigator.of(context).pushAndRemoveUntil(
+          if(responseData.cOMPANYHRMTYPE == "2"){
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => UpdateProfile(
+                      userId: "${responseData.id}",
+                      token: "${responseData.token}",
+                      type: "${responseData.type}",
+                    )),
+                    (Route<dynamic> route) => false);
+          }else if(responseData.cOMPANYHRMTYPE == "3"){
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => UpdateProfileCustomer(
+                      userId: "${responseData.id}",
+                      token: "${responseData.token}",
+                      type: "${responseData.type}",
+                    )),
+                    (Route<dynamic> route) => false);
+          }
+          /*Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) => UpdateProfile(
                         userId: "${responseData.id}",
                         token: "${responseData.token}",
                         type: "${responseData.type}",
                       )),
-              (Route<dynamic> route) => false);
+              (Route<dynamic> route) => false);*/
         } else if (responseData.pROFILESTATUS == "1") {
           if(responseData.cOMPANYHRMTYPE == "2"){
             Navigator.of(context).pushAndRemoveUntil(
@@ -110,11 +130,9 @@ class ApiService {
   }) async {
     try {
       Loader.showLoader();
-
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
-      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
       response = await dio.post(
           "https://celebrationstation.in/post_ajax/update_profile/",
@@ -186,13 +204,13 @@ class ApiService {
             'type': type?.replaceAll('"', '').replaceAll('"', '').toString()
           }),*/
           data: formData);
-      print("3");
+      //print("3");
       GetAllProfileModel responseData =
           GetAllProfileModel.fromJson(response.data);
-      print("4");
+      //print("4");
       if (responseData.message == "ok") {
         debugPrint('Get Profile data  ----- > ${response.data}');
-        print("4");
+        //print("4");
 
         Loader.hideLoader();
         /*Fluttertoast.showToast(
@@ -226,7 +244,6 @@ class ApiService {
       String? id = await Preferances.getString("id");
       String? token = await Preferances.getString("token");
       String? type = await Preferances.getString("type");
-      String? profileStatus = await Preferances.getString("PROFILE_STATUS");
       Response response;
       response = await dio.post(ApiEndPoints.addEnquiryApi,
           options: Options(headers: {
