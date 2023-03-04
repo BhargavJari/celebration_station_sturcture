@@ -42,6 +42,7 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
   var getData = [];
   var getEvent = [];
   List<dynamic> getDateEvent = [];
+  List<String> getDeviceTokens = [];
   var paymentStatus;
   final titleController = TextEditingController();
   final descpController = TextEditingController();
@@ -52,14 +53,12 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
   String? state, city, stateId;
   var cityName;
   var client = http.Client();
-
-
+  String? mtoken = " ";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
@@ -80,7 +79,6 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
             ));
       }
     });
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification? notification = message.notification;
@@ -106,6 +104,8 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
     getDistrictName();
     loadPreviousEvents();
     getprofile();
+    getUserToken();
+    requestPermission();
   }
 
   Future<void> callApi() async {
@@ -173,6 +173,103 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
     });
   }
 
+  getUserToken() async {
+    Loader.showLoader();
+    try {
+      String? id = await Preferances.getString("id");
+      String? token = await Preferances.getString("token");
+      String? type = await Preferances.getString("type");
+      http.Response response = await post(
+        //Uri.parse('https://reqres.in/api/login'),
+        Uri.parse(
+            'https://celebrationstation.in/get_ajax/get_all_users_by_category/'),
+        headers: {
+          'Client-Service': 'frontend-client',
+          'Auth-Key': 'simplerestapi',
+          'User-ID': id.toString(),
+          'token': token.toString(),
+          'type': type.toString()
+        },
+        body: {
+          'categoryid': widget.serviceId,
+        },
+      );
+      print("Service Id: ${widget.serviceId}");
+      if (response.statusCode == 200) {
+        var items = jsonDecode(response.body)['USERS'];
+        for(var i=0;i<items.length;i++){
+          getDeviceTokens.add(items[i]['DEVICE_TOKEN']);
+        }
+        //Loader.hideLoader();
+        Loader.hideLoader();
+        // print("items length = ${getDeviceTokens.length}");
+        // print("Device Tokens List: ${getDeviceTokens}");
+      } else {
+        setState(() {
+          getDateEvent = [];
+        });
+        Loader.hideLoader();
+        print("Error");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    // return getEvent;
+  }
+
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  void sendPushMessage(String body, String title, String token) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAwlp2Cyg:APA91bFuW0DXVnNghX7jQ7OsKZ12ihaxAAfaFNUOzKo3j3R00hGS4b-OiMOdXhHgwpv-Yu4ETGLZm5guNvzWi0eb-aYdQkjf86M8E5TiUkQCh8HAbK4OEWF3H-28D6RF1CM1mT8_IHdO',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': body,
+              'title': title,
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": token,
+          },
+        ),
+      );
+      print('done');
+    } catch (e) {
+      print("error push notification");
+    }
+  }
+
   void addBooking(
       String date,
       String title,
@@ -221,8 +318,11 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
           msg: 'Booking Added Successfully',
           backgroundColor: Colors.grey,
         );
+        for(var i=0;i<getDeviceTokens.length;i++){
+          sendPushMessage("A new enquiry has received", "New Enquiry", getDeviceTokens[i]);
+        }
 
-        if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "2"){
+        /*if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "2"){
           flutterLocalNotificationsPlugin.show(
               0,
               "New Enquiry",
@@ -234,7 +334,7 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
                       color: ColorUtils.orange,
                       playSound: true,
                       icon: '@mipmap/launcher_icon')));
-        }
+        }*/
         // callOnFcmApiSendPushNotifications(
         //   title: "Celebration Station",
         //   body: "Your booking confirm",

@@ -209,7 +209,7 @@ class ApiService {
           GetAllProfileModel.fromJson(response.data);
       //print("4");
       if (responseData.message == "ok") {
-        debugPrint('Get Profile data  ----- > ${response.data}');
+        //debugPrint('Get Profile data  ----- > ${response.data}');
         //print("4");
 
         Loader.hideLoader();

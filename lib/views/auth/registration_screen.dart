@@ -1,4 +1,5 @@
 import 'package:celebration_station_sturcture/views/auth/login_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dio/dio.dart';
@@ -23,11 +24,46 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
   TextEditingController referralController = TextEditingController();
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
+  String? mtoken = " ";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    requestPermission();
+    getToken();
+  }
+
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        mtoken = token;
+        print("Token:-${mtoken}");
+      });
+    });
   }
   /*@override
   void setState(VoidCallback fn) {}*/
@@ -184,7 +220,8 @@ class _RegistrationScrennState extends State<RegistrationScrenn> {
       "referal_code": referralController.text.trim(),
       "phone": widget.mobileNumber,
       "password": passwordController.text.trim(),
-      "profile_type": widget.userType
+      "profile_type": widget.userType,
+      "token": mtoken,
     });
   }
 }
