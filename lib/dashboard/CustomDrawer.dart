@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/bottom_nav_bar.dart';
+import 'package:celebration_station_sturcture/views/home.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -211,7 +212,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const LoginScreen()),
+                                          const Home()),
                                   (Route<dynamic> route) => false);
                             },
                             child: Container(

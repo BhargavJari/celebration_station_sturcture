@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:celebration_station_sturcture/Utils/fontFamily_utils.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBar/tabs/profile/components/profilePic.dart';
+import 'package:celebration_station_sturcture/views/home.dart';
 import 'package:celebration_station_sturcture/views/profileDetailsCustomer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +138,7 @@ class _BodyState extends State<Body> {
                                 sharedPreferences.clear();
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(builder: (context) =>
-                                    const LoginScreen()), (
+                                    const Home()), (
                                     Route<dynamic> route) => false);
                               },
                               child: Container(

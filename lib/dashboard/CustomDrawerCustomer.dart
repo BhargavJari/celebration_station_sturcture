@@ -4,6 +4,7 @@ import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/bot
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 import 'package:celebration_station_sturcture/dashboard/bottomNavBarCustomer/bottom_nav_bar_customer.dart';
+import 'package:celebration_station_sturcture/views/home.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -215,7 +216,7 @@ class CustomDrawerCustomerState extends State<CustomDrawerCustomer> {
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const LoginScreen()),
+                                          const Home()),
                                   (Route<dynamic> route) => false);
                             },
                             child: Container(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -106,6 +107,8 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
     getprofile();
     getUserToken();
     requestPermission();
+    loadFCM();
+    listenFCM();
   }
 
   Future<void> callApi() async {
@@ -200,6 +203,7 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
         for(var i=0;i<items.length;i++){
           getDeviceTokens.add(items[i]['DEVICE_TOKEN']);
         }
+        debugPrint("Token List: ${getDeviceTokens}");
         //Loader.hideLoader();
         Loader.hideLoader();
         // print("items length = ${getDeviceTokens.length}");
@@ -263,11 +267,77 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
             "to": token,
           },
         ),
+          /*body: flutterLocalNotificationsPlugin.show(
+              0,
+              "New Enquiry",
+              "A new enquiry has received",
+              NotificationDetails(
+                  android: AndroidNotificationDetails(channel.id, channel.name,
+                      channelDescription: channel.description,
+                      importance: Importance.high,
+                      color: ColorUtils.orange,
+                      playSound: true,
+                      icon: '@mipmap/launcher_icon')))*/
       );
       print('done');
     } catch (e) {
       print("error push notification");
     }
+  }
+
+  void loadFCM() async {
+    if (!kIsWeb) {
+      const AndroidNotificationChannel channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.high,
+        enableVibration: true,
+      );
+
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+      /// Create an Android Notification Channel.
+      ///
+      /// We use this channel in the `AndroidManifest.xml` file to override the
+      /// default FCM channel to enable heads up notifications.
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+
+      /// Update the iOS foreground notification presentation options to allow
+      /// heads up notifications.
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
+
+  void listenFCM() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: '@mipmap/launcher_icon',
+            ),
+          ),
+        );
+      }
+    });
   }
 
   void addBooking(
@@ -320,21 +390,9 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
         );
         for(var i=0;i<getDeviceTokens.length;i++){
           sendPushMessage("A new enquiry has received", "New Enquiry", getDeviceTokens[i]);
+          debugPrint("Device tokens:- ${getDeviceTokens[i]}");
         }
 
-        /*if(userType?.replaceAll('"', '').replaceAll('"', '').toString() == "2"){
-          flutterLocalNotificationsPlugin.show(
-              0,
-              "New Enquiry",
-              "A new enquiry has received",
-              NotificationDetails(
-                  android: AndroidNotificationDetails(channel.id, channel.name,
-                      channelDescription: channel.description,
-                      importance: Importance.high,
-                      color: ColorUtils.orange,
-                      playSound: true,
-                      icon: '@mipmap/launcher_icon')));
-        }*/
         // callOnFcmApiSendPushNotifications(
         //   title: "Celebration Station",
         //   body: "Your booking confirm",
