@@ -23,6 +23,24 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   bool obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
+  String? mtoken = " ";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getToken();
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        mtoken = token;
+        print("Token:-${mtoken}");
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,6 +181,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
   FormData data() {
-    return FormData.fromMap({"user_id": phoneController.text.trim(),"password":passwordController.text.trim()});
+    return FormData.fromMap({
+      "user_id": phoneController.text.trim(),
+      "password":passwordController.text.trim(),
+      "device_token" : mtoken
+    });
   }
 }

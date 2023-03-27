@@ -385,7 +385,7 @@ class _EventCalendarCustomerScreenState extends State<EventCalendarCustomerScree
         print(data);
         loadPreviousEvents();
         Fluttertoast.showToast(
-          msg: 'Booking Added Successfully',
+          msg: 'Enquiry Sent Successfully',
           backgroundColor: Colors.grey,
         );
         for(var i=0;i<getDeviceTokens.length;i++){

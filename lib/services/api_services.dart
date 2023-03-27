@@ -355,7 +355,7 @@ class ApiService {
               builder: (context) =>LoginScreen(),
             ));
         Fluttertoast.showToast(
-          msg: 'Add Account  Sucessfully...',
+          msg: 'Add Account Sucessfully...',
           backgroundColor: Colors.grey,
         );
       } else {
