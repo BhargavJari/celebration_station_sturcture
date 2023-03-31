@@ -330,7 +330,7 @@ class _UpdateProfileCustomer extends State<UpdateProfileCustomer> {
                           });
                         }
                         print(data);
-                        await ApiService().updateProfile(context, data: data());
+                        await ApiService().updateProfileCustomer(context, data: data());
                       },
                       child: Text(
                         "Submit",

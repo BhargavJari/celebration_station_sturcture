@@ -20,7 +20,6 @@ import '../../../services/shared_preference.dart';
 import '../../../utils/loder.dart';
 import '../../../views/custom_widget/dialogs/location_dialog.dart';
 import '../../../views/subscription_screen.dart';
-import '../../CustomDrawer.dart';
 import '../../CustomDrawerCustomer.dart';
 import '../../bottomNavBarCustomer/bottom_nav_bar_customer.dart';
 
